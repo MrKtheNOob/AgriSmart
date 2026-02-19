@@ -1,0 +1,242 @@
+import logging
+import os
+import json
+import time
+from dotenv import load_dotenv
+import httpx
+from pydantic import BaseModel, Field
+import asyncio
+from typing import List, Dict, Optional, Any, Union
+
+logger = logging.getLogger(__name__)
+DEFAULT_TOKEN_TTL = 3600  # 1 hour
+
+# --- Existing Data Models ---
+class SoilPropertyValue(BaseModel):
+    value: Optional[Union[float, int, str]] = None
+    unit: Optional[str] = None
+    type: str = "float"
+
+
+class SoilPropertyDepth(BaseModel):
+    value: Optional[str] = Field(None, description="The depth range (e.g., '0-20')")
+    unit: Optional[str] = None
+
+
+class SoilData(BaseModel):
+    value: SoilPropertyValue
+    depth: SoilPropertyDepth
+    # We can keep uncertainty optional as per schema
+    uncertainty: Optional[Any] = None
+
+
+# --- New Metadata Models (The "Info") ---
+class LayersDepth(BaseModel):
+    unit: Optional[str] = None
+    values: List[str]
+
+
+class SoilPropertyMetadata(BaseModel):
+    description: str = Field(..., description="Human-readable explanation")
+    theme: str = Field(..., description="Category: Chemistry, Physics, etc.")
+    unit: Optional[str] = None
+    depths: LayersDepth
+
+
+class PropertyResponse(BaseModel):
+    property: Dict[str, List[SoilData]]
+
+
+class SoilProfile(BaseModel):
+    target_depth: str
+    classification: str
+    properties: Dict[str, str]
+
+
+class iSDAsoilService:
+    def __init__(self, email: str, password: str):
+        self.base_url = "https://api.isda-africa.com/isdasoil/v2"
+        self.email = email
+        self.password = password
+        self._token = None
+        self._token_file = os.path.join(
+            os.path.dirname(__file__), "../files/isdasoil_token.json"
+        )
+        self._metadata: Dict[str, SoilPropertyMetadata] = self._fetch_metadata()
+        self.client = httpx.AsyncClient(timeout=15.0)
+
+
+        loaded = self._load_token()
+        if loaded:
+            self._token = loaded
+
+    async def _get_token(self):
+        """Authenticates using the /login endpoint."""
+        login_url = f"https://api.isda-africa.com/login"
+        data = {
+            "username": self.email,
+            "password": self.password,
+        }
+
+        
+        response = await self.client.post(login_url, data=data)
+        response.raise_for_status()
+        j = response.json()
+        token = j.get("access_token") or j.get("token")
+        expires_in = j.get("expires_in")
+        if not token:
+            raise RuntimeError("Login did not return an access token")
+        self._token = token
+        # save token for future runs; if API returns expires_in (seconds) store expiry
+        self._save_token(token, expires_in)
+
+    
+    def _save_token(self, token: str, expires_in: Optional[int] = None):
+        ttl = expires_in or DEFAULT_TOKEN_TTL
+        payload = {
+            "access_token": token,
+            "expires_at": int(time.time()) + int(ttl) - 60  # refresh 1 min early
+        }
+        with open(self._token_file, "w") as f:
+            json.dump(payload, f)
+
+
+    def _load_token(self) -> Optional[str]:
+        if not os.path.exists(self._token_file):
+            return None
+        try:
+            with open(self._token_file, "r") as f:
+                payload = json.load(f)
+            token = payload.get("access_token")
+            expires_at = payload.get("expires_at")
+            if token and expires_at:
+                if int(time.time()) >= int(expires_at):
+                    logging.info("Stored token expired")
+                    return None
+            return token
+        except Exception:
+            logging.exception("Failed to read token file")
+            return None
+
+    def _fetch_metadata(self):
+        """Fetches the 'info' about what each property means."""
+        try:
+            with open("../files/soil_metadata.json","r") as f:
+                data = json.load(f)
+            data={
+                k: SoilPropertyMetadata(**v) 
+                for k, v in data["property"].items()
+            }
+            return data
+        except Exception as e:
+            logging.error(f"Could not load metadata info: {e}")
+
+    async def _fetch_soil_data(
+        self, lat: float, lon: float, depth: str
+    ) -> PropertyResponse:
+        """Internal method to fetch and validate soil data with token retry logic."""
+        if not self._is_token_valid():
+            await self._get_token()
+
+        params = {"lat": lat, "lon": lon, "depth": depth}
+        headers = {"Authorization": f"Bearer {self._token}"}
+
+    
+        response = await self.client.get(
+            f"{self.base_url}/soilproperty", params=params, headers=headers
+        )
+
+        # If token expired or invalid, try obtaining a new token and retry once
+        if response.status_code in (401, 403):
+            logging.info("Token invalid or expired, refreshing token and retrying")
+            await self._get_token()
+            headers = {"Authorization": f"Bearer {self._token}"}
+            response = await self.client.get(
+                f"{self.base_url}/soilproperty", params=params, headers=headers
+            )
+
+        response.raise_for_status()
+        validated_data = PropertyResponse(**response.json())
+        return validated_data
+    
+    def _is_token_valid(self) -> bool:
+        if not self._token:
+            return False
+
+        if not os.path.exists(self._token_file):
+            return False
+
+        with open(self._token_file, "r") as f:
+            payload = json.load(f)
+
+        expires_at = payload.get("expires_at")
+        if not expires_at:
+            return False
+
+        return time.time() < expires_at
+
+    async def get_soil_analysis(
+        self, lat: float, lon: float, depth: str = "0-20"
+    ) -> str:
+        """Fetch soil analysis with token validation and metadata enrichment."""
+        try:
+            
+            validated_data = await self._fetch_soil_data(lat, lon, depth)
+
+            return await self._interpret_agronomy(validated_data)
+
+        except Exception as e:
+            logging.error(f"API Error: {e}")
+            return "Error retrieving soil data."
+
+    async def _interpret_agronomy(self, data: PropertyResponse) -> SoilProfile:
+        properties = {}
+
+        for prop_name, measurements in data.property.items():
+            if not measurements:
+                continue
+
+            val_obj = measurements[0].value
+            actual_value = val_obj.value
+
+            meta = self._metadata.get(prop_name)
+            description = meta.description if meta else prop_name
+            unit = val_obj.unit or (meta.unit if meta else "")
+
+            properties[description] = f"{actual_value} {unit}".strip()
+
+        # Moroccan classification logic
+        def get_raw(p):
+            return float(data.property[p][0].value.value) if p in data.property else 0.0
+
+        clay = get_raw("clay_content")
+        sand = get_raw("sand_content")
+
+        soil_type = "Hamri (Balanced)"
+        if clay > 40:
+            soil_type = "Tirs (Clayey)"
+        elif sand > 60:
+            soil_type = "R'mel (Sandy)"
+
+        return SoilProfile(
+            target_depth="0-20 centimeters",
+            classification=soil_type,
+            properties=properties,
+        )
+
+
+load_dotenv()
+
+soil_service = iSDAsoilService(
+    email=os.getenv("ISDA_EMAIL"), password=os.getenv("ISDA_PASSWORD")
+)
+
+if __name__ == "__main__":
+    # Example async usage
+    async def main():
+        result = await soil_service.get_soil_analysis(
+            lat=-16.88462642292991, lon=14.773616236242194, depth="0-20"
+        )
+        print(result)
+
+    asyncio.run(main())
