@@ -1,60 +1,63 @@
-interface Recommendation {
-  recommended_crop: string;
-  confidence: number;
-  why: string;
-  alternatives: string[];
+interface Crop {
+  name: string;
+  reason: string;
+}
+
+interface RecommendationResponse {
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  soil: {
+    target_depth: string;
+    classification: string;
+    properties: Record<string, string>;
+  };
+  climate: {
+    region: string;
+    annual_stats: Record<string, {
+      temperature_2m: number;
+      precipitation: number;
+      snowfall: number;
+      apparent_temperature: number;
+    }>;
+    heat_days: number;
+    frost_days: number;
+  };
+  recommendation: {
+    recommended_crops: Crop[];
+  };
 }
 
 interface SidebarProps {
   loading: boolean;
   error: string | null;
-  recommendation: Recommendation | null;
-  markerPosition: [number, number] | null; // Added markerPosition
-  locationName: string | null; // Added locationName
+  recommendation: RecommendationResponse | null;
+  markerPosition: [number, number] | null;
+  locationName: string | null;
   onClear: () => void;
-  fetchAnalysis: () => void; // Added fetchAnalysis
+  fetchAnalysis: () => void;
 }
 
 // components/SkeletonSidebar.tsx
 const SkeletonSidebar = () => {
   return (
     <div className="space-y-8 animate-pulse p-2">
-      {/* Header Skeleton */}
       <div className="border-b border-slate-100 pb-6">
         <div className="h-4 w-24 bg-slate-200 rounded mb-3"></div>
         <div className="h-10 w-48 bg-slate-300 rounded-lg mb-4"></div>
-        <div className="flex gap-2">
-          <div className="h-6 w-20 bg-green-100 rounded"></div>
-          <div className="h-4 w-32 bg-slate-100 rounded mt-1"></div>
-        </div>
       </div>
-
-      {/* "Why" Section Skeleton */}
-      <section>
-        <div className="h-5 w-40 bg-slate-200 rounded mb-4"></div>
-        <div className="space-y-3">
-          <div className="h-4 w-full bg-slate-100 rounded"></div>
-          <div className="h-4 w-full bg-slate-100 rounded"></div>
-          <div className="h-4 w-3/4 bg-slate-100 rounded"></div>
+      <section className="space-y-4">
+        <div className="h-5 w-40 bg-slate-200 rounded"></div>
+        <div className="h-24 w-full bg-slate-100 rounded-xl"></div>
+      </section>
+      <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+        <div className="h-5 w-48 bg-slate-200 rounded"></div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="h-12 bg-slate-200 rounded"></div>
+          <div className="h-12 bg-slate-200 rounded"></div>
         </div>
       </section>
-
-      {/* "Virtual Sensor" Section Skeleton */}
-      <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-        <div className="h-5 w-48 bg-slate-200 rounded mb-6"></div>
-        <div className="space-y-4">
-          <div className="flex justify-between">
-            <div className="h-3 w-32 bg-slate-200 rounded"></div>
-            <div className="h-3 w-8 bg-slate-200 rounded"></div>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-3"></div>
-          <div className="h-3 w-full bg-slate-100 rounded mt-4"></div>
-          <div className="h-3 w-2/3 bg-slate-100 rounded"></div>
-        </div>
-      </section>
-
-      {/* Button Skeleton */}
-      <div className="h-10 w-full bg-slate-100 rounded-xl mt-8"></div>
     </div>
   );
 };
@@ -63,7 +66,6 @@ const EmptyState = () => {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       <div className="relative mb-6">
-        {/* Un cercle décoratif pour l'icône */}
         <div className="absolute inset-0 bg-green-100 rounded-full scale-150 animate-pulse opacity-50"></div>
         <div className="relative bg-white p-5 rounded-full shadow-sm border border-green-100">
           <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,17 +74,10 @@ const EmptyState = () => {
           </svg>
         </div>
       </div>
-      
       <h3 className="text-xl font-bold text-slate-800 mb-2">Prêt pour l'analyse ?</h3>
       <p className="text-slate-500 text-sm leading-relaxed max-w-[240px]">
         Sélectionnez une parcelle sur la carte du Maroc pour obtenir des <span className="text-green-600 font-semibold">recommandations IA</span> basées sur le sol et le climat local.
       </p>
-      
-      <div className="mt-8 flex gap-2 items-center text-xs text-slate-400 font-medium uppercase tracking-widest">
-        <span className="w-8 h-[1px] bg-slate-200"></span>
-        <span>AgriSmart Engine</span>
-        <span className="w-8 h-[1px] bg-slate-200"></span>
-      </div>
     </div>
   );
 };
@@ -100,16 +95,9 @@ const ErrorMessage = ({ message, onRetry }: ErrorProps) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
-      
       <h3 className="text-lg font-bold text-red-800 mb-2">Analyse impossible</h3>
-      <p className="text-red-600 text-sm mb-6 leading-relaxed">
-        {message || "Nous n'avons pas pu récupérer les données agronomiques pour cette zone. Veuillez vérifier votre connexion."}
-      </p>
-      
-      <button 
-        onClick={onRetry}
-        className="w-full py-3 bg-white border border-red-200 text-red-700 font-semibold rounded-xl hover:bg-red-100 transition-colors shadow-sm"
-      >
+      <p className="text-red-600 text-sm mb-6 leading-relaxed">{message}</p>
+      <button onClick={onRetry} className="w-full py-3 bg-white border border-red-200 text-red-700 font-semibold rounded-xl hover:bg-red-100 transition-colors shadow-sm">
         Réessayer l'analyse
       </button>
     </div>
@@ -118,7 +106,7 @@ const ErrorMessage = ({ message, onRetry }: ErrorProps) => {
 
 export default function Sidebar({ loading, error, recommendation, markerPosition, locationName, onClear, fetchAnalysis }: SidebarProps){
   if (loading) return <SkeletonSidebar />;
-  if (error) return <ErrorMessage message={error} onRetry={fetchAnalysis} />; // Pass fetchAnalysis for retry
+  if (error) return <ErrorMessage message={error} onRetry={fetchAnalysis} />;
 
   if (markerPosition && !recommendation) {
     return (
@@ -131,75 +119,96 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
             </svg>
           </div>
         </div>
-        
-        <h3 className="text-xl font-bold text-slate-800 mb-2">
-          {locationName || "Location Selected"}
-        </h3>
-        <p className="text-slate-500 text-sm leading-relaxed max-w-60">
-          {locationName ? `Coordinates: ${markerPosition[0].toFixed(4)}, ${markerPosition[1].toFixed(4)}` : `Parcel at ${markerPosition[0].toFixed(4)}, ${markerPosition[1].toFixed(4)}`}
+        <h3 className="text-xl font-bold text-slate-800 mb-2">{locationName || "Zone Sélectionnée"}</h3>
+        <p className="text-slate-500 text-sm leading-relaxed max-w-[240px]">
+          Coordonnées : {markerPosition[0].toFixed(4)}, {markerPosition[1].toFixed(4)}
         </p>
-        
-        <button 
-          onClick={fetchAnalysis}
-          className="mt-8 px-6 py-3 bg-green-600 text-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-bold"
-        >
-          Analyser cette zone
+        <button onClick={fetchAnalysis} className="mt-8 px-8 py-4 bg-green-600 text-white rounded-2xl shadow-lg hover:bg-green-700 transition-colors font-bold text-lg">
+          Lancer l'analyse IA
         </button>
-
         <button onClick={onClear} className="mt-4 w-full py-3 text-slate-400 text-sm hover:text-red-500 transition-colors">
-          Annuler
+          Annuler la sélection
         </button>
       </div>
     );
   }
 
-  if (!recommendation) return <EmptyState />; // Changed to pass fetchAnalysis
+  if (!recommendation) return <EmptyState />;
+
+  const crops = recommendation.recommendation.recommended_crops;
+  const soil = recommendation.soil;
+  const climate = recommendation.climate;
 
   return (
-    <div className="space-y-6">
-      <header className="border-b pb-4">
-        <h2 className="text-sm font-bold text-green-600 uppercase tracking-wider">Expert Insight</h2>
-        <h1 className="text-3xl font-extrabold text-slate-900">{recommendation.recommended_crop}</h1>
-        <div className="flex items-center mt-2 gap-2">
-          <div className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">
-            {recommendation.confidence * 100}% Match
-          </div>
-          <span className="text-slate-400 text-xs italic">Basé sur données INRA</span>
-        </div>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header className="border-b border-slate-100 pb-6">
+        <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Recommandations IA</h2>
+        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Meilleurs Cultures</h1>
       </header>
 
-      {/* C'est ici que tu mets la vision "Insight" */}
-      <section>
-        <h3 className="text-slate-800 font-bold mb-3 flex items-center gap-2">
-           📖 Pourquoi ce choix ?
-        </h3>
-        <p className="text-slate-600 leading-relaxed text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
-          {recommendation.why}
-        </p>
-      </section>
+      {/* Recommended Crops */}
+      <div className="space-y-4">
+        {crops.map((crop, idx) => (
+          <div key={crop.name} className={`p-5 rounded-2xl border ${idx === 0 ? "bg-green-50 border-green-100 ring-2 ring-green-500/10" : "bg-white border-slate-100"}`}>
+            <div className="flex justify-between items-start mb-2">
+              <h3 className={`font-bold text-xl ${idx === 0 ? "text-green-800" : "text-slate-800"}`}>
+                {idx === 0 && "⭐ "}{crop.name}
+              </h3>
+              {idx === 0 && <span className="px-2 py-0.5 bg-green-200 text-green-700 text-[10px] font-black uppercase rounded">Top Match</span>}
+            </div>
+            <p className="text-sm text-slate-600 leading-relaxed">{crop.reason}</p>
+          </div>
+        ))}
+      </div>
 
-      {/* LA FEATURE "PRÉSENT" : Le Capteur Virtuel */}
-      <section className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
-        <h3 className="text-blue-800 font-bold mb-3 flex items-center gap-2">
-          💧 Pilotage Temps Réel (Virtual Sensor)
+      {/* Soil Analysis - Crucial for Investors */}
+      <section className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+        <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
+          🌱 Profil du Sol ({soil.classification})
         </h3>
-        <div className="space-y-4">
-          <div className="flex justify-between text-xs font-bold text-blue-600 uppercase">
-            <span>Humidité estimée (Hamri)</span>
-            <span>65%</span>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+            <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">pH du Sol</span>
+            <span className="text-lg font-black text-slate-700">{soil.properties["pH"]}</span>
           </div>
-          <div className="w-full bg-blue-200 rounded-full h-2">
-            <div className="bg-blue-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+          <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+            <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Carbone Org.</span>
+            <span className="text-lg font-black text-slate-700">{soil.properties["Carbon, organic"]}</span>
           </div>
-          <p className="text-xs text-blue-700 leading-tight italic">
-            "Le sol Hamri retient bien l'eau de la pluie d'hier. Aucun arrosage nécessaire pour les prochaines 48h."
-          </p>
+          <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm col-span-2">
+            <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Texture (USDA)</span>
+            <span className="text-sm font-bold text-slate-700">{soil.properties["USDA Texture Class"]}</span>
+          </div>
         </div>
       </section>
 
-      <button onClick={onClear} className="w-full py-3 text-slate-400 text-sm hover:text-red-500 transition-colors">
+      {/* Climate Risk - Crucial for Farmers */}
+      <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100">
+        <h3 className="text-orange-800 font-bold mb-4 flex items-center gap-2">
+          🌦️ Climat & Risques ({climate.region})
+        </h3>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-orange-700 font-medium">Jours de forte chaleur</span>
+            <span className="font-bold text-orange-900">{climate.heat_days}j/an</span>
+          </div>
+          <div className="w-full bg-orange-200/50 rounded-full h-1.5">
+            <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${(climate.heat_days / 365) * 100}%` }}></div>
+          </div>
+          
+          <div className="flex justify-between items-center text-sm mt-4">
+            <span className="text-blue-700 font-medium">Jours de gel</span>
+            <span className="font-bold text-blue-900">{climate.frost_days}j/an</span>
+          </div>
+          <div className="w-full bg-blue-200/50 rounded-full h-1.5">
+            <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${(climate.frost_days / 365) * 100}%` }}></div>
+          </div>
+        </div>
+      </section>
+
+      <button onClick={onClear} className="w-full py-4 text-slate-400 text-sm font-medium hover:text-red-500 transition-colors">
         Réinitialiser l'analyse
       </button>
     </div>
   );
-};
+}
