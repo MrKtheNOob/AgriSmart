@@ -50,7 +50,7 @@ class PropertyResponse(BaseModel):
 class SoilProfile(BaseModel):
     target_depth: str
     classification: str
-    properties: Dict[str, str]
+    properties: Dict[str, str] # other properties featured in the provided json
 
 
 class iSDAsoilService:
@@ -177,7 +177,7 @@ class iSDAsoilService:
 
     async def get_soil_analysis(
         self, lat: float, lon: float, depth: str = "0-20"
-    ) -> str:
+    ) -> SoilProfile:
         """Fetch soil analysis with token validation and metadata enrichment."""
         try:
             
@@ -187,7 +187,7 @@ class iSDAsoilService:
 
         except Exception as e:
             logging.error(f"API Error: {e}")
-            return "Error retrieving soil data."
+            raise # "Error retrieving soil data."
 
     async def _interpret_agronomy(self, data: PropertyResponse) -> SoilProfile:
         properties = {}

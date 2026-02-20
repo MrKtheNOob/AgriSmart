@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Recommendation {
   recommended_crop: string;
   confidence: number;
@@ -11,7 +9,10 @@ interface SidebarProps {
   loading: boolean;
   error: string | null;
   recommendation: Recommendation | null;
+  markerPosition: [number, number] | null; // Added markerPosition
+  locationName: string | null; // Added locationName
   onClear: () => void;
+  fetchAnalysis: () => void; // Added fetchAnalysis
 }
 
 // components/SkeletonSidebar.tsx
@@ -115,10 +116,44 @@ const ErrorMessage = ({ message, onRetry }: ErrorProps) => {
   );
 };
 
-export default function Sidebar({ loading, error, recommendation, onClear }:SidebarProps){
-  if (loading) return <SkeletonSidebar />; // Un petit placeholder qui brille
-  if (error) return <ErrorMessage message={error} onRetry={()=>{}} />;
-  if (!recommendation) return <EmptyState />;
+export default function Sidebar({ loading, error, recommendation, markerPosition, locationName, onClear, fetchAnalysis }: SidebarProps){
+  if (loading) return <SkeletonSidebar />;
+  if (error) return <ErrorMessage message={error} onRetry={fetchAnalysis} />; // Pass fetchAnalysis for retry
+
+  if (markerPosition && !recommendation) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="relative mb-6">
+          <div className="relative bg-white p-5 rounded-full shadow-sm border border-green-100">
+            <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+        </div>
+        
+        <h3 className="text-xl font-bold text-slate-800 mb-2">
+          {locationName || "Location Selected"}
+        </h3>
+        <p className="text-slate-500 text-sm leading-relaxed max-w-60">
+          {locationName ? `Coordinates: ${markerPosition[0].toFixed(4)}, ${markerPosition[1].toFixed(4)}` : `Parcel at ${markerPosition[0].toFixed(4)}, ${markerPosition[1].toFixed(4)}`}
+        </p>
+        
+        <button 
+          onClick={fetchAnalysis}
+          className="mt-8 px-6 py-3 bg-green-600 text-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 font-bold"
+        >
+          Analyser cette zone
+        </button>
+
+        <button onClick={onClear} className="mt-4 w-full py-3 text-slate-400 text-sm hover:text-red-500 transition-colors">
+          Annuler
+        </button>
+      </div>
+    );
+  }
+
+  if (!recommendation) return <EmptyState />; // Changed to pass fetchAnalysis
 
   return (
     <div className="space-y-6">

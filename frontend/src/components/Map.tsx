@@ -16,10 +16,7 @@ interface MoroccoRegionProperties {
   shapeType: string;
 }
 
-type MoroccoFeature = GeoJSON.Feature<
-  GeoJSON.Geometry,
-  MoroccoRegionProperties
->;
+type MoroccoFeature = GeoJSON.Feature<GeoJSON.Geometry,MoroccoRegionProperties>;
 
 // Fix default marker icon
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
@@ -33,7 +30,7 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  onMapClick: (lat: number, lng: number) => void;
+  onMapClick: (lat: number, lng: number, regionName?: string) => void;
   markerPosition: LatLngTuple | null;
 }
 
@@ -62,6 +59,7 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
 
   const onEachFeature = (feature: MoroccoFeature, layer: L.Layer) => {
     const regionName = feature.properties.shapeName;
+    console.log(feature)
 
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
@@ -73,7 +71,7 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         geoJsonRef.current?.resetStyle(e.target as L.Path);
       },
       click: (e: LeafletMouseEvent) => {
-        onMapClick(e.latlng.lat, e.latlng.lng);
+        onMapClick(e.latlng.lat, e.latlng.lng, regionName);
         (e.target as L.Path)
           .bindPopup(`<strong>${regionName}</strong>`)
           .openPopup(e.latlng);
@@ -84,6 +82,8 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
   function MapClickHandler() {
     useMapEvents({
       click: (e) => {
+        // Only trigger if we didn't click on a GeoJSON feature (which has its own handler)
+        // or just pass undefined for the name
         onMapClick(e.latlng.lat, e.latlng.lng);
       },
     });

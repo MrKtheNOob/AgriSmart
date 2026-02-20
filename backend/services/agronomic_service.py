@@ -4,6 +4,7 @@ import logging
 import time
 from dotenv import load_dotenv
 import asyncio
+from water_insight_service import WaterInsightService
 from isdasoil_service import iSDAsoilService
 from climate_service import ClimateService
 from vector_store import VectorStore
@@ -22,11 +23,13 @@ class AgronomicService:
         self,
         soil_service: iSDAsoilService,
         climate_service: ClimateService,
+        water_insight_service:WaterInsightService,
         rag_service: RAGService,
     ):
         logger.info("Initializing AgronomicService with all sub-services")
         self.soil_service = soil_service
         self.climate_service = climate_service
+        self.water_insight_service=water_insight_service
         self.rag_service = rag_service
         logger.debug("AgronomicService initialized successfully")
 
@@ -36,6 +39,7 @@ class AgronomicService:
             self.soil_service.get_soil_analysis(lat, lng),
             self.climate_service.get_climate_profile(lat, lng),
         )
+        # water_insight=self.water_insight_service.get_water_insight(soil_data,climate_data)
 
         # RAG service is async — call it directly
         recommendation = await self.rag_service.generate_recommendation(
@@ -59,7 +63,7 @@ if __name__ == "__main__":
     FEATHER_PATH=FILE_DIR+"/morocco_climate.feather"
     MARKDOWN_FILE="../RAG/agronomy_data.md"
     PERSIST_DIRECTORY="../RAG/chroma_db"
-    start_time = time.time()
+    
     try:
 
         async def main():
@@ -72,7 +76,7 @@ if __name__ == "__main__":
                 VectorStore.create(markdown_file=MARKDOWN_FILE,persist_directory=PERSIST_DIRECTORY),
             )
             rag_service = RAGService(vector_store)
-
+            start_time = time.time()
             agronomic_service = AgronomicService(
                 soil_service=soil_service,
                 climate_service=climate_service,
