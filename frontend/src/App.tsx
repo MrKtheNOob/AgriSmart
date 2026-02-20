@@ -3,74 +3,49 @@ import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import { useMapLogic } from './hooks/useMapLogic';
 import MoroccoMap from './components/Map';
+import Navbar from './components/Navbar';
 
-function App() {
-  const { markerPosition, recommendation, loading, error, handleMapClick, clearRecommendation } = useMapLogic();
+// App.tsx
+export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
-  const handleClearAndCloseDrawer = () => {
-    clearRecommendation();
-    setIsDrawerOpen(false); // Close drawer when clearing
-  };
+  
+  // On passe un callback pour ouvrir le drawer dès que le résultat arrive
+  const { markerPosition, recommendation, loading, error, handleMapClick, clearRecommendation } = useMapLogic();
 
   return (
-    <div className="flex flex-col h-screen md:flex-row font-sans">
-      {/* Map Section */}
-      <div className="grow md:w-7/10 h-1/2 md:h-full relative">
-        <MoroccoMap onMapClick={handleMapClick} markerPosition={markerPosition} />
-
-        {/* Mobile: Open Drawer Button */}
-        <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
-          <button
-            onClick={toggleDrawer}
-            className="px-6 py-3 bg-green-600 text-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-          >
-            {isDrawerOpen ? 'Close Results' : 'View Results'}
-          </button>
+    <div className="flex flex-col h-screen bg-slate-50">
+      <Navbar />
+      <div className="flex flex-col h-full md:flex-row">
+        {/* Map Section - Ajout d'un overlay de chargement sur la map */}
+        <div className="grow md:w-7/12 lg:w-3/4 h-[50vh] md:h-full relative border-r border-slate-200">
+          <MoroccoMap onMapClick={handleMapClick} markerPosition={markerPosition} />
+          
+          {loading && (
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] z-1000 flex items-center justify-center">
+              <div className="bg-white p-4 rounded-xl shadow-2xl flex items-center gap-3">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
+                <span className="font-medium text-slate-700">Analyse du sol en cours...</span>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
 
-      {/* Sidebar Section (Desktop) */}
-      <div className="hidden md:block md:w-3/10 p-4 overflow-y-auto">
-        <Sidebar
-          loading={loading}
-          error={error}
-          recommendation={recommendation}
-          onClear={handleClearAndCloseDrawer}
-        />
-      </div>
+        {/* Sidebar Desktop */}
+        <aside className="hidden md:block md:w-5/12 lg:w-1/4 bg-white shadow-xl z-10 overflow-y-auto">
+          <Sidebar loading={loading} error={error} recommendation={recommendation} onClear={clearRecommendation} />
+        </aside>
 
-      {/* Bottom Drawer Section (Mobile) */}
-      <div
-        className={`fixed inset-x-0 bottom-0 w-full bg-white transition-transform duration-300 ease-in-out z-20 md:hidden
-          ${isDrawerOpen ? 'translate-y-0' : 'translate-y-full'} h-2/3 max-h-[80vh] rounded-t-lg shadow-lg overflow-y-auto`}
-      >
-        <div className="p-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">Crop Recommendation Results</h2>
-            <button
-              onClick={toggleDrawer}
-              className="p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+        {/* Bottom Sheet Mobile - Amélioration du design */}
+        <div className={`fixed inset-x-0 bottom-0 bg-white transition-transform duration-500 z-2000 md:hidden
+            ${isDrawerOpen || loading ? 'translate-y-0' : 'translate-y-full'} 
+            h-[70vh] rounded-t-4xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col`}
+        >
+          <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto my-3" onClick={() => setIsDrawerOpen(false)} />
+          <div className="flex-1 overflow-y-auto p-6 pt-2">
+             <Sidebar loading={loading} error={error} recommendation={recommendation} onClear={clearRecommendation} />
           </div>
-          <Sidebar
-            loading={loading}
-            error={error}
-            recommendation={recommendation}
-            onClear={handleClearAndCloseDrawer}
-          />
         </div>
       </div>
     </div>
   );
 }
-
-export default App;
