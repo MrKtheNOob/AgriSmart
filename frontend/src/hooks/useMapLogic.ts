@@ -44,7 +44,7 @@ interface MapLogic {
 }
 async function fetchRecommendation(lat: number, lng: number): Promise<RecommendationResponse> {
 
-  const response = await fetch(BASE_URL+'/analyze', {
+  const response = await fetch(`${BASE_URL}/analyze`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
