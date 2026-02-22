@@ -4,9 +4,11 @@ from dotenv import load_dotenv
 import asyncio
 from langchain_openai import ChatOpenAI
 
-from climate_service import ClimateMetrics
-from isdasoil_service import SoilProfile
-from vector_store import VectorStore
+from services.climate_service import ClimateMetrics
+from services.isdasoil_service import SoilProfile
+from services.vector_store import VectorStore
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +44,7 @@ Analysis Instructions:
    - Interannual variability
    - Heat or frost risk if relevant
 
-3. Recommend up to 3 crops that are realistically viable
+3. Recommend 3 crops that are realistically viable
    under these exact conditions.
 
 4. For each crop:
@@ -57,7 +59,8 @@ Strict Rules:
 - Do NOT assume irrigation unless explicitly stated.
 - If conditions are limiting, acknowledge it.
 
-Return ONLY valid JSON in this format:
+
+Return ONLY valid JSON in french in this format:
 
 {{
   "recommended_crops": [

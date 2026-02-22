@@ -75,7 +75,7 @@ const EmptyState = () => {
         </div>
       </div>
       <h3 className="text-xl font-bold text-slate-800 mb-2">Prêt pour l'analyse ?</h3>
-      <p className="text-slate-500 text-sm leading-relaxed max-w-[240px]">
+      <p className="text-slate-500 text-sm leading-relaxed max-w-60">
         Sélectionnez une parcelle sur la carte du Maroc pour obtenir des <span className="text-green-600 font-semibold">recommandations IA</span> basées sur le sol et le climat local.
       </p>
     </div>
@@ -120,7 +120,7 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
           </div>
         </div>
         <h3 className="text-xl font-bold text-slate-800 mb-2">{locationName || "Zone Sélectionnée"}</h3>
-        <p className="text-slate-500 text-sm leading-relaxed max-w-[240px]">
+        <p className="text-slate-500 text-sm leading-relaxed max-w-60">
           Coordonnées : {markerPosition[0].toFixed(4)}, {markerPosition[1].toFixed(4)}
         </p>
         <button onClick={fetchAnalysis} className="mt-8 px-8 py-4 bg-green-600 text-white rounded-2xl shadow-lg hover:bg-green-700 transition-colors font-bold text-lg">
@@ -140,9 +140,9 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
   const climate = recommendation.climate;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="border-b border-slate-100 pb-6">
-        <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Recommandations IA</h2>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4">
+      <header className="border-b border-slate-100 pb-6 text-left pl-5">
+        <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">AgriSmart Engine</h2>
         <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Meilleurs Cultures</h1>
       </header>
 

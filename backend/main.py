@@ -1,0 +1,150 @@
+import asyncio
+import os
+import logging
+import json
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from dotenv import load_dotenv
+
+from services.RAG_service import RAGService
+from services.agronomic_service import AgronomicService
+from services.climate_service import ClimateService
+from services.isdasoil_service import iSDAsoilService
+from services.vector_store import VectorStore
+
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+# --- Global Service Instance ---
+agronomic_service: AgronomicService = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global agronomic_service
+
+    logger.info("Initializing AgriSmart Services...")
+
+    # Define paths relative to this file
+    base_dir = os.path.dirname(__file__)
+    feather_path = os.path.join(base_dir, "files/morocco_climate.feather")
+    markdown_file = os.path.join(base_dir, "RAG/agronomy_data.md")
+    persist_directory = os.path.join(base_dir, "RAG/chroma_db")
+
+    try:
+        # Initialize sub-services
+        soil_service = iSDAsoilService(
+            email=os.getenv("ISDA_EMAIL"), password=os.getenv("ISDA_PASSWORD")
+        )
+
+        # Async initialization
+
+        climate_service, vector_store = await asyncio.gather(
+            ClimateService.create(feather_path=feather_path),
+            VectorStore.create(
+                markdown_file=markdown_file, persist_directory=persist_directory
+            ),
+        )
+
+        rag_service = RAGService(vector_store)
+
+        # Master service
+        agronomic_service = AgronomicService(
+            soil_service=soil_service,
+            climate_service=climate_service,
+            # water_insight_service=None, # Placeholder as per current agronomic_service.py
+            rag_service=rag_service,
+        )
+
+        logger.info("AgriSmart Services successfully initialized.")
+    except Exception as e:
+        logger.error(f"Failed to initialize services: {e}", exc_info=True)
+        # We don't raise here to allow the app to start (and maybe show health errors),
+        # but the endpoint will fail.
+
+    yield
+    logger.info("Shutting down AgriSmart Services...")
+
+
+app = FastAPI(title="AgriSmart API", lifespan=lifespan)
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# --- Data Models ---
+class AnalysisRequest(BaseModel):
+    lat: float
+    lng: float
+
+
+class CropRecommendation(BaseModel):
+    name: str
+    reason: str
+
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to AgriSmart Precision Crop Planning API"}
+
+
+@app.get("/health")
+async def health():
+    if agronomic_service:
+        return {"status": "healthy", "services": "initialized"}
+    return {"status": "unhealthy", "services": "not_initialized"}
+
+
+@app.post("/analyze")
+async def analyze(request: AnalysisRequest):
+    if not agronomic_service:
+        raise HTTPException(status_code=503, detail="Services not initialized")
+
+    try:
+        lat=round(request.lat,3)
+        lng=round(request.lng,3)
+        result = await agronomic_service.analyze(lat, lng)
+        logger.info(
+            f"Received analysis request for lat={request.lat}, lng={request.lng}"
+        )
+
+        # The RAG service returns a JSON string, we should parse it if it's not already a dict
+        if isinstance(result.get("recommendation"), str):
+            try:
+                # Basic cleaning if LLM adds markdown blocks
+                clean_json = (
+                    result["recommendation"]
+                    .replace("```json", "")
+                    .replace("```", "")
+                    .strip()
+                )
+                result["recommendation"] = json.loads(clean_json)
+            except Exception as parse_err:
+                logger.error(f"Failed to parse LLM recommendation JSON: {parse_err}")
+                # Fallback or keep as string
+
+        return result
+    except Exception as e:
+        logger.error(f"Error during analysis: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)

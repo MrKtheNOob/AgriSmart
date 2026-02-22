@@ -4,11 +4,11 @@ import logging
 import time
 from dotenv import load_dotenv
 import asyncio
-from water_insight_service import WaterInsightService
-from isdasoil_service import iSDAsoilService
-from climate_service import ClimateService
-from vector_store import VectorStore
-from RAG_service import RAGService
+
+from services.isdasoil_service import iSDAsoilService
+from services.climate_service import ClimateService
+from services.vector_store import VectorStore
+from services.RAG_service import RAGService
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -23,13 +23,13 @@ class AgronomicService:
         self,
         soil_service: iSDAsoilService,
         climate_service: ClimateService,
-        water_insight_service:WaterInsightService,
+        
         rag_service: RAGService,
     ):
         logger.info("Initializing AgronomicService with all sub-services")
         self.soil_service = soil_service
         self.climate_service = climate_service
-        self.water_insight_service=water_insight_service
+        # self.water_insight_service=water_insight_service
         self.rag_service = rag_service
         logger.debug("AgronomicService initialized successfully")
 

@@ -11,6 +11,7 @@ from typing import List, Dict, Optional, Any, Union
 logger = logging.getLogger(__name__)
 DEFAULT_TOKEN_TTL = 3600  # 1 hour
 
+
 # --- Existing Data Models ---
 class SoilPropertyValue(BaseModel):
     value: Optional[Union[float, int, str]] = None
@@ -50,7 +51,7 @@ class PropertyResponse(BaseModel):
 class SoilProfile(BaseModel):
     target_depth: str
     classification: str
-    properties: Dict[str, str] # other properties featured in the provided json
+    properties: Dict[str, str]  # other properties featured in the provided json
 
 
 class iSDAsoilService:
@@ -65,7 +66,6 @@ class iSDAsoilService:
         self._metadata: Dict[str, SoilPropertyMetadata] = self._fetch_metadata()
         self.client = httpx.AsyncClient(timeout=15.0)
 
-
         loaded = self._load_token()
         if loaded:
             self._token = loaded
@@ -78,7 +78,6 @@ class iSDAsoilService:
             "password": self.password,
         }
 
-        
         response = await self.client.post(login_url, data=data)
         response.raise_for_status()
         j = response.json()
@@ -90,16 +89,14 @@ class iSDAsoilService:
         # save token for future runs; if API returns expires_in (seconds) store expiry
         self._save_token(token, expires_in)
 
-    
     def _save_token(self, token: str, expires_in: Optional[int] = None):
         ttl = expires_in or DEFAULT_TOKEN_TTL
         payload = {
             "access_token": token,
-            "expires_at": int(time.time()) + int(ttl) - 60  # refresh 1 min early
+            "expires_at": int(time.time()) + int(ttl) - 60,  # refresh 1 min early
         }
         with open(self._token_file, "w") as f:
             json.dump(payload, f)
-
 
     def _load_token(self) -> Optional[str]:
         if not os.path.exists(self._token_file):
@@ -121,12 +118,12 @@ class iSDAsoilService:
     def _fetch_metadata(self):
         """Fetches the 'info' about what each property means."""
         try:
-            with open("../files/soil_metadata.json","r") as f:
+            metadata_path = os.path.join(
+                os.path.dirname(__file__), "../files/soil_metadata.json"
+            )
+            with open(metadata_path, "r") as f:
                 data = json.load(f)
-            data={
-                k: SoilPropertyMetadata(**v) 
-                for k, v in data["property"].items()
-            }
+            data = {k: SoilPropertyMetadata(**v) for k, v in data["property"].items()}
             return data
         except Exception as e:
             logging.error(f"Could not load metadata info: {e}")
@@ -141,7 +138,6 @@ class iSDAsoilService:
         params = {"lat": lat, "lon": lon, "depth": depth}
         headers = {"Authorization": f"Bearer {self._token}"}
 
-    
         response = await self.client.get(
             f"{self.base_url}/soilproperty", params=params, headers=headers
         )
@@ -155,10 +151,11 @@ class iSDAsoilService:
                 f"{self.base_url}/soilproperty", params=params, headers=headers
             )
 
+        logger.warning(response.text)
         response.raise_for_status()
         validated_data = PropertyResponse(**response.json())
         return validated_data
-    
+
     def _is_token_valid(self) -> bool:
         if not self._token:
             return False
@@ -180,14 +177,12 @@ class iSDAsoilService:
     ) -> SoilProfile:
         """Fetch soil analysis with token validation and metadata enrichment."""
         try:
-            
             validated_data = await self._fetch_soil_data(lat, lon, depth)
-
             return await self._interpret_agronomy(validated_data)
 
         except Exception as e:
             logging.error(f"API Error: {e}")
-            raise # "Error retrieving soil data."
+            raise
 
     async def _interpret_agronomy(self, data: PropertyResponse) -> SoilProfile:
         properties = {}
@@ -207,16 +202,22 @@ class iSDAsoilService:
 
         # Moroccan classification logic
         def get_raw(p):
-            return float(data.property[p][0].value.value) if p in data.property else 0.0
+            if p in data.property and data.property[p]:
+                val = data.property[p][0].value.value
+                try:
+                    return float(val)
+                except (ValueError, TypeError):
+                    return 0.0
+            return 0.0
 
         clay = get_raw("clay_content")
         sand = get_raw("sand_content")
 
-        soil_type = "Hamri (Balanced)"
+        soil_type = "Hamri (Équilibré)"
         if clay > 40:
-            soil_type = "Tirs (Clayey)"
+            soil_type = "Tirs (Argileux)"
         elif sand > 60:
-            soil_type = "R'mel (Sandy)"
+            soil_type = "R'mel (Sableux)"
 
         return SoilProfile(
             target_depth="0-20 centimeters",
@@ -235,7 +236,7 @@ if __name__ == "__main__":
     # Example async usage
     async def main():
         result = await soil_service.get_soil_analysis(
-            lat=-16.88462642292991, lon=14.773616236242194, depth="0-20"
+            lat=29.304, lon=-9.157, depth="0-20"
         )
         print(result)
 
