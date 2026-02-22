@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 import asyncio
 from langchain_openai import ChatOpenAI
 
-from climate_service import ClimateMetrics
-from isdasoil_service import SoilProfile
-from vector_store import VectorStore
+from services.climate_service import ClimateMetrics
+from services.isdasoil_service import SoilProfile
+from services.vector_store import VectorStore
 
 
 

@@ -5,10 +5,10 @@ import time
 from dotenv import load_dotenv
 import asyncio
 
-from isdasoil_service import iSDAsoilService
-from climate_service import ClimateService
-from vector_store import VectorStore
-from RAG_service import RAGService
+from services.isdasoil_service import iSDAsoilService
+from services.climate_service import ClimateService
+from services.vector_store import VectorStore
+from services.RAG_service import RAGService
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',

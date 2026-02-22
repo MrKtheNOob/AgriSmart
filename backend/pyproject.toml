@@ -5,15 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "chromadb>=0.5.0",
     "fastapi>=0.129.0",
     "langchain-chroma>=0.2.3",
-    "langchain-community>=0.4.1",
-    "langchain-google-genai>=3.2.0",
-    "langchain-huggingface>=1.2.0",
     "langchain-openai>=1.1.9",
     "langchain-text-splitters>=1.1.0",
-    "langchain[gemini,openai]>=1.2.10",
     "openai>=2.21.0",
     "openepi-client>=2.0.0",
     "openmeteo-requests>=1.7.5",
