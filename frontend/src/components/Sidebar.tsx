@@ -121,7 +121,8 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
         </div>
         <h3 className="text-xl font-bold text-slate-800 mb-2">{locationName || "Zone Sélectionnée"}</h3>
         <p className="text-slate-500 text-sm leading-relaxed max-w-60">
-          Coordonnées : {markerPosition[0].toFixed(4)}, {markerPosition[1].toFixed(4)}
+          📍 Selected Site <br/>
+          Lat: {markerPosition[0].toFixed(4)}, Lng: {markerPosition[1].toFixed(4)}
         </p>
         <button onClick={fetchAnalysis} className="mt-8 px-8 py-4 bg-green-600 text-white rounded-2xl shadow-lg hover:bg-green-700 transition-colors font-bold text-lg">
           Lancer l'analyse IA
@@ -139,15 +140,30 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
   const soil = recommendation.soil;
   const climate = recommendation.climate;
 
+  const calculateAverages = (annualStats: RecommendationResponse['climate']['annual_stats']) => {
+    const years = Object.values(annualStats);
+    if (years.length === 0) {
+      return { avgTemp: 0, avgRainfall: 0 };
+    }
+    const totalTemp = years.reduce((sum, year) => sum + year.temperature_2m, 0);
+    const totalRainfall = years.reduce((sum, year) => sum + year.precipitation, 0);
+    return {
+      avgTemp: totalTemp / years.length,
+      avgRainfall: totalRainfall / years.length,
+    };
+  };
+
+  const { avgTemp, avgRainfall } = calculateAverages(climate.annual_stats);
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4">
       <header className="border-b border-slate-100 pb-6 text-left pl-5">
         <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">AgriSmart Engine</h2>
-        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Meilleurs Cultures</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Land Suitability Analysis</h1>
       </header>
 
       {/* Recommended Crops */}
-      <div className="space-y-4">
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
         {crops.map((crop, idx) => (
           <div key={crop.name} className={`p-5 rounded-2xl border ${idx === 0 ? "bg-green-50 border-green-100 ring-2 ring-green-500/10" : "bg-white border-slate-100"}`}>
             <div className="flex justify-between items-start mb-2">
@@ -162,7 +178,7 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
       </div>
 
       {/* Soil Analysis - Crucial for Investors */}
-      <section className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+      <section className="bg-slate-50 p-6 rounded-3xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
         <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
           🌱 Profil du Sol ({soil.classification})
         </h3>
@@ -183,10 +199,20 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
       </section>
 
       {/* Climate Risk - Crucial for Farmers */}
-      <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100">
+      <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">
         <h3 className="text-orange-800 font-bold mb-4 flex items-center gap-2">
           🌦️ Climat & Risques ({climate.region})
         </h3>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+            <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Avg. Annual Rainfall</span>
+            <span className="text-lg font-black text-slate-700">{avgRainfall.toFixed(1)} mm</span>
+          </div>
+          <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+            <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Avg. Annual Temp</span>
+            <span className="text-lg font-black text-slate-700">{avgTemp.toFixed(1)}°C</span>
+          </div>
+        </div>
         <div className="space-y-3">
           <div className="flex justify-between items-center text-sm">
             <span className="text-orange-700 font-medium">Jours de forte chaleur</span>

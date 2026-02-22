@@ -49,11 +49,13 @@ class PropertyResponse(BaseModel):
 
 
 class SoilProfile(BaseModel):
-    target_depth: str
+    target_depth: str ="0-20cm"
     classification: str
     properties: Dict[str, str]  # other properties featured in the provided json
 
-
+class DesertLandError(Exception):
+    """Raised when ISDAsoil's API returns {"detail":"Please choose another location. We don't have soil data for deserts, waterbodies, and areas outside Africa."}"""
+    pass
 class iSDAsoilService:
     def __init__(self, email: str, password: str):
         self.base_url = "https://api.isda-africa.com/isdasoil/v2"
@@ -141,18 +143,21 @@ class iSDAsoilService:
         response = await self.client.get(
             f"{self.base_url}/soilproperty", params=params, headers=headers
         )
+        match response.status_code:
+            # If token expired or invalid, try obtaining a new token and retry once
+            case 401 | 403:
+                logging.info("Token invalid or expired, refreshing token , retrying ...")
+                await self._get_token()
+                headers = {"Authorization": f"Bearer {self._token}"}
+                response = await self.client.get(
+                    f"{self.base_url}/soilproperty", params=params, headers=headers
+                )
+            case 500:
+                if response.json()["detail"]=="Please choose another location. We don't have soil data for deserts, waterbodies, and areas outside Africa.":
+                    raise DesertLandError # custom error
 
-        # If token expired or invalid, try obtaining a new token and retry once
-        if response.status_code in (401, 403):
-            logging.info("Token invalid or expired, refreshing token and retrying")
-            await self._get_token()
-            headers = {"Authorization": f"Bearer {self._token}"}
-            response = await self.client.get(
-                f"{self.base_url}/soilproperty", params=params, headers=headers
-            )
-
-        logger.warning(response.text)
-        response.raise_for_status()
+        # logger.warning(response.text)
+        # response.raise_for_status()
         validated_data = PropertyResponse(**response.json())
         return validated_data
 
@@ -180,6 +185,9 @@ class iSDAsoilService:
             validated_data = await self._fetch_soil_data(lat, lon, depth)
             return await self._interpret_agronomy(validated_data)
 
+        except DesertLandError:
+            return SoilProfile(classification="Non-Arable / Desert",properties={})
+        
         except Exception as e:
             logging.error(f"API Error: {e}")
             raise

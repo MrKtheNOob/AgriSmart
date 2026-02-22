@@ -1,22 +1,47 @@
-import {MapContainer,TileLayer,Marker,useMapEvents,GeoJSON,} from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  GeoJSON,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, {GeoJSON as LeafletGeoJSON,} from "leaflet";
-import type {LeafletMouseEvent,PathOptions,LatLngTuple,LatLngBoundsExpression} from "leaflet";
-import  { useRef } from "react";
-import moroccoGeoJSONString from "../assets/morocco_adm1.geojson?raw";
+import L, { GeoJSON as LeafletGeoJSON } from "leaflet";
+import type {
+  LeafletMouseEvent,
+  PathOptions,
+  LatLngTuple,
+  LatLngBoundsExpression,
+} from "leaflet";
+import { useRef, useState, useEffect } from "react";
+import provinceGeoJSONString from "../assets/mar_admin2.geojson?raw";
+import regionGeoJSONString from "../assets/morocco_adm1.geojson?raw";
 
-const moroccoGeoJSON: GeoJSON.FeatureCollection =
-  JSON.parse(moroccoGeoJSONString);
+const provinceGeoJSON: GeoJSON.FeatureCollection =
+  JSON.parse(provinceGeoJSONString);
+const regionGeoJSON: GeoJSON.FeatureCollection =
+  JSON.parse(regionGeoJSONString);
 
-interface MoroccoRegionProperties {
-  shapeName: string;
-  shapeISO: string;
-  shapeID: string;
-  shapeGroup: string;
-  shapeType: string;
+// Province properties
+interface MoroccoProvinceProperties {
+  adm2_name: string;
+  adm1_name: string;
+  adm0_name: string;
 }
 
-type MoroccoFeature = GeoJSON.Feature<GeoJSON.Geometry,MoroccoRegionProperties>;
+// Region properties
+interface MoroccoRegionProperties {
+  shapeName: string;
+}
+
+type ProvinceFeature = GeoJSON.Feature<
+  GeoJSON.Geometry,
+  MoroccoProvinceProperties
+>;
+type RegionFeature = GeoJSON.Feature<
+  GeoJSON.Geometry,
+  MoroccoRegionProperties
+>;
 
 // Fix default marker icon
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
@@ -30,7 +55,7 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapProps {
-  onMapClick: (lat: number, lng: number, regionName?: string) => void;
+  onMapClick: (lat: number, lng: number, name?: string) => void;
   markerPosition: LatLngTuple | null;
 }
 
@@ -40,9 +65,12 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     [36.5, -0.5],
   ];
 
-  const geoJsonRef = useRef<LeafletGeoJSON | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(6);
+  console.log("Current zoom level:", zoomLevel);
 
-  // Default region style
+  const provinceGeoJsonRef = useRef<LeafletGeoJSON | null>(null);
+  const regionGeoJsonRef = useRef<LeafletGeoJSON | null>(null);
+
   const defaultStyle: PathOptions = {
     weight: 1,
     opacity: 1,
@@ -57,10 +85,8 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     fillOpacity: 0.01,
   };
 
-  const onEachFeature = (feature: MoroccoFeature, layer: L.Layer) => {
-    const regionName = feature.properties.shapeName;
-    console.log(feature)
-
+  const onEachProvince = (feature: ProvinceFeature, layer: L.Layer) => {
+    const provinceName = feature.properties.adm2_name;
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
         const target = e.target as L.Path;
@@ -68,7 +94,27 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         target.bringToFront();
       },
       mouseout: (e: LeafletMouseEvent) => {
-        geoJsonRef.current?.resetStyle(e.target as L.Path);
+        provinceGeoJsonRef.current?.resetStyle(e.target as L.Path);
+      },
+      click: (e: LeafletMouseEvent) => {
+        onMapClick(e.latlng.lat, e.latlng.lng, provinceName);
+        (e.target as L.Path)
+          .bindPopup(`<strong>${provinceName}</strong>`)
+          .openPopup(e.latlng);
+      },
+    });
+  };
+
+  const onEachRegion = (feature: RegionFeature, layer: L.Layer) => {
+    const regionName = feature.properties.shapeName;
+    layer.on({
+      mouseover: (e: LeafletMouseEvent) => {
+        const target = e.target as L.Path;
+        target.setStyle(highlightStyle);
+        target.bringToFront();
+      },
+      mouseout: (e: LeafletMouseEvent) => {
+        regionGeoJsonRef.current?.resetStyle(e.target as L.Path);
       },
       click: (e: LeafletMouseEvent) => {
         onMapClick(e.latlng.lat, e.latlng.lng, regionName);
@@ -79,11 +125,23 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     });
   };
 
+  function ZoomHandler() {
+    const map = useMapEvents({
+      zoomend: () => {
+        setZoomLevel(map.getZoom());
+      },
+    });
+
+    useEffect(() => {
+      setZoomLevel(map.getZoom());
+    }, [map]);
+
+    return null;
+  }
+
   function MapClickHandler() {
     useMapEvents({
       click: (e) => {
-        // Only trigger if we didn't click on a GeoJSON feature (which has its own handler)
-        // or just pass undefined for the name
         onMapClick(e.latlng.lat, e.latlng.lng);
       },
     });
@@ -96,6 +154,7 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
       maxBounds={moroccoBounds}
       maxBoundsViscosity={1.0}
       minZoom={6}
+      zoom={6}
       maxZoom={18}
       scrollWheelZoom
       style={{ height: "100%", width: "100%" }}
@@ -108,18 +167,29 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <GeoJSON
-        ref={geoJsonRef}
-        data={moroccoGeoJSON}
-        style={() => defaultStyle}
-        onEachFeature={onEachFeature}
-      />
+      <ZoomHandler />
+
+      {zoomLevel > 7 ? (
+        <GeoJSON
+          key="provinces"
+          ref={provinceGeoJsonRef}
+          data={provinceGeoJSON}
+          style={() => defaultStyle}
+          onEachFeature={onEachProvince}
+        />
+      ) : (
+        <GeoJSON
+          key="regions"
+          ref={regionGeoJsonRef}
+          data={regionGeoJSON}
+          style={() => defaultStyle}
+          onEachFeature={onEachRegion}
+        />
+      )}
 
       <MapClickHandler />
 
-      {markerPosition && <Marker position={markerPosition} />}
+      {markerPosition && <Marker position={markerPosition} children={<></>} />}
     </MapContainer>
   );
-};
-
-
+}

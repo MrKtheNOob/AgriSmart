@@ -5,10 +5,10 @@ import time
 from dotenv import load_dotenv
 import asyncio
 
-from services.isdasoil_service import iSDAsoilService
-from services.climate_service import ClimateService
-from services.vector_store import VectorStore
-from services.RAG_service import RAGService
+from isdasoil_service import iSDAsoilService
+from climate_service import ClimateService
+from vector_store import VectorStore
+from RAG_service import RAGService
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -35,10 +35,13 @@ class AgronomicService:
 
     async def analyze(self, lat: float, lng: float):
 
+        
         soil_data, climate_data = await asyncio.gather(
             self.soil_service.get_soil_analysis(lat, lng),
             self.climate_service.get_climate_profile(lat, lng),
         )
+        
+            
         # water_insight=self.water_insight_service.get_water_insight(soil_data,climate_data)
 
         # RAG service is async — call it directly
@@ -85,7 +88,7 @@ if __name__ == "__main__":
             logger.info("All services initialized")
 
             logger.info("Analyzing Fes, Morocco coordinates...")
-            result = await agronomic_service.analyze(lat=31.7917, lng=-7.0926)
+            result = await agronomic_service.analyze(lat=26.4801, lng=-13.7057)
             logger.info(f"Analysis completed in {time.time() - start_time:.2f} seconds")
             print(result)
 

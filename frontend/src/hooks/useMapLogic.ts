@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { BASE_URL } from '../utils';
 
 interface Crop {
   name: string;
@@ -43,7 +44,7 @@ interface MapLogic {
 }
 async function fetchRecommendation(lat: number, lng: number): Promise<RecommendationResponse> {
 
-  const response = await fetch('http://localhost:8000/analyze', {
+  const response = await fetch(BASE_URL+'/analyze', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
