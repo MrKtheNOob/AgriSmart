@@ -1,9 +1,5 @@
 # PROJET HACKATHON Rab'hacks : AGRISMART
 
-# MAROC
-
-**Concept :** Plateforme de _Precision Crop Planning_ pour l'agriculture marocaine, alignée sur la
-stratégie nationale **"Génération Green 2020-2030"**.
 
 ## 1. PROBLÉMATIQUE & SOLUTION
 
