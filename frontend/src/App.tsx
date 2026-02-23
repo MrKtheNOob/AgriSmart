@@ -4,8 +4,12 @@ import MoroccoMap from './components/Map';
 import Navbar from './components/Navbar';
 import BottomSheet from './components/BottomSheet';
 import { useEffect, useState } from 'react';
+import { BASE_URL } from './utils';
 
 export default function App() {
+  useEffect(()=>{
+    fetch(BASE_URL).then((r)=>{console.log(r)})
+  })
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { markerPosition, locationName, recommendation, loading, error, handleMapClick, triggerAnalysis, clearRecommendation } = useMapLogic();
 
