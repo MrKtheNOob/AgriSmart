@@ -1,72 +1,88 @@
-# PROJET HACKATHON Rab'hacks : AGRISMART
+# AgriSmart — Precision Crop Planning for Moroccan Agriculture
 
+## 📍 Analyse de l'Adéquation des Terres & Conseil Agricole Intelligent
+
+**AgriSmart** est une plateforme d'aide à la décision stratégique pour l'agriculture marocaine. En fusionnant des données géospatiales de précision, l'intelligence artificielle (LLM) et une base de connaissances agronomiques locale (RAG), AgriSmart transforme une simple coordonnée GPS en un rapport complet d'évaluation environnementale.
+
+---
 
 ## 1. PROBLÉMATIQUE & SOLUTION
 
-### Défis du secteur
-__Les décisions relatives à l'utilisation des terres agricoles souffrent d'un manque d'optimisation intégrée et fondée sur les données__. 
-Les données climatiques, pédologiques, de rendement et d'infrastructures existent, mais elles sont fragmentées et non unifiées au sein d'un système d'aide à la décision unique.
-
-__L'allocation des capitaux en agriculture est caractérisée par une forte incertitude et une faible visibilité des risques.__ 
-Les investisseurs et les exploitants ne disposent pas d'outils standardisés pour évaluer de manière cohérente et spatialement informée l'adéquation des cultures, l'exposition au climat, les contraintes en ressources et le retour sur investissement prévisionnel.
-
-__L'inefficience des ressources compromet la productivité et la sécurité alimentaire.__ 
-Le choix sous-optimal des cultures, la mauvaise gestion des ressources et une planification réactive entraînent une baisse des rendements, des risques évitables et une diminution de la résilience agricole.
+### Les Défis du Secteur
+*   **Fragmentation des données :** Les données climatiques et pédologiques existent mais sont dispersées, empêchant une vision holistique.
+*   **Incertitude d'investissement :** Les agriculteurs et investisseurs manquent d'outils standardisés pour évaluer les risques climatiques et la rentabilité d'une parcelle.
+*   **Inefficience des ressources :** Le choix sous-optimal des cultures entraîne un gaspillage d'eau et une baisse des rendements.
 
 ### La Solution AgriSmart
+Une interface interactive **Map-Click** qui génère instantanément un **Rapport d'Évaluation Environnementale**. Le système s'appuie sur le **Moteur AgriSmart (Engine)** pour identifier les cultures les plus résilientes et rentables en fonction du profil spécifique du sol et des tendances climatiques historiques.
 
-Une application interactive de type **Map-Click** utilisant un LLM (Large Language Model)
-comme moteur de recommandation. Le système fusionne des données satellites et
-pédologiques (sols) en temps réel pour identifier la culture la plus rentable et la plus résiliente
-pour une parcelle précise.
+---
 
-## 2. ARCHITECTURE TECHNIQUE (STACK OPTIMISÉE)
+## 2. FONCTIONNALITÉS CLÉS
 
-L'architecture repose sur un Backend pivot qui agrège les données avant de les soumettre au
-moteur de raisonnement.
-**Composant Technologie / API Rôle
-Interface** React.js + Typescript - Leaflet.js Carte interactive pour capture des coordonnées GPS (Lat/Long).
-**Météo** Open-Meteo de 6 ans et prévisions d'évapotranspiration.
-**Sols** iSDAsoil Données techniques : texture (Tirs, Hamri), pH et nutriments.
+### 🗺️ Carte Interactive à Précision Dynamique
+*   **Navigation Intuitive :** Sélection de parcelles par clic sur carte.
+*   **Zoom de Précision :** Passage dynamique d'une vue par **Régions** à une vue détaillée par **Provinces** pour une identification précise des actifs.
+*   **Identité de Site :** Capture et affichage immédiat des coordonnées GPS précises (Lat/Lng).
 
-**Backend** Python FastAPI Le Pivot : Collecte les données API et construit le prompt contextuel.
+### 🧪 Profilage de Sol (iSDAsoil)
+*   Analyse des propriétés physico-chimiques : pH, carbone organique, texture (Tirs, Hamri, etc.).
+*   Évaluation de la capacité d'échange cationique et des nutriments.
 
-**Raisonnement** GPT 4.1 Moteur de décision traitant le contexte "Données + Guide de
-culture".
+### 🌦️ Analyse Climatique Avancée (Open-Meteo)
+*   **Statistiques Historiques :** Analyse sur plusieurs années des précipitations et températures moyennes.
+*   **Indicateurs de Risque :** Détection automatique des jours de forte chaleur et des jours de gel annuels.
 
+### 🤖 Moteur de Recommandation IA (RAG + LLM)
+*   **RAG (Retrieval-Augmented Generation) :** Interrogation d'une base de connaissances vectorisée contenant les guides de culture de l'INRA et de l'ADA.
+*   **Analyse de Land Suitability :** Génération de recommandations personnalisées avec justifications techniques basées sur la compatibilité sol-climat.
 
-## 3. UTILISATION DU LLM (LOGIQUE DE PROMPTING)
-Contrairement à un agent autonome imprévisible, nous utilisons Gemini comme un moteur de raisonnement pur via un pipeline de données rigoureux :
+---
 
-### 1. Extraction & Transformation :
-Le Backend récupère les données brutes de sol et de climat. Il les traite pour extraire des indicateurs clés (ex: tendance au stress hydrique sur 3 mois, stabilité du pH, cumul thermique).
+## 3. ARCHITECTURE TECHNIQUE
 
-### 2. Le "Knowledge Template" (Prompt Contextuel)
-Ces tendances sont injectées dans un template structuré qui décrit l'état actuel de la parcelle. Ce template agit comme le "brief" technique pour le LLM.
+L'application repose sur une stack moderne et performante :
 
-### 3. RAG (Retrieval-Augmented Generation) :
-En fonction de la localisation et des tendances détectées, le système interroge une base de connaissances vectorisée contenant les guides de cultures marocains (INRA/ADA). Les extraits les plus pertinents sont joints au prompt.
+| Composant | Technologie / API | Rôle |
+| :--- | :--- | :--- |
+| **Frontend** | React.js, TypeScript, Leaflet, Tailwind CSS | Interface utilisateur et visualisation cartographique. |
+| **Backend** | Python, FastAPI | Pivot de données et orchestration des services. |
+| **Base de Données Vectorielle** | ChromaDB | Stockage et récupération des guides agronomiques. |
+| **Intelligence Artificielle** | LangChain, LLM (Gemini/GPT) | Moteur de raisonnement et synthèse des recommandations. |
+| **Données Sols** | iSDAsoil API | Données pédologiques à haute résolution (30m). |
+| **Données Climat** | Open-Meteo API | Historique et prévisions météorologiques précises. |
 
-Le LLM analyse la corrélation entre les tendances terrain et le référentiel RAG pour générer un plan d'action précis : Culture recommandée, Calendrier de semis optimisé et Perspectives de marché.
+---
 
-## 4. SCÉNARIO DE DÉMO (EXEMPLE RÉEL)
+## 4. INSTALLATION & LANCEMENT
 
+### Prérequis
+*   Node.js (v18+)
+*   Python (v3.10+)
+*   Clé API pour le LLM (configurée dans `.env`)
 
-● Localisation : Sud de Settat (Région de la Chaouia).
-● Analyse système : Sol de type Tirs (forte rétention d'eau) avec un déficit hydrique
-actuel de 20%.
-● Recommandation LLM : Pois Chiche (Variété Arifi).
-● Justification : Culture de bour à cycle court (100j), tolérante à la chaleur et haute
-valeur marchande à Casablanca.
-● Alerte : Risque de vent chaud (Chergui) détecté pour la fin avril ; ajustement du
-calendrier de récolte conseillé.
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend
+```bash
+cd backend
+# Créer et activer l'environnement virtuel
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+---
 
 ## 5. ANALYSE DE VALEUR & IMPACT
 
-● Rendement : Augmentation prévue de +15% à +25% grâce à l'optimisation des
-calendriers de semis.
-● Ressources : Économie d'eau de -30% via le choix stratégique de cultures résilientes.
-● Financier : Réduction du profil de risque pour les institutions financières (Crédit
-Agricole du Maroc) et les assureurs (MAMDA).
+*   **Optimisation du Rendement :** Augmentation prévue de **+15% à +25%** via une planification scientifiquement informée.
+*   **Résilience Hydrique :** Économie d'eau de **-30%** par le choix de cultures adaptées au stress hydrique local.
+*   **Sérieux de l'Actif :** Fournit un rapport d'évaluation prêt pour les institutions financières et les assureurs (Crédit Agricole, MAMDA).
 
-
+---
+*Projet développé dans le cadre du Hackathon Rab'hacks.*
