@@ -4,18 +4,25 @@ import MoroccoMap from './components/Map';
 import Navbar from './components/Navbar';
 import BottomSheet from './components/BottomSheet';
 import { useEffect, useState } from 'react';
-import { BASE_URL } from './utils';
+
+const LoadingOverlay = ({ status }: { status: string | null }) => (
+  <div className="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center gap-4 max-w-[80%] text-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+    <span 
+      key={status} 
+      className="font-bold text-slate-700 text-lg animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300"
+    >
+      {status || "Analyse en cours..."}
+    </span>
+  </div>
+);
 
 export default function App() {
-  useEffect(()=>{
-    fetch(BASE_URL).then((r)=>{console.log(r)})
-  })
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { markerPosition, locationName, recommendation, loading, error, handleMapClick, triggerAnalysis, clearRecommendation } = useMapLogic();
+  const { markerPosition, locationName, recommendation, loading, error, status, handleMapClick, triggerAnalysis, clearRecommendation } = useMapLogic();
 
   useEffect(() => {
     if (markerPosition || recommendation || loading) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsDrawerOpen(true);
     }
   }, [markerPosition, recommendation, loading]);
@@ -33,12 +40,10 @@ export default function App() {
         <div className="grow md:w-7/12 lg:w-3/4 h-[50vh] md:h-full relative border-r border-slate-200">
           <MoroccoMap onMapClick={handleMapClick} markerPosition={markerPosition} />
 
+          {/* Desktop Loading Overlay (Hidden on Mobile via md:flex) */}
           {loading && (
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] z-1000 flex items-center justify-center">
-              <div className="bg-white p-4 rounded-xl shadow-2xl flex items-center gap-3">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
-                <span className="font-medium text-slate-700">Analyse du sol en cours...</span>
-              </div>
+            <div className="hidden md:flex absolute inset-0 bg-white/40 backdrop-blur-[2px] z-1000 items-center justify-center">
+              <LoadingOverlay status={status} />
             </div>
           )}
         </div>
@@ -58,15 +63,23 @@ export default function App() {
 
         {/* Bottom Sheet Mobile */}
         <BottomSheet isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
-          <Sidebar
-            loading={loading}
-            error={error}
-            recommendation={recommendation}
-            markerPosition={markerPosition}
-            locationName={locationName}
-            onClear={handleCloseDrawer}
-            fetchAnalysis={triggerAnalysis}
-          />
+          <div className="relative min-h-75">
+            <Sidebar
+              loading={loading}
+              error={error}
+              recommendation={recommendation}
+              markerPosition={markerPosition}
+              locationName={locationName}
+              onClear={handleCloseDrawer}
+              fetchAnalysis={triggerAnalysis}
+            />
+            {/* Mobile Loading Overlay */}
+            {loading && (
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center rounded-t-4xl">
+                <LoadingOverlay status={status} />
+              </div>
+            )}
+          </div>
         </BottomSheet>
       </div>
     </div>

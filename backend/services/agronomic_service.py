@@ -1,4 +1,5 @@
 """Master service using all services in this directory to exexute the whole pipeline"""
+import json
 import os
 import logging
 import time
@@ -33,16 +34,18 @@ class AgronomicService:
         self.rag_service = rag_service
         logger.debug("AgronomicService initialized successfully")
 
-    async def analyze(self, lat: float, lng: float):
+    async def analyze(self, lat: float, lng: float, progress_callback=None):
 
+        if progress_callback:
+            await progress_callback("Analyse du sol et du climat...")
         
         soil_data, climate_data = await asyncio.gather(
             self.soil_service.get_soil_analysis(lat, lng),
             self.climate_service.get_climate_profile(lat, lng),
         )
         
-            
-        # water_insight=self.water_insight_service.get_water_insight(soil_data,climate_data)
+        if progress_callback:
+            await progress_callback("Optimisation des cultures (IA)...")
 
         # RAG service is async — call it directly
         recommendation = await self.rag_service.generate_recommendation(
@@ -51,10 +54,32 @@ class AgronomicService:
 
         return {
             "coordinates": {"lat": lat, "lng": lng},
-            "soil": soil_data,
-            "climate": climate_data,
+            "soil": soil_data.model_dump(),
+            "climate": climate_data.model_dump(),
             "recommendation": recommendation,
         }
+    async def analyze_stream(self, lat: float, lng: float):
+        yield {"type": "status", "message": "Analyse du sol et du climat..."}
+
+        soil_data, climate_data = await asyncio.gather(
+            self.soil_service.get_soil_analysis(lat, lng),
+            self.climate_service.get_climate_profile(lat, lng),
+        )
+
+        yield {"type": "status", "message": "Optimisation des cultures ..."}
+
+        recommendation = await self.rag_service.generate_recommendation(
+            soil_data, climate_data
+        )
+
+        result = {
+            "coordinates": {"lat": lat, "lng": lng},
+            "soil": soil_data.model_dump(),
+            "climate": climate_data.model_dump(),
+            "recommendation": recommendation,
+        }
+
+        yield {"type": "result", "data": result}
 
 
 if __name__ == "__main__":

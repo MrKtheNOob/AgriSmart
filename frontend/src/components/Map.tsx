@@ -22,6 +22,37 @@ const provinceGeoJSON: GeoJSON.FeatureCollection =
 const regionGeoJSON: GeoJSON.FeatureCollection =
   JSON.parse(regionGeoJSONString);
 
+// Create a mask for everything outside Morocco
+const worldMaskGeoJSON: GeoJSON.FeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          // Outer boundary: World
+          [
+            [-180, -90],
+            [180, -90],
+            [180, 90],
+            [-180, 90],
+            [-180, -90],
+          ],
+          // Holes: Morocco regions
+          ...regionGeoJSON.features.flatMap((f: any) => {
+            if (f.geometry.type === "Polygon") return f.geometry.coordinates;
+            if (f.geometry.type === "MultiPolygon")
+              return f.geometry.coordinates.flat(1);
+            return [];
+          }),
+        ],
+      },
+    },
+  ],
+};
+
 // Province properties
 interface MoroccoProvinceProperties {
   adm2_name: string;
@@ -75,14 +106,21 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     weight: 1,
     opacity: 1,
     color: "#ffffff",
-    fillOpacity: 0.4,
+    fillOpacity: 0, // Morocco itself is clear
+  };
+
+  const maskStyle: PathOptions = {
+    stroke: false,
+    fillColor: "#ffffff",
+    fillOpacity: 0.6, // Outside Morocco is dimmed
+    interactive: false,
   };
 
   const highlightStyle: PathOptions = {
     fillColor: "#66BB6A",
     weight: 2,
     color: "#1B5E20",
-    fillOpacity: 0.01,
+    fillOpacity: 0.03,
   };
 
   const onEachProvince = (feature: ProvinceFeature, layer: L.Layer) => {
@@ -139,15 +177,6 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     return null;
   }
 
-  function MapClickHandler() {
-    useMapEvents({
-      click: (e) => {
-        onMapClick(e.latlng.lat, e.latlng.lng);
-      },
-    });
-    return null;
-  }
-
   return (
     <MapContainer
       bounds={moroccoBounds}
@@ -166,6 +195,8 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         attribution="© OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      <GeoJSON data={worldMaskGeoJSON} style={() => maskStyle} />
 
       <ZoomHandler />
 
@@ -186,8 +217,6 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
           onEachFeature={onEachRegion}
         />
       )}
-
-      <MapClickHandler />
 
       {markerPosition && <Marker position={markerPosition} children={<></>} />}
     </MapContainer>

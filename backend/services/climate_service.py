@@ -53,7 +53,7 @@ class ClimateService:
         """Aggregates annual statistics for a region."""
         region_df = self.df[self.df["region"] == region_name].copy()
         region_df["year"] = region_df.index.year
-        return (
+        stats = (
             region_df.groupby("year")
             .agg(
                 {
@@ -65,6 +65,8 @@ class ClimateService:
             )
             .to_dict(orient="index")
         )
+        # Ensure keys (years) are strings for JSON serialization
+        return {str(k): v for k, v in stats.items()}
 
     def _compute_seasonality(self, rainfall_series):
         monthly = rainfall_series.resample("ME").sum()
@@ -83,7 +85,8 @@ class ClimateService:
         mean = monthly.mean()
         std = monthly.std()
         drought_index = (monthly - mean) / std if std != 0 else np.nan
-        return drought_index.to_dict()
+        # Convert Timestamp keys to string for JSON serialization
+        return {str(k): v for k, v in drought_index.to_dict().items()}
 
     async def get_climate_profile(self, lat, lon) -> ClimateMetrics:
         """Async entry to compute climate profile; heavy pandas ops run in a thread."""

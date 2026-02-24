@@ -136,12 +136,12 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
 
   if (!recommendation) return <EmptyState />;
 
-  const crops = recommendation.recommendation.recommended_crops;
+  const crops = recommendation.recommendation?.recommended_crops || [];
   const soil = recommendation.soil;
   const climate = recommendation.climate;
 
   const calculateAverages = (annualStats: RecommendationResponse['climate']['annual_stats']) => {
-    const years = Object.values(annualStats);
+    const years = Object.values(annualStats || {});
     if (years.length === 0) {
       return { avgTemp: 0, avgRainfall: 0 };
     }
@@ -155,17 +155,29 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
 
   const { avgTemp, avgRainfall } = calculateAverages(climate.annual_stats);
 
+  // Helper to find soil property by partial key match (e.g. "pH" vs "Soil pH")
+  const getSoilProp = (keyPart: string) => {
+    if (!soil?.properties) return "N/A";
+    const foundKey = Object.keys(soil.properties).find(k => k.toLowerCase().includes(keyPart.toLowerCase()));
+    return foundKey ? soil.properties[foundKey] : "N/A";
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4">
       <header className="border-b border-slate-100 pb-6 text-left pl-5">
-        <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">AgriSmart Engine</h2>
-        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Land Suitability Analysis</h1>
-      </header>
+        
 
+        <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">AgriSmart Engine</h2>
+        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">Analyse du Site Agricole</h1>
+        <p className="text-sm text-slate-500 mt-2">
+          📍{locationName}
+        </p>
+      </header>
+    
       {/* Recommended Crops */}
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-        {crops.map((crop, idx) => (
-          <div key={crop.name} className={`p-5 rounded-2xl border ${idx === 0 ? "bg-green-50 border-green-100 ring-2 ring-green-500/10" : "bg-white border-slate-100"}`}>
+        {crops.length > 0 ? crops.map((crop, idx) => (
+          <div key={`${crop.name}-${idx}`} className={`p-5 rounded-2xl border ${idx === 0 ? "bg-green-50 border-green-100 ring-2 ring-green-500/10" : "bg-white border-slate-100"}`}>
             <div className="flex justify-between items-start mb-2">
               <h3 className={`font-bold text-xl ${idx === 0 ? "text-green-800" : "text-slate-800"}`}>
                 {idx === 0 && "⭐ "}{crop.name}
@@ -174,26 +186,30 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
             </div>
             <p className="text-sm text-slate-600 leading-relaxed">{crop.reason}</p>
           </div>
-        ))}
+        )) : (
+          <div className="p-5 text-center bg-slate-50 rounded-2xl border border-slate-100">
+            <p className="text-slate-500 text-sm">Aucune recommandation disponible pour cette zone.</p>
+          </div>
+        )}
       </div>
 
       {/* Soil Analysis - Crucial for Investors */}
       <section className="bg-slate-50 p-6 rounded-3xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
         <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
-          🌱 Profil du Sol ({soil.classification})
+          🌱 Profil du Sol ({soil?.classification || "Inconnu"})
         </h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
             <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">pH du Sol</span>
-            <span className="text-lg font-black text-slate-700">{soil.properties["pH"]}</span>
+            <span className="text-lg font-black text-slate-700">{getSoilProp("pH")}</span>
           </div>
           <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
             <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Carbone Org.</span>
-            <span className="text-lg font-black text-slate-700">{soil.properties["Carbon, organic"]}</span>
+            <span className="text-lg font-black text-slate-700">{getSoilProp("Carbon, organic")}</span>
           </div>
           <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm col-span-2">
             <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">Texture (USDA)</span>
-            <span className="text-sm font-bold text-slate-700">{soil.properties["USDA Texture Class"]}</span>
+            <span className="text-sm font-bold text-slate-700">{getSoilProp("Texture Class")}</span>
           </div>
         </div>
       </section>
@@ -201,7 +217,7 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
       {/* Climate Risk - Crucial for Farmers */}
       <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">
         <h3 className="text-orange-800 font-bold mb-4 flex items-center gap-2">
-          🌦️ Climat & Risques ({climate.region})
+          🌦️ Climat & Risques ({climate?.region || "Zone locale"})
         </h3>
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
@@ -216,18 +232,18 @@ export default function Sidebar({ loading, error, recommendation, markerPosition
         <div className="space-y-3">
           <div className="flex justify-between items-center text-sm">
             <span className="text-orange-700 font-medium">Jours de forte chaleur</span>
-            <span className="font-bold text-orange-900">{climate.heat_days}j/an</span>
+            <span className="font-bold text-orange-900">{climate?.heat_days || 0}j/an</span>
           </div>
           <div className="w-full bg-orange-200/50 rounded-full h-1.5">
-            <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${(climate.heat_days / 365) * 100}%` }}></div>
+            <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${((climate?.heat_days || 0) / 365) * 100}%` }}></div>
           </div>
           
           <div className="flex justify-between items-center text-sm mt-4">
             <span className="text-blue-700 font-medium">Jours de gel</span>
-            <span className="font-bold text-blue-900">{climate.frost_days}j/an</span>
+            <span className="font-bold text-blue-900">{climate?.frost_days || 0}j/an</span>
           </div>
           <div className="w-full bg-blue-200/50 rounded-full h-1.5">
-            <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${(climate.frost_days / 365) * 100}%` }}></div>
+            <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${((climate?.frost_days || 0) / 365) * 100}%` }}></div>
           </div>
         </div>
       </section>

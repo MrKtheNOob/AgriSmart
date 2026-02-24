@@ -3,10 +3,11 @@ import os
 import logging
 import json
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from sse_starlette.sse import EventSourceResponse
 
 from services.RAG_service import RAGService
 from services.agronomic_service import AgronomicService
@@ -110,39 +111,58 @@ async def health():
     return {"status": "unhealthy", "services": "not_initialized"}
 
 
+def parse_recommendation(result):
+    # The RAG service returns a JSON string, we should parse it if it's not already a dict
+    if isinstance(result.get("recommendation"), str):
+        try:
+            # Basic cleaning if LLM adds markdown blocks
+            clean_json = (
+                result["recommendation"]
+                .replace("```json", "")
+                .replace("```", "")
+                .strip()
+            )
+            result["recommendation"] = json.loads(clean_json)
+        except Exception as parse_err:
+            logger.error(f"Failed to parse LLM recommendation JSON: {parse_err}")
+            # Fallback or keep as string
+    return result
+
+
 @app.post("/analyze")
 async def analyze(request: AnalysisRequest):
     if not agronomic_service:
         raise HTTPException(status_code=503, detail="Services not initialized")
 
     try:
-        lat=round(request.lat,3)
-        lng=round(request.lng,3)
+        lat = round(request.lat, 3)
+        lng = round(request.lng, 3)
         result = await agronomic_service.analyze(lat, lng)
         logger.info(
             f"Received analysis request for lat={request.lat}, lng={request.lng}"
         )
 
-        # The RAG service returns a JSON string, we should parse it if it's not already a dict
-        if isinstance(result.get("recommendation"), str):
-            try:
-                # Basic cleaning if LLM adds markdown blocks
-                clean_json = (
-                    result["recommendation"]
-                    .replace("```json", "")
-                    .replace("```", "")
-                    .strip()
-                )
-                result["recommendation"] = json.loads(clean_json)
-            except Exception as parse_err:
-                logger.error(f"Failed to parse LLM recommendation JSON: {parse_err}")
-                # Fallback or keep as string
-
-        return result
+        return parse_recommendation(result)
     except Exception as e:
         logger.error(f"Error during analysis: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.get("/analyze-stream")
+async def analyze_stream(lat: float, lng: float):
+
+    async def event_generator():
+        try:
+            async for event in agronomic_service.analyze_stream(lat, lng):
+                if event["type"] == "result":
+                    event["data"] = parse_recommendation(event["data"])
+                
+                yield {"data": json.dumps(event)}
+        except Exception as e:
+            logger.error(f"Error during streaming analysis: {e}", exc_info=True)
+            yield {"data": json.dumps({"type": "error", "message": str(e)})}
+
+    return EventSourceResponse(event_generator())
 
 if __name__ == "__main__":
     import uvicorn

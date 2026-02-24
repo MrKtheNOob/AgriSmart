@@ -38,10 +38,12 @@ interface MapLogic {
   recommendation: RecommendationResponse | null;
   loading: boolean;
   error: string | null;
+  status: string | null;
   handleMapClick: (lat: number, lng: number, name?: string) => void;
   triggerAnalysis: () => Promise<void>;
   clearRecommendation: () => void;
 }
+
 async function fetchRecommendation(lat: number, lng: number): Promise<RecommendationResponse> {
 
   const response = await fetch(`${BASE_URL}/analyze`, {
@@ -66,19 +68,23 @@ export function useMapLogic(): MapLogic {
   const [recommendation, setRecommendation] = useState<RecommendationResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
   const clearRecommendation = useCallback(() => {
     setRecommendation(null);
     setError(null);
     setMarkerPosition(null);
     setLocationName(null);
+    setStatus(null);
   }, []);
   
   const handleMapClick = useCallback((lat: number, lng: number, name?: string) => {
     setMarkerPosition([lat, lng]);
     setLocationName(name || null);
+    console.log(locationName)
     setError(null);
     setRecommendation(null); // Clear previous recommendation
+    setStatus(null);
   }, []);
 
   const triggerAnalysis = useCallback(async () => {
@@ -86,16 +92,40 @@ export function useMapLogic(): MapLogic {
 
     setLoading(true);
     setError(null);
+    setStatus("Initialisation...");
 
-    try {
-      const data = await fetchRecommendation(markerPosition[0], markerPosition[1]);
-      setRecommendation(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || 'An unknown error occurred');
-    } finally {
+    const [lat, lng] = markerPosition;
+    const url = `${BASE_URL}/analyze-stream?lat=${lat}&lng=${lng}`;
+    
+    const eventSource = new EventSource(url);
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        
+        if (data.type === "status") {
+          setStatus(data.message);
+        } else if (data.type === "result") {
+          setRecommendation(data.data);
+          setLoading(false);
+          eventSource.close();
+        } else if (data.type === "error") {
+          setError(data.message);
+          setLoading(false);
+          eventSource.close();
+        }
+      } catch (err) {
+        console.error("Error parsing SSE message:", err);
+      }
+    };
+
+    eventSource.onerror = (err) => {
+      console.error("EventSource failed:", err);
+      setError("Erreur de connexion au serveur");
       setLoading(false);
-    }
+      eventSource.close();
+    };
+
   }, [markerPosition]);
 
   return {
@@ -104,7 +134,7 @@ export function useMapLogic(): MapLogic {
     recommendation,
     loading,
     error,
-    
+    status,
     handleMapClick,
     triggerAnalysis,
     clearRecommendation,
