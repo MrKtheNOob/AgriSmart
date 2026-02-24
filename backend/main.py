@@ -16,12 +16,6 @@ from services.isdasoil_service import iSDAsoilService
 from services.vector_store import VectorStore
 
 
-
-
-
-
-
-
 # Load environment variables
 load_dotenv()
 

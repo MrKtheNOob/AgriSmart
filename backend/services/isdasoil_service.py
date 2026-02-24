@@ -152,9 +152,9 @@ class iSDAsoilService:
                 response = await self.client.get(
                     f"{self.base_url}/soilproperty", params=params, headers=headers
                 )
-            case 500:
+            case 400:
                 if response.json()["detail"]=="Please choose another location. We don't have soil data for deserts, waterbodies, and areas outside Africa.":
-                    raise DesertLandError # custom error
+                    raise DesertLandError 
 
         # logger.warning(response.text)
         # response.raise_for_status()
@@ -186,7 +186,7 @@ class iSDAsoilService:
             return await self._interpret_agronomy(validated_data)
 
         except DesertLandError:
-            return SoilProfile(classification="Non-Arable / Desert",properties={})
+            raise
         
         except Exception as e:
             logging.error(f"API Error: {e}")

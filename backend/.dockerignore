@@ -9,4 +9,3 @@ __pycache__/
 .vscode/
 .venv/
 node_modules/
-RAG/chroma_db/   # optional, if you plan to mount it as a volume instead
