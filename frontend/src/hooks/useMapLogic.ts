@@ -44,23 +44,6 @@ interface MapLogic {
   clearRecommendation: () => void;
 }
 
-async function fetchRecommendation(lat: number, lng: number): Promise<RecommendationResponse> {
-
-  const response = await fetch(`${BASE_URL}/analyze`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ lat ,lng  }),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Analysis failed with status ${response.status}`);
-  }
-
-  return response.json();
-}
 
 export function useMapLogic(): MapLogic {
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
