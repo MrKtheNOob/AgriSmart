@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.env
+.DS_Store
+.vscode/
+.venv/
+node_modules/
+RAG/chroma_db/   # optional, if you plan to mount it as a volume instead

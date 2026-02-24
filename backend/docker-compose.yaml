@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: .
+    container_name: agri_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./RAG/chroma_db:/app/RAG/chroma_db
+      - ./files:/app/files
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CHROMA_HOST=api.trychroma.com
+      - CHROMA_API_KEY=ck-7w5bVKCynEmQjjURrDU84VMbHNXbaUX3iZZ63gKGNWnj
+      - CHROMA_TENANT=4c64b7ae-6ff4-4aa3-a1a8-f25d446bcbae
+      - CHROMA_DATABASE=myfirstdatabase
+      - ISDA_EMAIL=ahmadoubamba706@gmail.com
+      - ISDA_PASSWORD=6cgrdsPq@_T6U6] 
+      - AGRISMART_API_KEY=ck-HVhTpYSroggBVAd5e1s9Aau5KF3LRGydwdtD4fQmGxpd
+      - OPENAI_API_KEY=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
+      - EMBEDDING_KEY=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
