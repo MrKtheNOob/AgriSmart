@@ -1,4 +1,4 @@
-# AgriSmart — Precision Crop Planning for Moroccan Agriculture
+# AgriSmart — Precision Crop Planning for Smart Agriculture
 
 ## 📍 Analyse de l'Adéquation des Terres & Conseil Agricole Intelligent
 
