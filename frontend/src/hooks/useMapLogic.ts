@@ -4,6 +4,8 @@ import { BASE_URL } from '../utils';
 interface Crop {
   name: string;
   reason: string;
+  revenue_per_ha: number;
+  profitability_index: number;
 }
 
 interface RecommendationResponse {

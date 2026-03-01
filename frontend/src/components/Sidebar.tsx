@@ -1,6 +1,10 @@
+import { Cpu } from "lucide-react";
+
 interface Crop {
   name: string;
   reason: string;
+  revenue_per_ha: number;
+  profitability_index: number;
 }
 
 interface RecommendationResponse {
@@ -38,6 +42,7 @@ interface SidebarProps {
   recommendation: RecommendationResponse | null;
   markerPosition: [number, number] | null;
   locationName: string | null;
+  status: string | null;
   onClear: () => void;
   fetchAnalysis: () => void;
 }
@@ -67,12 +72,12 @@ const SkeletonSidebar = () => {
 // components/EmptyState.tsx
 const EmptyState = () => {
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <div className="relative mb-6">
-        <div className="absolute inset-0 bg-green-100 rounded-full scale-150 animate-pulse opacity-50"></div>
+    <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+      <div className="relative mb-8">
+        <div className="absolute inset-0 bg-green-100 rounded-full scale-150 animate-pulse opacity-40"></div>
         <div className="relative bg-white p-5 rounded-full shadow-sm border border-green-100">
           <svg
-            className="w-10 h-10 text-green-600"
+            className="w-10 h-10 text-green-700"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -92,13 +97,22 @@ const EmptyState = () => {
           </svg>
         </div>
       </div>
-      <h3 className="text-xl font-bold text-slate-800 mb-2">
-        Prêt pour l'analyse ?
+
+      <h3 className="text-xl font-bold text-slate-900 mb-3">
+        Analyse de parcelle
       </h3>
-      <p className="text-slate-500 text-sm leading-relaxed max-w-60">
-        Sélectionnez une parcelle sur la carte du Maroc pour obtenir des{" "}
-        <span className="text-green-600 font-semibold">recommandations IA</span>{" "}
-        basées sur le sol et le climat local.
+
+      <p className="text-slate-600 text-sm leading-relaxed max-w-xs">
+        Cliquez sur une zone du Maroc pour lancer une
+        <span className="text-green-700 font-semibold">
+          {" "}
+          analyse environnementale{" "}
+        </span>
+        basée sur les données de sol et les tendances climatiques locales.
+      </p>
+
+      <p className="text-[11px] text-slate-400 mt-6 uppercase tracking-wide">
+        Sol • Climat • Risque • Culture optimale
       </p>
     </div>
   );
@@ -147,10 +161,28 @@ export default function Sidebar({
   recommendation,
   markerPosition,
   locationName,
+  status,
   onClear,
   fetchAnalysis,
 }: SidebarProps) {
-  if (loading) return <SkeletonSidebar />;
+  if (loading) {
+    return (
+      <div className="relative h-full overflow-hidden">
+        <SkeletonSidebar />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[1px] z-10">
+          <div className="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center gap-4 max-w-[80%] text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+            <span
+              key={status}
+              className="font-bold text-slate-700 text-lg animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300"
+            >
+              {status || "Analyse en cours..."}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (error) return <ErrorMessage message={error} onRetry={fetchAnalysis} />;
 
   if (markerPosition && !recommendation) {
@@ -184,14 +216,18 @@ export default function Sidebar({
         </h3>
         <p className="text-slate-500 text-sm leading-relaxed max-w-60">
           📍 Selected Site <br />
-          Lat: {markerPosition[0].toFixed(4)}, Lng:{" "}
+          <span className="text-slate-900">
+            Latitude: {markerPosition[0].toFixed(4)}
+            <br /> Longitude:{" "}
           {markerPosition[1].toFixed(4)}
+          </span>
+          
         </p>
         <button
           onClick={fetchAnalysis}
-          className="mt-8 px-8 py-4 bg-green-600 text-white rounded-2xl shadow-lg hover:bg-green-700 transition-colors font-bold text-lg"
+          className="flex gap-2 justify-center m-4 w-[85%] px-8 py-4 bg-green-600 text-white rounded-2xl shadow-md hover:bg-green-800 transition-colors font-semibold text-base"
         >
-          Lancer l'analyse IA
+           <Cpu /> Lancer l'analyse
         </button>
         <button
           onClick={onClear}
@@ -200,6 +236,7 @@ export default function Sidebar({
           Annuler la sélection
         </button>
       </div>
+      
     );
   }
 
@@ -229,7 +266,7 @@ export default function Sidebar({
 
   const { avgTemp, avgRainfall } = calculateAverages(climate.annual_stats);
 
-  // // Helper to find soil property by partial key match (e.g. "pH" vs "Soil pH")
+  // Helper to find soil property by partial key match (e.g. "pH" vs "Soil pH")
   const getSoilProp = (keyPart: string) => {
     if (!soil?.properties) return "N/A";
     const foundKey = Object.keys(soil.properties).find((k) =>
@@ -271,9 +308,35 @@ export default function Sidebar({
                   </span>
                 )}
               </div>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed mb-4">
                 {crop.reason}
               </p>
+
+              {/* Profitability Data */}
+              {(crop.revenue_per_ha || crop.profitability_index) && (
+                <div className="grid grid-cols-2 gap-2 mt-2 pt-4 border-t border-slate-100">
+                  {crop.revenue_per_ha && (
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase text-slate-400 font-bold">
+                        Revenue / Ha
+                      </span>
+                      <span className="text-sm font-black text-slate-700">
+                        ~ {crop.revenue_per_ha.toLocaleString()} Dirham
+                      </span>
+                    </div>
+                  )}
+                  {crop.profitability_index && (
+                    <div className="flex flex-col text-right">
+                      <span className="text-[10px] uppercase text-slate-400 font-bold">
+                        Profit Index
+                      </span>
+                      <span className="text-sm font-black text-green-600">
+                        {(crop.profitability_index * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))
         ) : (
@@ -287,7 +350,7 @@ export default function Sidebar({
                 Les très faibles précipitations et le stress thermique élevé
                 limitent fortement la viabilité agricole sans apport d’eau
                 externe. Toute exploitation nécessiterait une infrastructure
-                d’irrigation fiable et une évaluation économique spécifique.
+                d’irrigation fiable et une analyse économique spécifique.
               </p>
             </p>
           </div>
@@ -299,7 +362,7 @@ export default function Sidebar({
         {soil ? (
           <>
             <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
-              🌱 Profil du Sol ({soil?.classification || "Inconnu"})
+              🌱 Profil du Sol ({soil?.classification || "Zone Deserte/Aride"})
             </h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
@@ -329,15 +392,15 @@ export default function Sidebar({
             </div>
           </>
         ) : (
-           
-            <p className="text-slate-500 text-sm text-center">
-              <strong>
-                Aucune Donnée de sol
-              </strong>
-              
+          <div className="text-center">
+            <p className="text-slate-700 text-sm font-semibold mb-1">
+              Données pédologiques indisponibles pour cette zone
             </p>
-          
-          
+            <p className="text-slate-500 text-xs leading-relaxed">
+              Les régions hyper-arides sont parfois exclues des modèles
+              pédologiques en raison d’une faible fiabilité prédictive.
+            </p>
+          </div>
         )}
       </section>
 

@@ -5,18 +5,6 @@ import Navbar from './components/Navbar';
 import BottomSheet from './components/BottomSheet';
 import { useEffect, useState } from 'react';
 
-const LoadingOverlay = ({ status }: { status: string | null }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center gap-4 max-w-[80%] text-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-    <span 
-      key={status} 
-      className="font-bold text-slate-700 text-lg animate-in fade-in zoom-in slide-in-from-bottom-2 duration-300"
-    >
-      {status || "Analyse en cours..."}
-    </span>
-  </div>
-);
-
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { markerPosition, locationName, recommendation, loading, error, status, handleMapClick, triggerAnalysis, clearRecommendation } = useMapLogic();
@@ -39,13 +27,6 @@ export default function App() {
         {/* Map Section */}
         <div className="grow md:w-7/12 lg:w-3/4 h-[50vh] md:h-full relative border-r border-slate-200">
           <MoroccoMap onMapClick={handleMapClick} markerPosition={markerPosition} />
-
-          {/* Desktop Loading Overlay (Hidden on Mobile via md:flex) */}
-          {loading && (
-            <div className="hidden md:flex absolute inset-0 bg-white/40 backdrop-blur-[2px] z-1000 items-center justify-center">
-              <LoadingOverlay status={status} />
-            </div>
-          )}
         </div>
 
         {/* Sidebar Desktop */}
@@ -56,6 +37,7 @@ export default function App() {
             recommendation={recommendation}
             markerPosition={markerPosition}
             locationName={locationName}
+            status={status}
             onClear={clearRecommendation}
             fetchAnalysis={triggerAnalysis}
           />
@@ -70,15 +52,10 @@ export default function App() {
               recommendation={recommendation}
               markerPosition={markerPosition}
               locationName={locationName}
+              status={status}
               onClear={handleCloseDrawer}
               fetchAnalysis={triggerAnalysis}
             />
-            {/* Mobile Loading Overlay */}
-            {loading && (
-              <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center rounded-t-4xl">
-                <LoadingOverlay status={status} />
-              </div>
-            )}
           </div>
         </BottomSheet>
       </div>

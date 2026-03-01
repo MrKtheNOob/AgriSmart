@@ -40,6 +40,7 @@ async def lifespan(app: FastAPI):
     feather_path = os.path.join(base_dir, "files/morocco_climate.feather")
     markdown_file = os.path.join(base_dir, "RAG/agronomy_data.md")
     persist_directory = os.path.join(base_dir, "RAG/chroma_db")
+    profit_data_file=os.path.join(base_dir, "files/morroco_crop_profit.json")
 
     try:
         # Initialize sub-services
@@ -56,7 +57,7 @@ async def lifespan(app: FastAPI):
             ),
         )
 
-        rag_service = RAGService(vector_store)
+        rag_service = RAGService(vector_store,profit_data_path=profit_data_file)
 
         # Master service
         agronomic_service = AgronomicService(

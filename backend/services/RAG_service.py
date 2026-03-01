@@ -54,6 +54,8 @@ Analysis Instructions:
    - Mention one potential risk or limitation
    - Keep reasoning concise but technically grounded
 
+5. Rank candidate crops by Profitability_Index in descending order before recommending.
+
 Strict Rules:
 - Use only the provided data.
 - Do NOT invent environmental metrics.
@@ -67,7 +69,9 @@ Return ONLY valid JSON in french in this format:
   "recommended_crops": [
     {{
       "name": "Crop name",
-      "reason": "Technically grounded explanation referencing soil and climate values."
+      "reason": "Technically grounded explanation referencing soil and climate values.",
+      "revenue_per_ha": number,
+      "profitability_index": number
     }}
   ]
 }}
@@ -79,6 +83,7 @@ class RAGService:
     def __init__(
         self,
         vector_service: VectorStore,
+        profit_data_path:str,
         llm_model: str = "openai/gpt-4o-mini",
         base_url: str = "https://openrouter.ai/api/v1",
         api_key_env: str = "OPENAI_API_KEY",
@@ -88,6 +93,11 @@ class RAGService:
         os.environ["OPENAI_API_KEY"] = os.getenv(api_key_env)
 
         self.vector_service = vector_service
+
+        import json 
+        with open(profit_data_path) as f:
+            profit_data=json.load(f)
+            self.profit_data=profit_data
 
         self.llm = ChatOpenAI(
             model=llm_model,
@@ -145,7 +155,10 @@ class RAGService:
             docs = await self.vector_service.similarity_search(query, k=5)
             logger.info(f"Retrieved {len(docs)} relevant documents from vector store")
             context = "\n\n".join([doc.page_content for doc in docs])
-
+            context = {
+                "retrieved_docs": context,
+                "profitability_data": self.profit_data
+            }
             prompt = PROMPT.format(
                 soil_data=soil_data,
                 climate_json=climate_data,
@@ -161,3 +174,5 @@ class RAGService:
         except Exception as e:
             logger.error(f"Error generating recommendation: {str(e)}", exc_info=True)
             raise
+
+
