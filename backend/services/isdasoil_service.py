@@ -49,9 +49,10 @@ class PropertyResponse(BaseModel):
 
 
 class SoilProfile(BaseModel):
-    target_depth: str ="0-20cm"
+    target_depth: str = "0-20cm"
     classification: str
-    properties: Dict[str, str]  # other properties featured in the provided json
+    properties: Dict[str, str]  # Human readable strings
+    raw_properties: Dict[str, float] = {}  # Raw values for calculations
 
 class DesertLandError(Exception):
     """Raised when ISDAsoil's API returns {"detail":"Please choose another location. We don't have soil data for deserts, waterbodies, and areas outside Africa."}"""
@@ -194,6 +195,7 @@ class iSDAsoilService:
 
     async def _interpret_agronomy(self, data: PropertyResponse) -> SoilProfile:
         properties = {}
+        raw_properties = {}
 
         for prop_name, measurements in data.property.items():
             if not measurements:
@@ -202,24 +204,20 @@ class iSDAsoilService:
             val_obj = measurements[0].value
             actual_value = val_obj.value
 
+            # Store raw value for calculations
+            try:
+                raw_properties[prop_name] = float(actual_value)
+            except (ValueError, TypeError):
+                pass
+
             meta = self._metadata.get(prop_name)
             description = meta.description if meta else prop_name
             unit = val_obj.unit or (meta.unit if meta else "")
 
             properties[description] = f"{actual_value} {unit}".strip()
 
-        # Moroccan classification logic
-        def get_raw(p):
-            if p in data.property and data.property[p]:
-                val = data.property[p][0].value.value
-                try:
-                    return float(val)
-                except (ValueError, TypeError):
-                    return 0.0
-            return 0.0
-
-        clay = get_raw("clay_content")
-        sand = get_raw("sand_content")
+        clay = raw_properties.get("clay_content", 0.0)
+        sand = raw_properties.get("sand_content", 0.0)
 
         soil_type = "Hamri (Équilibré)"
         if clay > 40:
@@ -231,6 +229,7 @@ class iSDAsoilService:
             target_depth="0-20 centimeters",
             classification=soil_type,
             properties=properties,
+            raw_properties=raw_properties,
         )
 
 

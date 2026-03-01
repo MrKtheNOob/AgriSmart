@@ -14,6 +14,7 @@ from services.agronomic_service import AgronomicService
 from services.climate_service import ClimateService
 from services.isdasoil_service import iSDAsoilService
 from services.vector_store import VectorStore
+from services.water_insight_service import WaterInsightService
 
 
 # Load environment variables
@@ -57,14 +58,15 @@ async def lifespan(app: FastAPI):
             ),
         )
 
-        rag_service = RAGService(vector_store,profit_data_path=profit_data_file)
+        rag_service = RAGService(vector_store,profit_data_file)
+        water_insight_service = WaterInsightService()
 
         # Master service
         agronomic_service = AgronomicService(
             soil_service=soil_service,
             climate_service=climate_service,
-            # water_insight_service=None, # Placeholder as per current agronomic_service.py
             rag_service=rag_service,
+            water_insight_service=water_insight_service,
         )
 
         logger.info("AgriSmart Services successfully initialized.")

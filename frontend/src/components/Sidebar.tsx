@@ -31,6 +31,12 @@ interface RecommendationResponse {
     heat_days: number;
     frost_days: number;
   };
+  water_insight?: {
+    awc_value: number;
+    retention_score: number;
+    category: string;
+    insight: string;
+  };
   recommendation: {
     recommended_crops: Crop[];
   };
@@ -358,51 +364,147 @@ export default function Sidebar({
       </div>
 
       {/* Soil Analysis - Crucial for Investors */}
-      <section className="bg-slate-50 p-6 rounded-3xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
-        {soil ? (
-          <>
-            <h3 className="text-slate-800 font-bold mb-4 flex items-center gap-2">
-              🌱 Profil du Sol ({soil?.classification || "Zone Deserte/Aride"})
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-                <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">
-                  pH du Sol
-                </span>
-                <span className="text-lg font-black text-slate-700">
-                  {getSoilProp("pH")}
-                </span>
-              </div>
-              <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-                <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">
-                  Carbone Org.
-                </span>
-                <span className="text-lg font-black text-slate-700">
-                  {getSoilProp("Carbon, organic")}
-                </span>
-              </div>
-              <div className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm col-span-2">
-                <span className="block text-[10px] uppercase text-slate-400 font-bold mb-1">
-                  Texture (USDA)
-                </span>
-                <span className="text-sm font-bold text-slate-700">
-                  {getSoilProp("Texture Class")}
-                </span>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="text-center">
-            <p className="text-slate-700 text-sm font-semibold mb-1">
-              Données pédologiques indisponibles pour cette zone
-            </p>
-            <p className="text-slate-500 text-xs leading-relaxed">
-              Les régions hyper-arides sont parfois exclues des modèles
-              pédologiques en raison d’une faible fiabilité prédictive.
-            </p>
+<section className="bg-slate-50 p-6 rounded-3xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
+  {soil ? (
+    <>
+      <h3 className="text-slate-900 font-bold mb-6 flex items-center gap-2">
+        Profil du Sol ({soil?.classification || "Zone Aride"})
+      </h3>
+
+      {/* Core Properties */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+            pH du Sol
+          </span>
+          <span className="text-xl font-black text-slate-800">
+            {getSoilProp("pH")}
+          </span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+            Carbone Organique
+          </span>
+          <span className="text-xl font-black text-slate-800">
+            {getSoilProp("Carbon, organic")}
+          </span>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2">
+          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+            Texture (USDA)
+          </span>
+          <span className="text-base font-bold text-slate-800">
+            {getSoilProp("Texture Class")}
+          </span>
+        </div>
+      </div>
+
+      {/* Fertility */}
+      <div className="mb-8">
+        <h4 className="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-4">
+          Fertilité & Nutriments
+        </h4>
+
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
+            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+              Azote (N)
+            </span>
+            <span className="text-base font-black text-slate-800">
+              {getSoilProp("Nitrogen")}
+            </span>
           </div>
-        )}
-      </section>
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
+            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+              Phosphore (P)
+            </span>
+            <span className="text-base font-black text-slate-800">
+              {getSoilProp("Phosphorus")}
+            </span>
+          </div>
+
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
+            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
+              Potassium (K)
+            </span>
+            <span className="text-base font-black text-slate-800">
+              {getSoilProp("Potassium")}
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
+          <span className="text-sm font-medium text-slate-600">
+            Capacité d'Échange (CEC)
+          </span>
+          <span className="text-base font-black text-slate-800">
+            {getSoilProp("Cation Exchange Capacity")}
+          </span>
+        </div>
+      </div>
+
+      {/* Water Retention - The New "Insightful" Data */}
+      
+      {recommendation.water_insight && (
+        <div className="mb-8 bg-blue-50/50 p-5 rounded-3xl border border-blue-100/50">
+          <h4 className="text-[11px] uppercase tracking-widest text-blue-600 font-black mb-4">
+            Analyse Hydrique
+          </h4>
+          <div className="flex justify-between items-end mb-2">
+            <span className="text-sm font-bold text-slate-700">Rétention d'eau</span>
+            <span className="text-2xl font-black text-blue-700">{recommendation.water_insight.retention_score}%</span>
+          </div>
+          <div className="w-full bg-blue-200/30 rounded-full h-2 mb-4">
+            <div 
+              className="bg-blue-500 h-2 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" 
+              style={{ width: `${recommendation.water_insight.retention_score}%` }}
+            ></div>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm p-3 rounded-xl border border-blue-100">
+            <p className="text-[10px] font-black uppercase text-blue-500 mb-1">{recommendation.water_insight.category}</p>
+            <p className="text-xs text-slate-600 leading-relaxed italic">"{recommendation.water_insight.insight}"</p>
+          </div>
+        </div>
+      )}
+
+      {/* Technical Details - Only shown if available */}
+      {(getSoilProp("Stone content") !== "N/A" || getSoilProp("Depth to bedrock") !== "N/A") && (
+        <div>
+          <h4 className="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-4">
+            Détails Techniques
+          </h4>
+          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+            {getSoilProp("Depth to bedrock") !== "N/A" && (
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-600">Profondeur de roche</span>
+                <span className="font-bold text-slate-800">{getSoilProp("Depth to bedrock")}</span>
+              </div>
+            )}
+            {getSoilProp("Stone content") !== "N/A" && (
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-600">Contenu en pierres</span>
+                <span className="font-bold text-slate-800">{getSoilProp("Stone content")}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  ) : (
+    <div className="text-center py-6">
+      <p className="text-slate-800 text-sm font-semibold mb-2">
+        Données pédologiques indisponibles
+      </p>
+      <p className="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
+        Certaines zones hyper-arides peuvent être exclues des modèles
+        en raison d’une fiabilité prédictive limitée.
+      </p>
+    </div>
+  )}
+</section>
 
       {/* Climate Risk - Crucial for Farmers */}
       <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">

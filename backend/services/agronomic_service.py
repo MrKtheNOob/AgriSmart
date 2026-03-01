@@ -11,6 +11,7 @@ from services.isdasoil_service import DesertLandError, iSDAsoilService
 from services.climate_service import ClimateService
 from services.vector_store import VectorStore
 from services.RAG_service import RAGService
+from services.water_insight_service import WaterInsightService
 
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -26,11 +27,12 @@ class AgronomicService:
         soil_service: iSDAsoilService,
         climate_service: ClimateService,
         rag_service: RAGService,
+        water_insight_service: WaterInsightService,
     ):
         logger.info("Initializing AgronomicService with all sub-services")
         self.soil_service = soil_service
         self.climate_service = climate_service
-        # self.water_insight_service=water_insight_service
+        self.water_insight_service = water_insight_service
         self.rag_service = rag_service
         logger.debug("AgronomicService initialized successfully")
 
@@ -38,6 +40,11 @@ class AgronomicService:
         soil_data, climate_data = await asyncio.gather(
             self.soil_service.get_soil_analysis(lat, lng),
             self.climate_service.get_climate_profile(lat, lng),
+        )
+
+        # Calculate water insight
+        water_insight = await self.water_insight_service.get_water_insight(
+            soil_data, climate_data
         )
 
         # RAG service is async — call it directly
@@ -49,6 +56,7 @@ class AgronomicService:
             "coordinates": {"lat": lat, "lng": lng},
             "soil": soil_data.model_dump(),
             "climate": climate_data.model_dump(),
+            "water_insight": water_insight,
             "recommendation": recommendation,
         }
 
@@ -68,10 +76,17 @@ class AgronomicService:
                 "coordinates": {"lat": lat, "lng": lng},
                 "soil": None,
                 "climate": climate_data.model_dump(),
+                "water_insight": None,
                 "recommendation":[],
             }
             yield {"type": "result", "data": result}
             return
+
+        yield {"type": "status", "message": "Calcul de la rétention d'eau..."}
+        
+        water_insight = await self.water_insight_service.get_water_insight(
+            soil_data, climate_data
+        )
 
         yield {"type": "status", "message": "Optimisation des cultures ..."}
 
@@ -83,9 +98,10 @@ class AgronomicService:
             "coordinates": {"lat": lat, "lng": lng},
             "soil": soil_data.model_dump() if soil_data else None,
             "climate": climate_data.model_dump() if climate_data else None,
+            "water_insight": water_insight,
             "recommendation": recommendation if recommendation else None,
         }
-
+        logger.info(result)
         yield {"type": "result", "data": result}
 
 

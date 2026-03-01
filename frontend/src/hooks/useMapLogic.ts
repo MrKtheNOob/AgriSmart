@@ -29,6 +29,12 @@ interface RecommendationResponse {
     heat_days: number;
     frost_days: number;
   };
+  water_insight?: {
+    awc_value: number;
+    retention_score: number;
+    category: string;
+    insight: string;
+  };
   recommendation: {
     recommended_crops: Crop[];
   };
