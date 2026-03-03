@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    container_name: agri_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./RAG/chroma_db:/app/RAG/chroma_db
+      - ./files:/app/files
+    environment:
+      - PYTHONUNBUFFERED=1
