@@ -15,7 +15,7 @@ DEFAULT_TOKEN_TTL = 3600  # 1 hour
 # --- Existing Data Models ---
 class SoilPropertyValue(BaseModel):
     value: Optional[Union[float, int, str]] = None
-    unit: Optional[str] = None
+    unit: Optional[str] =None
     type: str = "float"
 
 
@@ -160,6 +160,7 @@ class iSDAsoilService:
         # logger.warning(response.text)
         # response.raise_for_status()
         validated_data = PropertyResponse(**response.json())
+        print(f"validated_data: {validated_data}")
         return validated_data
 
     def _is_token_valid(self) -> bool:
@@ -184,7 +185,13 @@ class iSDAsoilService:
         """Fetch soil analysis with token validation and metadata enrichment."""
         try:
             validated_data = await self._fetch_soil_data(lat, lon, depth)
-            return await self._interpret_agronomy(validated_data)
+            response=await self._interpret_agronomy(validated_data)
+            
+            # Post cleaning
+            response.properties["pH"]=response.properties["pH"].replace("None", "").strip()  # Remove spaces from pH value
+            response.properties["USDA Texture Class"]=response.properties["USDA Texture Class"].replace("None", "").strip()  # Remove spaces from USDA Texture Class value
+            
+            return response
 
         except DesertLandError:
             raise
@@ -218,7 +225,6 @@ class iSDAsoilService:
 
         clay = raw_properties.get("clay_content", 0.0)
         sand = raw_properties.get("sand_content", 0.0)
-
         soil_type = "Hamri (Équilibré)"
         if clay > 40:
             soil_type = "Tirs (Argileux)"
@@ -245,6 +251,7 @@ if __name__ == "__main__":
         result = await soil_service.get_soil_analysis(
             lat=29.304, lon=-9.157, depth="0-20"
         )
-        print(result)
+        with open("soildataexample.json", "w") as f:
+            json.dump(result.model_dump(), f, indent=2)
 
     asyncio.run(main())
