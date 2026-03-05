@@ -10,7 +10,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./RAG/chroma_db:/app/RAG/chroma_db
-      - ./files:/app/files
+      - .:/app
     environment:
       - PYTHONUNBUFFERED=1

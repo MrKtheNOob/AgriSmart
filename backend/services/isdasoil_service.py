@@ -188,8 +188,8 @@ class iSDAsoilService:
             response=await self._interpret_agronomy(validated_data)
             
             # Post cleaning
-            response.properties["pH"]=response.properties["pH"].replace("None", "").strip()  # Remove spaces from pH value
-            response.properties["USDA Texture Class"]=response.properties["USDA Texture Class"].replace("None", "").strip()  # Remove spaces from USDA Texture Class value
+            response.properties["pH"]=response.properties["pH"].replace("None", "").strip()  
+            response.properties["USDA Texture Class"]=response.properties["USDA Texture Class"].replace("None", "").strip() 
             
             return response
 
