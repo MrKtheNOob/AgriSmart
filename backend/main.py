@@ -84,12 +84,11 @@ app = FastAPI(title="AgriSmart API", lifespan=lifespan)
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://agrismart-pjmy.onrender.com"],
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # --- Data Models ---
 class AnalysisRequest(BaseModel):
