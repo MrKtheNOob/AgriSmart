@@ -45,7 +45,7 @@ export default function ClimateSection({ climate }: ClimateSectionProps) {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-white p-4 rounded-2xl border border-orange-200">
           <span className="text-[10px] uppercase text-slate-400 font-bold">
-            Précipitations
+            Précipitations fnuzdifnz 
           </span>
           <p className="text-xl font-black text-slate-800">
             {avgRainfall.toFixed(1)} mm

@@ -1,4 +1,6 @@
 import { Cpu } from "lucide-react";
+import RecommendedCrops from "./RecommendedCrops";
+import SoilAnalysis from "./SoilAnalysis";
 
 interface Crop {
   name: string;
@@ -224,16 +226,14 @@ export default function Sidebar({
           📍 Selected Site <br />
           <span className="text-slate-900">
             Latitude: {markerPosition[0].toFixed(4)}
-            <br /> Longitude:{" "}
-          {markerPosition[1].toFixed(4)}
+            <br /> Longitude: {markerPosition[1].toFixed(4)}
           </span>
-          
         </p>
         <button
           onClick={fetchAnalysis}
           className="flex gap-2 justify-center m-4 w-[85%] px-8 py-4 bg-green-600 text-white rounded-2xl shadow-md hover:bg-green-800 transition-colors font-semibold text-base"
         >
-           <Cpu /> Lancer l'analyse
+          <Cpu /> Lancer l'analyse
         </button>
         <button
           onClick={onClear}
@@ -242,7 +242,6 @@ export default function Sidebar({
           Annuler la sélection
         </button>
       </div>
-      
     );
   }
 
@@ -295,216 +294,10 @@ export default function Sidebar({
 
       {/* Recommended Crops */}
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
-        {crops.length > 0 ? (
-          crops.map((crop, idx) => (
-            <div
-              key={`${crop.name}-${idx}`}
-              className={`p-5 rounded-2xl border ${idx === 0 ? "bg-green-50 border-green-100 ring-2 ring-green-500/10" : "bg-white border-slate-100"}`}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <h3
-                  className={`font-bold text-xl ${idx === 0 ? "text-green-800" : "text-slate-800"}`}
-                >
-                  {idx === 0 && "⭐ "}
-                  {crop.name}
-                </h3>
-                {idx === 0 && (
-                  <span className="px-2 py-0.5 bg-green-200 text-green-700 text-[10px] font-black uppercase rounded">
-                    Top Match
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                {crop.reason}
-              </p>
-
-              {/* Profitability Data */}
-              {(crop.revenue_per_ha || crop.profitability_index) && (
-                <div className="grid grid-cols-2 gap-2 mt-2 pt-4 border-t border-slate-100">
-                  {crop.revenue_per_ha && (
-                    <div className="flex flex-col">
-                      <span className="text-[10px] uppercase text-slate-400 font-bold">
-                        Revenue / Ha
-                      </span>
-                      <span className="text-sm font-black text-slate-700">
-                        ~ {crop.revenue_per_ha.toLocaleString()} Dirham
-                      </span>
-                    </div>
-                  )}
-                  {crop.profitability_index && (
-                    <div className="flex flex-col text-right">
-                      <span className="text-[10px] uppercase text-slate-400 font-bold">
-                        Profit Index
-                      </span>
-                      <span className="text-sm font-black text-green-600">
-                        {(crop.profitability_index * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <div className="p-5 text-center bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-slate-500 text-sm">
-              <strong>
-                Aucune culture n’est recommandée dans les conditions naturelles
-                actuelles.
-              </strong>{" "}
-              <p>
-                Les très faibles précipitations et le stress thermique élevé
-                limitent fortement la viabilité agricole sans apport d’eau
-                externe. Toute exploitation nécessiterait une infrastructure
-                d’irrigation fiable et une analyse économique spécifique.
-              </p>
-            </p>
-          </div>
-        )}
+        <RecommendedCrops crops={crops} />
       </div>
-
       {/* Soil Analysis - Crucial for Investors */}
-<section className="bg-slate-50 p-6 rounded-3xl border border-slate-100 animate-in fade-in slide-in-from-bottom-4">
-  {soil ? (
-    <>
-      <h3 className="text-slate-900 font-bold mb-6 flex items-center gap-2">
-        Profil du Sol ({soil?.classification || "Zone Aride"})
-      </h3>
-
-      {/* Core Properties */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-            pH du Sol
-          </span>
-          <span className="text-xl font-black text-slate-800">
-            {getSoilProp("pH")}
-          </span>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-            Carbone Organique
-          </span>
-          <span className="text-xl font-black text-slate-800">
-            {getSoilProp("Carbon, organic")}
-          </span>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2">
-          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-            Texture (USDA)
-          </span>
-          <span className="text-base font-bold text-slate-800">
-            {getSoilProp("Texture Class")}
-          </span>
-        </div>
-      </div>
-
-      {/* Fertility */}
-      <div className="mb-8">
-        <h4 className="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-4">
-          Fertilité & Nutriments
-        </h4>
-
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
-            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-              Azote (N)
-            </span>
-            <span className="text-base font-black text-slate-800">
-              {getSoilProp("Nitrogen")}
-            </span>
-          </div>
-
-          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
-            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-              Phosphore (P)
-            </span>
-            <span className="text-base font-black text-slate-800">
-              {getSoilProp("Phosphorus")}
-            </span>
-          </div>
-
-          <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-sm">
-            <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-              Potassium (K)
-            </span>
-            <span className="text-base font-black text-slate-800">
-              {getSoilProp("Potassium")}
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-          <span className="text-sm font-medium text-slate-600">
-            Capacité d'Échange (CEC)
-          </span>
-          <span className="text-base font-black text-slate-800">
-            {getSoilProp("Cation Exchange Capacity")}
-          </span>
-        </div>
-      </div>
-
-      {/* Water Retention - The New "Insightful" Data */}
-      
-      {recommendation.water_insight && (
-        <div className="mb-8 bg-blue-50/50 p-5 rounded-3xl border border-blue-100/50">
-          <h4 className="text-[11px] uppercase tracking-widest text-blue-600 font-black mb-4">
-            Analyse Hydrique
-          </h4>
-          <div className="flex justify-between items-end mb-2">
-            <span className="text-sm font-bold text-slate-700">Rétention d'eau</span>
-            <span className="text-2xl font-black text-blue-700">{recommendation.water_insight.retention_score}%</span>
-          </div>
-          <div className="w-full bg-blue-200/30 rounded-full h-2 mb-4">
-            <div 
-              className="bg-blue-500 h-2 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" 
-              style={{ width: `${recommendation.water_insight.retention_score}%` }}
-            ></div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm p-3 rounded-xl border border-blue-100">
-            <p className="text-[10px] font-black uppercase text-blue-500 mb-1">{recommendation.water_insight.category}</p>
-            <p className="text-xs text-slate-600 leading-relaxed italic">"{recommendation.water_insight.insight}"</p>
-          </div>
-        </div>
-      )}
-
-      {/* Technical Details - Only shown if available */}
-      {(getSoilProp("Stone content") !== "N/A" || getSoilProp("Depth to bedrock") !== "N/A") && (
-        <div>
-          <h4 className="text-[11px] uppercase tracking-widest text-slate-400 font-black mb-4">
-            Détails Techniques
-          </h4>
-          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-            {getSoilProp("Depth to bedrock") !== "N/A" && (
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Profondeur de roche</span>
-                <span className="font-bold text-slate-800">{getSoilProp("Depth to bedrock")}</span>
-              </div>
-            )}
-            {getSoilProp("Stone content") !== "N/A" && (
-              <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Contenu en pierres</span>
-                <span className="font-bold text-slate-800">{getSoilProp("Stone content")}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  ) : (
-    <div className="text-center py-6">
-      <p className="text-slate-800 text-sm font-semibold mb-2">
-        Données pédologiques indisponibles
-      </p>
-      <p className="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
-        Certaines zones hyper-arides peuvent être exclues des modèles
-        en raison d’une fiabilité prédictive limitée.
-      </p>
-    </div>
-  )}
-</section>
+      <SoilAnalysis soil={soil} waterInsight={recommendation.water_insight} />
 
       {/* Climate Risk - Crucial for Farmers */}
       <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">

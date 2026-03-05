@@ -53,7 +53,7 @@ export default function RecommendedCrops({ crops }: RecommendedCropsProps) {
                     Revenue / Ha
                   </span>
                   <p className="text-lg font-black text-slate-800">
-                    ~ {crop.revenue_per_ha.toLocaleString()} DH
+                    ~ ${(crop.revenue_per_ha / 10).toLocaleString()} USD
                   </p>
                 </div>
               )}
