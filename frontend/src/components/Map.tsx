@@ -16,6 +16,7 @@ import type {
 import { useRef, useState, useEffect } from "react";
 import provinceGeoJSONString from "../assets/mar_admin2.geojson?raw";
 import regionGeoJSONString from "../assets/morocco_adm1.geojson?raw";
+import SearchBar from "./SearchBar";
 
 const provinceGeoJSON: GeoJSON.FeatureCollection =
   JSON.parse(provinceGeoJSONString);
@@ -196,9 +197,12 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
+      <SearchBar />
+
       <GeoJSON data={worldMaskGeoJSON} style={() => maskStyle} />
 
       <ZoomHandler />
+      
 
       {zoomLevel > 7 ? (
         <GeoJSON
@@ -222,3 +226,4 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     </MapContainer>
   );
 }
+
