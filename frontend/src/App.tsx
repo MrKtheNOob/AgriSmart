@@ -10,7 +10,7 @@ export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { markerPosition, locationName, recommendation, loading, error, status, handleMapClick, triggerAnalysis, clearRecommendation } = useMapLogic();
   useEffect(()=>{
-    fetch(BASE_URL+'/api/health').then(res=>res.json()).then(data=>console.log('API Health:', data)).catch(err=>console.error('API Health Check Failed:', err));
+    fetch(BASE_URL+'/health').then(res=>res.json()).then(data=>console.log('API Health:', data)).catch(err=>console.error('API Health Check Failed:', err));
   },[])
   useEffect(() => {
     if (markerPosition || recommendation || loading) {
