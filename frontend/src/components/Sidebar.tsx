@@ -272,13 +272,13 @@ export default function Sidebar({
   const { avgTemp, avgRainfall } = calculateAverages(climate.annual_stats);
 
   // Helper to find soil property by partial key match (e.g. "pH" vs "Soil pH")
-  const getSoilProp = (keyPart: string) => {
-    if (!soil?.properties) return "N/A";
-    const foundKey = Object.keys(soil.properties).find((k) =>
-      k.toLowerCase().includes(keyPart.toLowerCase()),
-    );
-    return foundKey ? soil.properties[foundKey] : "N/A";
-  };
+  // const getSoilProp = (keyPart: string) => {
+  //   if (!soil?.properties) return "N/A";
+  //   const foundKey = Object.keys(soil.properties).find((k) =>
+  //     k.toLowerCase().includes(keyPart.toLowerCase()),
+  //   );
+  //   return foundKey ? soil.properties[foundKey] : "N/A";
+  // };
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4">
