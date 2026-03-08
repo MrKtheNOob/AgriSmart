@@ -15,6 +15,7 @@ from services.climate_service import ClimateService
 from services.isdasoil_service import iSDAsoilService
 from services.vector_store import VectorStore
 from services.water_insight_service import WaterInsightService
+from services.telemetry_service import TelemetryService
 
 
 # Load environment variables
@@ -22,17 +23,21 @@ load_dotenv()
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, 
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    force=True
 )
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 # --- Global Service Instance ---
 agronomic_service: AgronomicService = None
+telemetry_service: TelemetryService = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global agronomic_service
+    global agronomic_service, telemetry_service
 
     logger.info("Initializing AgriSmart Services...")
 
@@ -61,6 +66,14 @@ async def lifespan(app: FastAPI):
         rag_service = RAGService(vector_store,profit_data_file)
         water_insight_service = WaterInsightService()
 
+        # Telemetry service
+        telemetry_db_uri = os.getenv("TELEMETRY_DB_URI")
+        if telemetry_db_uri:
+            telemetry_service = TelemetryService(telemetry_db_uri)
+            await telemetry_service.connect()
+        else:
+            logger.warning("TELEMETRY_DB_URI not found in environment variables.")
+
         # Master service
         agronomic_service = AgronomicService(
             soil_service=soil_service,
@@ -77,6 +90,8 @@ async def lifespan(app: FastAPI):
 
     yield
     logger.info("Shutting down AgriSmart Services...")
+    if telemetry_service:
+        await telemetry_service.close()
 
 
 app = FastAPI(title="AgriSmart API", lifespan=lifespan)
@@ -139,6 +154,11 @@ async def analyze(request: AnalysisRequest):
     try:
         lat = round(request.lat, 3)
         lng = round(request.lng, 3)
+        
+        # Log telemetry
+        if telemetry_service:
+            asyncio.create_task(telemetry_service.log_analysis(lat, lng))
+
         result = await agronomic_service.analyze(lat, lng)
         logger.info(
             f"Received analysis request for lat={request.lat}, lng={request.lng}"
@@ -152,6 +172,9 @@ async def analyze(request: AnalysisRequest):
 
 @app.get("/analyze-stream")
 async def analyze_stream(lat: float, lng: float):
+    # Log telemetry
+    if telemetry_service:
+        asyncio.create_task(telemetry_service.log_analysis(lat, lng))
 
     async def event_generator():
         try:
