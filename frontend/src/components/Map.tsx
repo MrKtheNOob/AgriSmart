@@ -4,36 +4,61 @@ import {
   Marker,
   useMapEvents,
   GeoJSON,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L, { GeoJSON as LeafletGeoJSON } from "leaflet";
+} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L, { GeoJSON as LeafletGeoJSON } from 'leaflet';
+import type {
+  FeatureCollection,
+  Feature,
+  Geometry,
+} from 'geojson';
 import type {
   LeafletMouseEvent,
   PathOptions,
   LatLngTuple,
   LatLngBoundsExpression,
-} from "leaflet";
-import { useRef, useState, useEffect } from "react";
-import provinceGeoJSONString from "../assets/mar_admin2.geojson?raw";
-import regionGeoJSONString from "../assets/morocco_adm1.geojson?raw";
-import SearchBar from "./SearchBar";
+} from 'leaflet';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import SearchBar from './SearchBar';
+import senegalRegionsGeoJSONString from '../assets/senegal_adm1.geojson?raw';
+import senegalDepartmentsGeoJSONString from '../assets/senegal_adm2.geojson?raw';
 
-const provinceGeoJSON: GeoJSON.FeatureCollection =
-  JSON.parse(provinceGeoJSONString);
-const regionGeoJSON: GeoJSON.FeatureCollection =
-  JSON.parse(regionGeoJSONString);
+type GeoFeature = Feature<Geometry, Record<string, unknown>>;
+const senegalRegionsGeoJSON: FeatureCollection = JSON.parse(
+  senegalRegionsGeoJSONString,
+);
+const senegalDepartmentsGeoJSON: FeatureCollection = JSON.parse(
+  senegalDepartmentsGeoJSONString,
+);
 
-// Create a mask for everything outside Morocco
-const worldMaskGeoJSON: GeoJSON.FeatureCollection = {
-  type: "FeatureCollection",
+const getFeatureName = (properties: Record<string, unknown>) => {
+  const candidates = [
+    properties.adm2_name,
+    properties.adm1_name,
+    properties.shapeName,
+    properties.name,
+    properties.ADM2_EN,
+    properties.ADM1_EN,
+    properties.SNAME,
+  ];
+
+  const name = candidates.find(
+    (value): value is string =>
+      typeof value === 'string' && value.trim().length > 0,
+  );
+
+  return name ?? 'Selected area';
+};
+
+const buildOutsideMask = (regionGeoJSON: FeatureCollection): FeatureCollection => ({
+  type: 'FeatureCollection',
   features: [
     {
-      type: "Feature",
+      type: 'Feature',
       properties: {},
       geometry: {
-        type: "Polygon",
+        type: 'Polygon',
         coordinates: [
-          // Outer boundary: World
           [
             [-180, -90],
             [180, -90],
@@ -41,39 +66,19 @@ const worldMaskGeoJSON: GeoJSON.FeatureCollection = {
             [-180, 90],
             [-180, -90],
           ],
-          // Holes: Morocco regions
-          ...regionGeoJSON.features.flatMap((f: any) => {
-            if (f.geometry.type === "Polygon") return f.geometry.coordinates;
-            if (f.geometry.type === "MultiPolygon")
-              return f.geometry.coordinates.flat(1);
+          ...regionGeoJSON.features.flatMap((feature) => {
+            if (!feature.geometry) return [];
+            if (feature.geometry.type === 'Polygon') return feature.geometry.coordinates;
+            if (feature.geometry.type === 'MultiPolygon') {
+              return feature.geometry.coordinates.flat(1);
+            }
             return [];
           }),
         ],
       },
     },
   ],
-};
-
-// Province properties
-interface MoroccoProvinceProperties {
-  adm2_name: string;
-  adm1_name: string;
-  adm0_name: string;
-}
-
-// Region properties
-interface MoroccoRegionProperties {
-  shapeName: string;
-}
-
-type ProvinceFeature = GeoJSON.Feature<
-  GeoJSON.Geometry,
-  MoroccoProvinceProperties
->;
-type RegionFeature = GeoJSON.Feature<
-  GeoJSON.Geometry,
-  MoroccoRegionProperties
->;
+});
 
 // Fix default marker icon
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
@@ -81,9 +86,9 @@ delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+    'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
 interface MapProps {
@@ -91,41 +96,47 @@ interface MapProps {
   markerPosition: LatLngTuple | null;
 }
 
-export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
-  const moroccoBounds: LatLngBoundsExpression = [
-    [20.0, -18.0],
-    [36.5, -0.5],
+export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
+  const senegalBounds: LatLngBoundsExpression = [
+    [12.2, -17.8],
+    [17.8, -11.2],
   ];
 
   const [zoomLevel, setZoomLevel] = useState(6);
-  console.log("Current zoom level:", zoomLevel);
+  const regionGeoJSON = senegalRegionsGeoJSON;
+  const departmentGeoJSON = senegalDepartmentsGeoJSON;
 
-  const provinceGeoJsonRef = useRef<LeafletGeoJSON | null>(null);
+  const departmentGeoJsonRef = useRef<LeafletGeoJSON | null>(null);
   const regionGeoJsonRef = useRef<LeafletGeoJSON | null>(null);
+  const outsideMaskGeoJSON = useMemo(
+    () => (regionGeoJSON ? buildOutsideMask(regionGeoJSON) : null),
+    [regionGeoJSON],
+  );
 
   const defaultStyle: PathOptions = {
     weight: 1,
     opacity: 1,
-    color: "#ffffff",
-    fillOpacity: 0, // Morocco itself is clear
+    color: '#f8fafc',
+    fillOpacity: 0,
   };
 
   const maskStyle: PathOptions = {
     stroke: false,
-    fillColor: "#ffffff",
-    fillOpacity: 0.6, // Outside Morocco is dimmed
+    // gray
+    fillColor: '#9ca3af',
+    fillOpacity: 0.55,
     interactive: false,
   };
 
   const highlightStyle: PathOptions = {
-    fillColor: "#66BB6A",
+    fillColor: '#66BB6A',
     weight: 2,
-    color: "#1B5E20",
-    fillOpacity: 0.03,
+    color: '#1B5E20',
+    fillOpacity: 0.05,
   };
 
-  const onEachProvince = (feature: ProvinceFeature, layer: L.Layer) => {
-    const provinceName = feature.properties.adm2_name;
+  const onEachDepartment = (feature: GeoFeature, layer: L.Layer) => {
+    const departmentName = getFeatureName(feature.properties);
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
         const target = e.target as L.Path;
@@ -133,19 +144,19 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
         target.bringToFront();
       },
       mouseout: (e: LeafletMouseEvent) => {
-        provinceGeoJsonRef.current?.resetStyle(e.target as L.Path);
+        departmentGeoJsonRef.current?.resetStyle(e.target as L.Path);
       },
       click: (e: LeafletMouseEvent) => {
-        onMapClick(e.latlng.lat, e.latlng.lng, provinceName);
+        onMapClick(e.latlng.lat, e.latlng.lng, departmentName);
         (e.target as L.Path)
-          .bindPopup(`<strong>${provinceName}</strong>`)
+          .bindPopup(`<strong>District:</strong> ${departmentName}`)
           .openPopup(e.latlng);
       },
     });
   };
 
-  const onEachRegion = (feature: RegionFeature, layer: L.Layer) => {
-    const regionName = feature.properties.shapeName;
+  const onEachRegion = (feature: GeoFeature, layer: L.Layer) => {
+    const regionName = getFeatureName(feature.properties);
     layer.on({
       mouseover: (e: LeafletMouseEvent) => {
         const target = e.target as L.Path;
@@ -158,7 +169,7 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
       click: (e: LeafletMouseEvent) => {
         onMapClick(e.latlng.lat, e.latlng.lng, regionName);
         (e.target as L.Path)
-          .bindPopup(`<strong>${regionName}</strong>`)
+          .bindPopup(`<strong>Region:</strong> ${regionName}`)
           .openPopup(e.latlng);
       },
     });
@@ -178,16 +189,19 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
     return null;
   }
 
+  const showDepartments =
+    zoomLevel > 7 && !!departmentGeoJSON?.features.length;
+
   return (
     <MapContainer
-      bounds={moroccoBounds}
-      maxBounds={moroccoBounds}
+      bounds={senegalBounds}
+      maxBounds={senegalBounds}
       maxBoundsViscosity={1.0}
       minZoom={6}
       zoom={6}
       maxZoom={18}
       scrollWheelZoom
-      style={{ height: "100%", width: "100%" }}
+      style={{ height: '100%', width: '100%' }}
       className="rounded-lg shadow-md"
     >
       <TileLayer
@@ -199,20 +213,21 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
 
       <SearchBar />
 
-      <GeoJSON data={worldMaskGeoJSON} style={() => maskStyle} />
+      {outsideMaskGeoJSON ? <GeoJSON data={outsideMaskGeoJSON} style={() => maskStyle} /> : null}
 
       <ZoomHandler />
-      
 
-      {zoomLevel > 7 ? (
-        <GeoJSON
-          key="provinces"
-          ref={provinceGeoJsonRef}
-          data={provinceGeoJSON}
-          style={() => defaultStyle}
-          onEachFeature={onEachProvince}
-        />
-      ) : (
+      {showDepartments ? (
+        departmentGeoJSON ? (
+          <GeoJSON
+            key="departments"
+            ref={departmentGeoJsonRef}
+            data={departmentGeoJSON}
+            style={() => defaultStyle}
+            onEachFeature={onEachDepartment}
+          />
+        ) : null
+      ) : regionGeoJSON ? (
         <GeoJSON
           key="regions"
           ref={regionGeoJsonRef}
@@ -220,10 +235,9 @@ export default function MoroccoMap({ onMapClick, markerPosition }: MapProps) {
           style={() => defaultStyle}
           onEachFeature={onEachRegion}
         />
-      )}
+      ) : null}
 
-      {markerPosition && <Marker position={markerPosition} children={<></>} />}
+      {markerPosition ? <Marker position={markerPosition} children={<></>} /> : null}
     </MapContainer>
   );
 }
-

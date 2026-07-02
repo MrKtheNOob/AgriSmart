@@ -1,0 +1,249 @@
+{
+  "retrieved_docs": [
+    {
+      "id": 19,
+      "content": {
+        "soil": {
+          "preferred_texture": "Alluvial (Dehs) or Sandy (R'mel)",
+          "ph": "5.5 - 7.5",
+          "salinity": "Highly sensitive (redoutes salts/alkalinity)"
+        },
+        "hydric_profile": {
+          "min_rainfall": "1000 - 1200 mm",
+          "rainfall_notes": "Total needs",
+          "critical_stress": "Nouaison (fruit set) and early growth"
+        },
+        "climate": {
+          "frost": "Fatal at -3°C to -9°C depending on organ",
+          "heat": "Chergui increases June drop"
+        },
+        "expert_logic": "Badigeonner les troncs à la chaux pour protéger contre les coups de soleil et les ravageurs"
+      }
+    },
+    {
+      "id": 39,
+      "content": {
+        "tree": "Almond Tree (Amandier)",
+        "identity": "Prunus dulcis | Louz (لوز)",
+        "regions": "Al Haouz, Azilal, Taza, Souss"
+      }
+    },
+    {
+      "id": 11,
+      "content": {
+        "soil": {
+          "preferred_texture": "Deep, light, well-draining (prefers Hamri over Tirs)",
+          "ph": "6.5"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "soil": {
+          "preferred_texture": "Alluvial (Dehs) or Sandy (R'mel)",
+          "ph": "5.5 - 7.5",
+          "salinity": "Highly sensitive (redoutes salts/alkalinity)"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "hydric_profile": {
+          "min_rainfall": "1000 - 1200 mm",
+          "rainfall_notes": "Total needs",
+          "critical_stress": "Nouaison (fruit set) and early growth"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "climate": {
+          "frost": "Fatal at -3°C to -9°C depending on organ",
+          "heat": "Chergui increases June drop"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "expert_logic": "Badigeonner les troncs à la chaux pour protéger contre les coups de soleil et les ravageurs"
+      }
+    },
+    {
+      "id": 39,
+      "content": {
+        "tree": "Almond Tree (Amandier)",
+        "identity": "Prunus dulcis | Louz (لوز)",
+        "regions": "Al Haouz, Azilal, Taza, Souss"
+      }
+    },
+    {
+      "id": 11,
+      "content": {
+        "soil": {
+          "preferred_texture": "Deep, light, well-draining (prefers Hamri over Tirs)",
+          "ph": "6.5"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "soil": {
+          "preferred_texture": "Alluvial (Dehs) or Sandy (R'mel)",
+          "ph": "5.5 - 7.5",
+          "salinity": "Highly sensitive (redoutes salts/alkalinity)"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "hydric_profile": {
+          "min_rainfall": "1000 - 1200 mm",
+          "rainfall_notes": "Total needs",
+          "critical_stress": "Nouaison (fruit set) and early growth"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "climate": {
+          "frost": "Fatal at -3°C to -9°C depending on organ",
+          "heat": "Chergui increases June drop"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "expert_logic": "Badigeonner les troncs à la chaux pour protéger contre les coups de soleil et les ravageurs"
+      }
+    },
+    {
+      "id": 39,
+      "content": {
+        "tree": "Almond Tree (Amandier)",
+        "identity": "Prunus dulcis | Louz (لوز)",
+        "regions": "Al Haouz, Azilal, Taza, Souss"
+      }
+    },
+    {
+      "id": 11,
+      "content": {
+        "soil": {
+          "preferred_texture": "Deep, light, well-draining (prefers Hamri over Tirs)",
+          "ph": "6.5"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "soil": {
+          "preferred_texture": "Alluvial (Dehs) or Sandy (R'mel)",
+          "ph": "5.5 - 7.5",
+          "salinity": "Highly sensitive (redoutes salts/alkalinity)"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "hydric_profile": {
+          "min_rainfall": "1000 - 1200 mm",
+          "rainfall_notes": "Total needs",
+          "critical_stress": "Nouaison (fruit set) and early growth"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "climate": {
+          "frost": "Fatal at -3°C to -9°C depending on organ",
+          "heat": "Chergui increases June drop"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "expert_logic": "Badigeonner les troncs à la chaux pour protéger contre les coups de soleil et les ravageurs"
+      }
+    },
+    {
+      "id": 39,
+      "content": {
+        "tree": "Almond Tree (Amandier)",
+        "identity": "Prunus dulcis | Louz (لوز)",
+        "regions": "Al Haouz, Azilal, Taza, Souss"
+      }
+    },
+    {
+      "id": 11,
+      "content": {
+        "soil": {
+          "preferred_texture": "Deep, light, well-draining (prefers Hamri over Tirs)",
+          "ph": "6.5"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "soil": {
+          "preferred_texture": "Alluvial (Dehs) or Sandy (R'mel)",
+          "ph": "5.5 - 7.5",
+          "salinity": "Highly sensitive (redoutes salts/alkalinity)"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "hydric_profile": {
+          "min_rainfall": "1000 - 1200 mm",
+          "rainfall_notes": "Total needs",
+          "critical_stress": "Nouaison (fruit set) and early growth"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "climate": {
+          "frost": "Fatal at -3°C to -9°C depending on organ",
+          "heat": "Chergui increases June drop"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "content": {
+        "expert_logic": "Badigeonner les troncs à la chaux pour protéger contre les coups de soleil et les ravageurs"
+      }
+    },
+    {
+      "id": 39,
+      "content": {
+        "tree": "Almond Tree (Amandier)",
+        "identity": "Prunus dulcis | Louz (لوز)",
+        "regions": "Al Haouz, Azilal, Taza, Souss"
+      }
+    },
+    {
+      "id": 11,
+      "content": {
+        "soil": {
+          "preferred_texture": "Deep, light, well-draining (prefers Hamri over Tirs)",
+          "ph": "6.5"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+    "coordinates": {
+        "lat": 15.112824409639334,
+        "lng": -16.544044700923635
+    },
+    "soil": {
+        "target_depth": "0-20 centimeters",
+        "classification": "Dior (Sableux ferrugineux) - Drainage élevé, nécessite fertilisation",
+        "properties": {
+            "Aluminium, extractable": "80.5 ppm",
+            "pH": "6.5",
+            "Nitrogen, total": "0.3 g/kg",
+            "Phosphorus, extractable": "5.7 ppm",
+            "Potassium, extractable": "53.6 ppm",
+            "Magnesium, extractable": "72.7 ppm",
+            "Calcium, extractable": "329.3 ppm",
+            "Iron, extractable": "21.2 ppm",
+            "Zinc, extractable": "1.0 ppm",
+            "Sulphur, extractable": "12.5 ppm",
+            "Carbon, total": "5.0 g/kg",
+            "Carbon, organic": "3.1 g/kg",
+            "Bulk density, <2mm fraction": "1.6 g/cm³",
+            "Stone content": "1.5 %",
+            "Silt content": "6 %",
+            "Clay content": "9 %",
+            "Sand content": "81 %",
+            "USDA Texture Class": "Loamy Sand",
+            "Effective Cation Exchange Capacity": "3.1 cmol(+)/kg"
+        },
+        "raw_properties": {
+            "aluminium_extractable": 80.5,
+            "ph": 6.5,
+            "nitrogen_total": 0.3,
+            "phosphorous_extractable": 5.7,
+            "potassium_extractable": 53.6,
+            "magnesium_extractable": 72.7,
+            "calcium_extractable": 329.3,
+            "iron_extractable": 21.2,
+            "zinc_extractable": 1.0,
+            "sulphur_extractable": 12.5,
+            "carbon_total": 5.0,
+            "carbon_organic": 3.1,
+            "bulk_density": 1.6,
+            "stone_content": 1.5,
+            "silt_content": 6.0,
+            "clay_content": 9.0,
+            "sand_content": 81.0,
+            "cation_exchange_capacity": 3.1
+        }
+    },
+    "climate": {
+        "region": "Thiès",
+        "annual_stats": {
+            "2020": {
+                "temperature_2m": 26.719791665567573,
+                "precipitation": 444.60000202804804,
+                "snowfall": 0.0,
+                "apparent_temperature": 29.185174030192353
+            },
+            "2021": {
+                "temperature_2m": 26.191152959653778,
+                "precipitation": 255.50000131875277,
+                "snowfall": 0.0,
+                "apparent_temperature": 26.469497930404803
+            },
+            "2022": {
+                "temperature_2m": 25.684726020408004,
+                "precipitation": 543.8000017479062,
+                "snowfall": 0.0,
+                "apparent_temperature": 26.332595267361157
+            },
+            "2023": {
+                "temperature_2m": 26.482659829805975,
+                "precipitation": 453.9000013396144,
+                "snowfall": 0.0,
+                "apparent_temperature": 27.32877699370798
+            },
+            "2024": {
+                "temperature_2m": 26.495634119367338,
+                "precipitation": 309.40000078082085,
+                "snowfall": 0.0,
+                "apparent_temperature": 27.139003677229194
+            },
+            "2025": {
+                "temperature_2m": 25.599434921839467,
+                "precipitation": 419.3000036329031,
+                "snowfall": 0.0,
+                "apparent_temperature": 26.65453335640093
+            },
+            "2026": {
+                "temperature_2m": 24.54513891515534,
+                "precipitation": 37.699999526143074,
+                "snowfall": 0.0,
+                "apparent_temperature": 23.958608869778907
+            }
+        },
+        "seasonality": 1.7069582109459498,
+        "heat_days": 16,
+        "frost_days": 0,
+        "drought_index": {
+            "2020-06-30 00:00:00+00:00": -0.5858374233109241,
+            "2020-07-31 00:00:00+00:00": 1.338829409519539,
+            "2020-08-31 00:00:00+00:00": 1.2555255402971348,
+            "2020-09-30 00:00:00+00:00": 2.9372227114607035,
+            "2020-10-31 00:00:00+00:00": -0.19014397196459748,
+            "2020-11-30 00:00:00+00:00": -0.5545984658872902,
+            "2020-12-31 00:00:00+00:00": -0.5858374233109241,
+            "2021-01-31 00:00:00+00:00": -0.5858374233109241,
+            "2021-02-28 00:00:00+00:00": -0.5858374233109241,
+            "2021-03-31 00:00:00+00:00": -0.5858374233109241,
+            "2021-04-30 00:00:00+00:00": -0.5858374233109241,
+            "2021-05-31 00:00:00+00:00": -0.5858374233109241,
+            "2021-06-30 00:00:00+00:00": -0.5650114518675744,
+            "2021-07-31 00:00:00+00:00": -0.44352662116343183,
+            "2021-08-31 00:00:00+00:00": 1.9531955779599466,
+            "2021-09-30 00:00:00+00:00": 0.8754515514995445,
+            "2021-10-31 00:00:00+00:00": -0.3359257680596016,
+            "2021-11-30 00:00:00+00:00": -0.5719534420900816,
+            "2021-12-31 00:00:00+00:00": -0.5788954328298075,
+            "2022-01-31 00:00:00+00:00": -0.5320369990218403,
+            "2022-02-28 00:00:00+00:00": -0.5858374233109241,
+            "2022-03-31 00:00:00+00:00": -0.5858374233109241,
+            "2022-04-30 00:00:00+00:00": -0.5858374233109241,
+            "2022-05-31 00:00:00+00:00": -0.4886495591613849,
+            "2022-06-30 00:00:00+00:00": -0.06865913699340159,
+            "2022-07-31 00:00:00+00:00": 0.7435537335220712,
+            "2022-08-31 00:00:00+00:00": 3.048294557736218,
+            "2022-09-30 00:00:00+00:00": 2.6855755583304926,
+            "2022-10-31 00:00:00+00:00": -0.16411151425494733,
+            "2022-11-30 00:00:00+00:00": -0.5858374233109241,
+            "2022-12-31 00:00:00+00:00": -0.473030077863475,
+            "2023-01-31 00:00:00+00:00": -0.5441854800363107,
+            "2023-02-28 00:00:00+00:00": -0.5806309303207821,
+            "2023-03-31 00:00:00+00:00": -0.5858374233109241,
+            "2023-04-30 00:00:00+00:00": -0.5841019256906449,
+            "2023-05-31 00:00:00+00:00": -0.5858374233109241,
+            "2023-06-30 00:00:00+00:00": -0.5129465248108558,
+            "2023-07-31 00:00:00+00:00": 1.1045372279371524,
+            "2023-08-31 00:00:00+00:00": 2.860860818107991,
+            "2023-09-30 00:00:00+00:00": 1.623451023900286,
+            "2023-10-31 00:00:00+00:00": -0.1797309865015319,
+            "2023-11-30 00:00:00+00:00": -0.5823664280703658,
+            "2023-12-31 00:00:00+00:00": -0.5858374233109241,
+            "2024-01-31 00:00:00+00:00": -0.5858374233109241,
+            "2024-02-29 00:00:00+00:00": -0.5858374233109241,
+            "2024-03-31 00:00:00+00:00": -0.5841019256906449,
+            "2024-04-30 00:00:00+00:00": -0.5858374233109241,
+            "2024-05-31 00:00:00+00:00": -0.5858374233109241,
+            "2024-06-30 00:00:00+00:00": -0.4348491325448175,
+            "2024-07-31 00:00:00+00:00": 0.542236019267539,
+            "2024-08-31 00:00:00+00:00": 1.0004073862369613,
+            "2024-09-30 00:00:00+00:00": 1.6199800166343956,
+            "2024-10-31 00:00:00+00:00": -0.3741067132489545,
+            "2024-11-30 00:00:00+00:00": -0.5858374233109241,
+            "2024-12-31 00:00:00+00:00": -0.5007980431498622,
+            "2025-01-31 00:00:00+00:00": -0.5858374233109241,
+            "2025-02-28 00:00:00+00:00": -0.5858374233109241,
+            "2025-03-31 00:00:00+00:00": -0.5806309304500866,
+            "2025-04-30 00:00:00+00:00": -0.5754244375892492,
+            "2025-05-31 00:00:00+00:00": -0.5632759539886859,
+            "2025-06-30 00:00:00+00:00": 0.05282570172762908,
+            "2025-07-31 00:00:00+00:00": -0.09469160103897946,
+            "2025-08-31 00:00:00+00:00": 2.3384760501791355,
+            "2025-09-30 00:00:00+00:00": 1.2694095173802287,
+            "2025-10-31 00:00:00+00:00": 0.39298322870780444,
+            "2025-11-30 00:00:00+00:00": -0.40187467879395095,
+            "2025-12-31 00:00:00+00:00": -0.4192296527985634,
+            "2026-01-31 00:00:00+00:00": -0.5667469494878535,
+            "2026-02-28 00:00:00+00:00": -0.5841019256906449,
+            "2026-03-31 00:00:00+00:00": -0.5858374233109241,
+            "2026-04-30 00:00:00+00:00": -0.5858374233109241,
+            "2026-05-31 00:00:00+00:00": -0.5806309304500866,
+            "2026-06-30 00:00:00+00:00": 0.04241269725678039
+        }
+    },
+    "water_insight": {
+        "awc_value": 0.026,
+        "retention_score": 10.4,
+        "category": "Faible (Drainage Rapide)",
+        "insight": "Le sol retient peu l'eau. Irrigation fréquente nécessaire."
+    },
+    "recommendation": {
+        "recommended_crops": [
+            {
+                "name": "Millet",
+                "reason": "Le millet est adapté aux sols de type Dior avec une texture sablo-limoneuse (81 % de sable) et un pH de 6,5, favorisant une bonne croissance. Climatiquement, il tolère bien les températures annuelles moyennes de 26,5 °C et un régime de pluies qui varie de 255 à 543 mm par an. Un risque potentiel est la variabilité interannuelle des précipitations qui peut affecter le rendement."
+            },
+            {
+                "name": "Sorgho",
+                "reason": "Le sorgho s\"adapte aux sols pauvres en éléments nutritifs comme ceux de type Dior avec une capacité d\"échange cat ionique de 3,1 cmol(+)/kg. Il prospère dans un climat semi-aride avec des températures comme celles observées (26,5 °C) et une pluviométrie annuelle oscillante. Toutefois, il est sensible aux périodes de sécheresse prolongées qui peuvent réduire drastiquement les rendements."
+            },
+            {
+                "name": "Groundnut (Arachide)",
+                "reason": "Les arachides se développent bien dans des sols sablo-limoneux avec un pH de 6,5, qui est optimal pour leur croissance. De plus, elles nécessitent des températures similaires à celles enregistrées (environ 26 °C) et une pluie annuelle minimale de 400 mm, présente dans certaines années bien que la variabilité se pose comme un défi. Le risque principal réside dans la fertilisation nécessaire et la sensibilité aux risques de sécheresse."
+            }
+        ]
+    }
+}
