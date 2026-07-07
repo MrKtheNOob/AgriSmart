@@ -7,8 +7,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from shared.database_service import DatabaseService
 
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -20,8 +18,12 @@ class Telemetry(Base):
     __tablename__ = "telemetry"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    session_id: Mapped[str | None] = mapped_column("sessionid", String(128), nullable=True, index=True)
-    event_type: Mapped[str] = mapped_column("type", String(32), nullable=False, index=True)
+    session_id: Mapped[str | None] = mapped_column(
+        "sessionid", String(128), nullable=True, index=True
+    )
+    event_type: Mapped[str] = mapped_column(
+        "type", String(32), nullable=False, index=True
+    )
     x: Mapped[float | None] = mapped_column(Float, nullable=True)
     y: Mapped[float | None] = mapped_column(Float, nullable=True)
     data: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
@@ -49,6 +51,7 @@ class TelemetryService:
     ):
         try:
             if not session_id:
+                # I doubt we should just return here . how the hell do you know if logging was successful or not if you don't have a session id?
                 return
 
             sessionmaker = self.db_service.get_sessionmaker()
