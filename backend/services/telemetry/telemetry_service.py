@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime
 import logging
 
-from sqlalchemy import DateTime, Float, Integer, func, select
+from sqlalchemy import Float, Integer, JSON, String, func, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from shared.database_service import DatabaseService
@@ -17,15 +16,15 @@ class Base(DeclarativeBase):
     pass
 
 
-class AnalysisTelemetry(Base):
-    __tablename__ = "analysis_telemetry"
+class Telemetry(Base):
+    __tablename__ = "telemetry"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    latitude: Mapped[float] = mapped_column(Float, nullable=False)
-    longitude: Mapped[float] = mapped_column(Float, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
-    )
+    session_id: Mapped[str | None] = mapped_column("sessionid", String(128), nullable=True, index=True)
+    event_type: Mapped[str] = mapped_column("type", String(32), nullable=False, index=True)
+    x: Mapped[float | None] = mapped_column(Float, nullable=True)
+    y: Mapped[float | None] = mapped_column(Float, nullable=True)
+    data: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
 
 
 class TelemetryService:
@@ -40,24 +39,66 @@ class TelemetryService:
             logger.error(f"Failed to initialize telemetry table: {e}")
             raise
 
-    async def log_analysis(self, lat: float, lng: float):
+    async def _log_event(
+        self,
+        event_type: str,
+        session_id: str | None,
+        lat: float | None = None,
+        lng: float | None = None,
+        data: dict | list | None = None,
+    ):
         try:
+            if not session_id:
+                return
+
             sessionmaker = self.db_service.get_sessionmaker()
             async with sessionmaker() as session:
-                session.add(AnalysisTelemetry(latitude=lat, longitude=lng))
+                session.add(
+                    Telemetry(
+                        session_id=session_id,
+                        event_type=event_type,
+                        x=lat,
+                        y=lng,
+                        data=data,
+                    )
+                )
                 await session.commit()
-            logger.info(f"Logged telemetry: lat={lat}, lng={lng}")
+            logger.info("Logged telemetry %s", event_type)
         except Exception as e:
             logger.error(f"Error logging telemetry: {e}")
 
-    async def get_analysis_count(self) -> int:
+    async def log_visit(self, session_id: str | None):
+        await self._log_event("visit", session_id)
+
+    async def log_analysis(
+        self,
+        session_id: str | None,
+        lat: float | None,
+        lng: float | None,
+        data: dict | list | None,
+    ):
+        await self._log_event("analysis", session_id, lat, lng, data)
+
+    async def log_download(
+        self,
+        session_id: str | None,
+        lat: float | None,
+        lng: float | None,
+        data: dict | list | None,
+    ):
+        await self._log_event("download_pdf", session_id, lat, lng, data)
+
+    async def get_device_count(self) -> int:
         try:
             sessionmaker = self.db_service.get_sessionmaker()
             async with sessionmaker() as session:
                 result = await session.execute(
-                    select(func.count()).select_from(AnalysisTelemetry)
+                    select(func.count(func.distinct(Telemetry.session_id))).where(
+                        Telemetry.event_type == "visit",
+                        Telemetry.session_id.isnot(None),
+                    )
                 )
                 return int(result.scalar_one() or 0)
         except Exception as e:
-            logger.error(f"Error fetching analysis count: {e}")
+            logger.error(f"Error fetching telemetry device count: {e}")
             return 0

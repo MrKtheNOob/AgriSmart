@@ -366,7 +366,7 @@ export default function SearchBar() {
   return (
     <div 
       ref={containerRef}
-      className="absolute top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-md"
+      className="absolute top-4 left-1/2 z-[1000] -translate-x-1/2 w-[90%] max-w-md pointer-events-auto"
     >
       <div className="relative group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

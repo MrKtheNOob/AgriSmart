@@ -6,9 +6,12 @@ interface SoilAnalysisProps {
 }
 
 export default function SoilAnalysis({ soil, waterInsight }: SoilAnalysisProps) {
-  const getSoilProp = (keyPart: string) => {
+  const getSoilProp = (keyParts: string | string[]) => {
     if (!soil?.properties) return "N/A";
-    const foundKey = Object.keys(soil.properties).find((k) => k.toLowerCase().includes(keyPart.toLowerCase()));
+    const parts = Array.isArray(keyParts) ? keyParts : [keyParts];
+    const foundKey = Object.keys(soil.properties).find((k) =>
+      parts.some((part) => k.toLowerCase().includes(part.toLowerCase())),
+    );
     return foundKey ? soil.properties[foundKey] : "N/A";
   };
 
@@ -41,8 +44,8 @@ export default function SoilAnalysis({ soil, waterInsight }: SoilAnalysisProps) 
         </div>
 
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm col-span-2">
-          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Texture (USDA)</span>
-          <span className="text-base font-bold text-slate-800">{getSoilProp("Texture Class")}</span>
+          <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1">Classe texturale (USDA)</span>
+          <span className="text-base font-bold text-slate-800">{getSoilProp(["Classe texturale", "Texture Class"])}</span>
         </div>
       </div>
 

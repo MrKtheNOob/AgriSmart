@@ -3,7 +3,7 @@ import os
 import logging
 import json
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -14,6 +14,7 @@ from services.RAG.RAG_service import RAGService
 from services.agronomy.agronomic_service import AgronomicService
 from services.climate.climate_service import ClimateService
 from shared.database_service import DatabaseService
+from services.telemetry.api import get_telemetry_service, router as telemetry_router
 from services.soil.isdasoil_service import iSDAsoilService
 from services.RAG.vector_store import VectorStore
 from services.soil.water_insight_service import WaterInsightService
@@ -61,6 +62,8 @@ async def lifespan(app: FastAPI):
         telemetry_service = TelemetryService(db_service)
         await telemetry_service.init_table()
         await init_management_db(db_service)
+        app.state.db_service = db_service
+        app.state.telemetry_service = telemetry_service
 
         # Initialize sub-services
         soil_service = iSDAsoilService(
@@ -102,6 +105,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AgriSmart API", lifespan=lifespan)
 app.include_router(management_router)
+app.include_router(telemetry_router)
 
 # CORS configuration
 app.add_middleware(
@@ -113,23 +117,16 @@ app.add_middleware(
 )
 
 # --- Data Models ---
+
 class AnalysisRequest(BaseModel):
     lat: float
     lng: float
+    session_id: str | None = None
 
 
 class CropRecommendation(BaseModel):
     name: str
     reason: str
-
-
-@app.get("/telemetry/count")
-async def get_telemetry_count():
-    if not telemetry_service:
-        return {"count": 0}
-    count = await telemetry_service.get_analysis_count()
-    return {"count": count}
-
 
 @app.get("/")
 async def root():
@@ -162,7 +159,10 @@ def parse_recommendation(result):
 
 
 @app.post("/analyze")
-async def analyze(request: AnalysisRequest):
+async def analyze(
+    request: AnalysisRequest,
+    telemetry_service: TelemetryService = Depends(get_telemetry_service),
+):
     if not agronomic_service:
         raise HTTPException(status_code=503, detail="Services not initialized")
 
@@ -170,26 +170,32 @@ async def analyze(request: AnalysisRequest):
         lat = round(request.lat, 3)
         lng = round(request.lng, 3)
         
-        # Log telemetry
-        if telemetry_service:
-            asyncio.create_task(telemetry_service.log_analysis(lat, lng))
-
         result = await agronomic_service.analyze(lat, lng)
+        parsed_result = parse_recommendation(result)
+
+        await telemetry_service.log_analysis(
+            request.session_id,
+            lat,
+            lng,
+            parsed_result,
+        )
         logger.info(
             f"Received analysis request for lat={request.lat}, lng={request.lng}"
         )
 
-        return parse_recommendation(result)
+        return parsed_result
     except Exception as e:
         logger.error(f"Error during analysis: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/analyze-stream")
-async def analyze_stream(lat: float, lng: float):
-    # Log telemetry
-    if telemetry_service:
-        asyncio.create_task(telemetry_service.log_analysis(lat, lng))
+async def analyze_stream(
+    lat: float,
+    lng: float,
+    session_id: str | None = None,
+    telemetry_service: TelemetryService = Depends(get_telemetry_service),
+):
     
     async def event_generator():
         global agronomic_service
@@ -200,6 +206,12 @@ async def analyze_stream(lat: float, lng: float):
             async for event in agronomic_service.analyze_stream(lat, lng):
                 if event["type"] == "result":
                     event["data"] = parse_recommendation(event["data"])
+                    await telemetry_service.log_analysis(
+                        session_id,
+                        lat,
+                        lng,
+                        event["data"],
+                    )
                 
                 yield {"data": json.dumps(event)}
         except Exception as e:

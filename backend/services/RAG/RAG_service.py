@@ -34,7 +34,7 @@ Knowledge Base Context:
 Analysis Instructions:
 
 1. Evaluate soil suitability:
-   - Texture class
+   - Classe texturale du sol
    - pH level
    - Organic carbon
    - Cation exchange capacity
@@ -43,7 +43,7 @@ Analysis Instructions:
    - Average annual temperature
    - Average annual precipitation
    - Interannual variability
-   - Heat or frost risk if relevant
+   - Heat stress risk and rainy-day patterns if relevant
 
 3. Recommend 3 crops that are realistically viable
    under these exact conditions.
@@ -107,7 +107,7 @@ class RAGService:
         props = soil.properties
 
         # Extract key soil indicators safely
-        texture = props.get("USDA Texture Class", "Unknown")
+        texture = props.get("Classe texturale (USDA)") or props.get("USDA Texture Class", "Unknown")
         ph = props.get("pH", "Unknown")
         organic_carbon = props.get("Carbon, organic", "Unknown")
         clay = props.get("Clay content", "Unknown")
@@ -120,13 +120,13 @@ class RAGService:
         avg_precip = sum(y["precipitation"] for y in years) / len(years)
 
         heat_days = climate.heat_days
-        frost_days = climate.frost_days
+        rainy_days = climate.rainy_days
 
         query = f"""
         Agronomic conditions in Senegal:
 
         Soil classification: {soil.classification}
-        Texture: {texture}
+        Classe texturale du sol: {texture}
         pH: {ph}
         Organic carbon: {organic_carbon}
         Clay content: {clay}
@@ -137,7 +137,7 @@ class RAGService:
         Average temperature: {avg_temp:.1f} °C
         Average annual precipitation: {avg_precip:.1f} mm
         Heat stress days per year: {heat_days}
-        Frost days per year: {frost_days}
+        Rainy days per year: {rainy_days}
 
         Which crops are agronomically suitable for these conditions?
         """

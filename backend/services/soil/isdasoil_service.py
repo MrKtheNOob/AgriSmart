@@ -132,6 +132,29 @@ class iSDAsoilService:
         except Exception as e:
             logging.error(f"Could not load metadata info: {e}")
             raise
+
+    def _translate_property_label(self, prop_name: str, description: str) -> str:
+        if prop_name == "USDA Texture Class":
+            return "Classe texturale (USDA)"
+        return description
+
+    def _translate_texture_class(self, value: str) -> str:
+        translations = {
+            "Sand": "Sable",
+            "Loamy Sand": "Sable limoneux",
+            "Sandy Loam": "Limon sableux",
+            "Sandy Clay Loam": "Limon argilo-sableux",
+            "Clay Loam": "Limon argileux",
+            "Silty Clay Loam": "Limon argilo-limoneux",
+            "Silty Clay": "Argile limoneuse",
+            "Silt Loam": "Limon",
+            "Silt": "Limon fin",
+            "Loam": "Limon franc",
+            "Sandy Clay": "Argile sableuse",
+            "Clay": "Argile",
+            "Clayey Sand": "Sable argileux",
+        }
+        return translations.get(value, value)
     async def _fetch_soil_data(
         self, lat: float, lon: float, depth: str
     ) -> PropertyResponse:
@@ -190,7 +213,16 @@ class iSDAsoilService:
             
             # Post cleaning
             response.properties["pH"]=response.properties["pH"].replace("None", "").strip()  
-            response.properties["USDA Texture Class"]=response.properties["USDA Texture Class"].replace("None", "").strip() 
+            texture_key = next(
+                (
+                    key
+                    for key in ("Classe texturale (USDA)", "USDA Texture Class")
+                    if key in response.properties
+                ),
+                None,
+            )
+            if texture_key:
+                response.properties[texture_key] = response.properties[texture_key].replace("None", "").strip()
             
             return response
 
@@ -224,7 +256,12 @@ class iSDAsoilService:
             description = meta.description if meta else prop_name
             unit = val_obj.unit or (meta.unit if meta else "")
 
-            properties[description] = f"{actual_value} {unit}".strip()
+            display_description = self._translate_property_label(prop_name, description)
+            display_value = actual_value
+            if prop_name == "USDA Texture Class" and isinstance(actual_value, str):
+                display_value = self._translate_texture_class(actual_value)
+
+            properties[display_description] = f"{display_value} {unit}".strip()
 
         soil_type = self._classify_senegal_soil(raw_properties)
 

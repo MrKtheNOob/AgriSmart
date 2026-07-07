@@ -30,7 +30,7 @@ export interface Climate {
     }
   >;
   heat_days: number;
-  frost_days: number;
+  rainy_days: number;
 }
 
 export interface RecommendationResponse {

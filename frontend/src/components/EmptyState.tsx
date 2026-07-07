@@ -32,7 +32,7 @@ const EmptyState = () => {
       </h3>
 
       <p className="text-slate-600 text-sm leading-relaxed max-w-xs">
-        Cliquez sur une zone du Maroc pour lancer une
+        Cliquez sur une zone du Senegal pour lancer une
         <span className="text-green-700 font-semibold">
           {' '}analyse environnementale{' '}
         </span>

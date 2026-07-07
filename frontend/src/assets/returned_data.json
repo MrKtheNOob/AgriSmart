@@ -24,7 +24,7 @@
             "Silt content": "6 %",
             "Clay content": "9 %",
             "Sand content": "81 %",
-            "USDA Texture Class": "Loamy Sand",
+            "Classe texturale (USDA)": "Sable limoneux",
             "Effective Cation Exchange Capacity": "3.1 cmol(+)/kg"
         },
         "raw_properties": {
@@ -96,7 +96,7 @@
         },
         "seasonality": 1.7069582109459498,
         "heat_days": 16,
-        "frost_days": 0,
+        "rainy_days": 0,
         "drought_index": {
             "2020-06-30 00:00:00+00:00": -0.5858374233109241,
             "2020-07-31 00:00:00+00:00": 1.338829409519539,

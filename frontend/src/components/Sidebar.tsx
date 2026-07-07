@@ -1,4 +1,5 @@
-import { Cpu } from "lucide-react";
+import type { RefObject } from "react";
+import { Cpu, Download } from "lucide-react";
 import RecommendedCrops from "./recommendation/RecommendedCrops";
 import SoilAnalysis from "./recommendation/SoilAnalysis";
 import ClimateSection from "./recommendation/ClimateSection";
@@ -13,6 +14,9 @@ interface SidebarProps {
   status: string | null;
   onClear: () => void;
   fetchAnalysis: () => void;
+  onDownloadPdf?: () => void;
+  variant?: "sidebar" | "pdf";
+  containerRef?: RefObject<HTMLDivElement | null>;
 }
 
 const SkeletonSidebar = () => {
@@ -69,7 +73,7 @@ const EmptyState = () => {
       </h3>
 
       <p className="text-slate-600 text-sm leading-relaxed max-w-xs">
-        Cliquez sur une zone du Maroc pour lancer une
+        Cliquez sur une zone du Senegal pour lancer une
         <span className="text-green-700 font-semibold">
           {" "}
           analyse environnementale{" "}
@@ -129,10 +133,19 @@ export default function Sidebar({
   status,
   onClear,
   fetchAnalysis,
+  onDownloadPdf,
+  variant = "sidebar",
+  containerRef,
 }: SidebarProps) {
+  const isPdfVariant = variant === "pdf";
+  const rootClassName =
+    variant === "pdf"
+      ? "space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-6 bg-white"
+      : "space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4";
+
   if (loading) {
     return (
-      <div className="relative h-full overflow-hidden">
+      <div ref={containerRef} className="relative h-full overflow-hidden">
         <SkeletonSidebar />
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[1px] ">
           <div className="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center gap-4 max-w-[80%] text-center">
@@ -152,7 +165,7 @@ export default function Sidebar({
 
   if (markerPosition && !recommendation) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+      <div ref={containerRef} className="flex flex-col items-center justify-center py-12 px-4 text-center">
         <div className="relative mb-6">
           <div className="relative bg-white p-5 rounded-full shadow-sm border border-green-100">
             <svg
@@ -205,14 +218,29 @@ export default function Sidebar({
   if (!recommendation) return <EmptyState />;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4">
+    <div ref={containerRef} className={rootClassName}>
       <header className="border-b border-slate-100 pb-6 text-left pl-5">
         <h2 className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">
           AgriSmart Engine
         </h2>
-        <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">
+        <div className="flex items-start justify-between gap-4">
+          <h1
+            className={`font-extrabold text-slate-900 leading-tight ${
+              isPdfVariant ? "text-2xl" : "text-3xl"
+            }`}
+          >
           Analyse du Site Agricole
-        </h1>
+          </h1>
+          {!isPdfVariant && onDownloadPdf ? (
+            <button
+              onClick={onDownloadPdf}
+              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+            >
+              <Download size={14} />
+              PDF
+            </button>
+          ) : null}
+        </div>
         <p className="text-sm text-slate-500 mt-2">📍{locationName}</p>
       </header>
 
@@ -231,12 +259,14 @@ export default function Sidebar({
       {/* Climate Risk - Crucial for Farmers */}
       <ClimateSection climate={recommendation.climate} />
 
-      <button
-        onClick={onClear}
-        className="w-full py-4 text-slate-400 text-sm font-medium hover:text-red-500 transition-colors"
-      >
-        Réinitialiser l'analyse
-      </button>
+      {!isPdfVariant ? (
+        <button
+          onClick={onClear}
+          className="w-full py-4 text-slate-400 text-sm font-medium hover:text-red-500 transition-colors"
+        >
+          Réinitialiser l'analyse
+        </button>
+      ) : null}
     </div>
   );
 }

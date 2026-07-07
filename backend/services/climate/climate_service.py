@@ -13,7 +13,7 @@ class ClimateMetrics(BaseModel):
     annual_stats: dict
     seasonality: float
     heat_days: int
-    frost_days: int
+    rainy_days: int
     drought_index: dict
 
 
@@ -72,11 +72,13 @@ class ClimateService:
 
     def _compute_heat_days(self, temp_series, threshold=30):
         daily = temp_series.resample("D").mean()
-        return int((daily > threshold).sum())
+        yearly_heat_days = (daily > threshold).resample("YE").sum()
+        return int(round(yearly_heat_days.mean())) if len(yearly_heat_days) else 0
 
-    def _compute_frost_days(self, temp_series, threshold=0):
-        daily_min = temp_series.resample("D").min()
-        return int((daily_min < threshold).sum())
+    def _compute_rainy_days(self, rainfall_series, threshold=1.0):
+        daily_rainfall = rainfall_series.resample("D").sum()
+        yearly_rainy_days = (daily_rainfall >= threshold).resample("YE").sum()
+        return int(round(yearly_rainy_days.mean())) if len(yearly_rainy_days) else 0
 
     def _compute_drought_index(self, rainfall_series):
         monthly = rainfall_series.resample("ME").sum()
@@ -84,7 +86,7 @@ class ClimateService:
         std = monthly.std()
         drought_index = (monthly - mean) / std if std != 0 else np.nan
         # Convert Timestamp keys to string for JSON serialization
-        return {str(k): v for k, v in drought_index.to_dict().items()}
+        return {str(k): v for k, v in drought_index.to_dict().items()} # type: ignore
 
     async def get_climate_profile(self, lat, lon) -> ClimateMetrics:
         """Async entry to compute climate profile; heavy pandas ops run in a thread."""
@@ -97,7 +99,7 @@ class ClimateService:
             annual_stats = await asyncio.to_thread(self._aggregate_annual_stats, region_name)
             seasonality = await asyncio.to_thread(self._compute_seasonality, region_df["precipitation"])
             heat_days = await asyncio.to_thread(self._compute_heat_days, region_df["temperature_2m"])
-            frost_days = await asyncio.to_thread(self._compute_frost_days, region_df["temperature_2m"])
+            rainy_days = await asyncio.to_thread(self._compute_rainy_days, region_df["precipitation"])
             drought_index = await asyncio.to_thread(self._compute_drought_index, region_df["precipitation"])
 
             response = ClimateMetrics(
@@ -105,12 +107,12 @@ class ClimateService:
                 annual_stats=annual_stats,
                 seasonality=seasonality,
                 heat_days=heat_days,
-                frost_days=frost_days,
+                rainy_days=rainy_days,
                 drought_index=drought_index,
             )
 
             logger.info(
-                f"Climate profile retrieved: region={response.region}, heat_days={response.heat_days}, frost_days={response.frost_days}"
+                f"Climate profile retrieved: region={response.region}, heat_days={response.heat_days}, rainy_days={response.rainy_days}"
             )
 
             return response
@@ -130,7 +132,8 @@ if __name__ == "__main__":
     try:
         async def main():
             service = await ClimateService.create()
-            result = await service.get_climate_profile(lat=30.048748647184787, lon=-8.570123192097313)
+            
+            result = await service.get_climate_profile(lat=14.64544074287179, lon=-16.29337186288759)
             print(result.model_dump_json())
 
         asyncio.run(main())

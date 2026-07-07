@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Home, Layers, MapPin, Settings } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { ENABLE_MANAGEMENT } from "../config/featureFlags";
+import { getTelemetrySessionId, sendTelemetryVisit } from "../services/telemetry";
 
 function LeftSidebar() {
   const baseLink =
@@ -57,6 +59,13 @@ function LeftSidebar() {
 }
 
 export default function WorkspaceLayout() {
+  useEffect(() => {
+    const sessionId = getTelemetrySessionId();
+    void sendTelemetryVisit(sessionId).catch((error) => {
+      console.error("Failed to send telemetry visit:", error);
+    });
+  }, []);
+
   return (
     <div className="flex flex-col h-screen bg-slate-50">
       <Navbar />

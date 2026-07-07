@@ -288,7 +288,7 @@
       }
     },
     "texture_class": {
-      "description": "USDA Texture Class",
+      "description": "Classe texturale (USDA)",
       "theme": "Soil physical properties and landscape",
       "unit": null,
       "uncertainty": false,

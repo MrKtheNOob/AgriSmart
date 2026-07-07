@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { BASE_URL } from '../utils';
+import { getTelemetrySessionId } from '../services/telemetry';
 
 interface Crop {
   name: string;
@@ -18,17 +19,17 @@ interface RecommendationResponse {
     classification: string;
     properties: Record<string, string>;
   };
-  climate: {
-    region: string;
-    annual_stats: Record<string, {
-      temperature_2m: number;
-      precipitation: number;
-      snowfall: number;
-      apparent_temperature: number;
-    }>;
-    heat_days: number;
-    frost_days: number;
-  };
+    climate: {
+      region: string;
+      annual_stats: Record<string, {
+        temperature_2m: number;
+        precipitation: number;
+        snowfall: number;
+        apparent_temperature: number;
+      }>;
+      heat_days: number;
+      rainy_days: number;
+    };
   water_insight?: {
     awc_value: number;
     retention_score: number;
@@ -86,7 +87,8 @@ export function useMapLogic(): MapLogic {
     setStatus("Initialisation...");
 
     const [lat, lng] = markerPosition;
-    const url = `${BASE_URL}/analyze-stream?lat=${lat}&lng=${lng}`;
+    const sessionId = getTelemetrySessionId();
+    const url = `${BASE_URL}/analyze-stream?lat=${lat}&lng=${lng}&session_id=${encodeURIComponent(sessionId)}`;
     
     const eventSource = new EventSource(url);
 

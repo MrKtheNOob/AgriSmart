@@ -109,7 +109,7 @@ function getTextureLabel(report?: AnalysisReport | null) {
   if (typeof soil === "string" && soil.trim()) return soil;
 
   const properties = getSoilProperties(report);
-  return getTextProperty(properties, ["USDA Texture Class"], "—");
+  return getTextProperty(properties, ["Classe texturale (USDA)", "USDA Texture Class"], "—");
 }
 
 function FarmCard({
