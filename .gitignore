@@ -181,6 +181,11 @@ cython_debug/
 # Learn more at https://abstra.io/docs
 .abstra/
 
+# AgriSmart generated data
+backend/data/RAG/chroma_db/
+backend/data/RAG/.cache.sqlite
+backend/data/isdasoil_token.json
+
 # Visual Studio Code
 #  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
