@@ -110,7 +110,7 @@ app.include_router(telemetry_router)
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://agri-smart-beta.vercel.app/", "http://localhost:5173"],
+    allow_origins=["https://agri-smart-beta.vercel.app", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
