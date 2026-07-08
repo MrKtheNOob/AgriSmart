@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime
 
-from sqlalchemy import Float, Integer, JSON, String, func, select
+from sqlalchemy import DateTime, Float, Integer, JSON, String, func, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from shared.database_service import DatabaseService
@@ -23,6 +24,12 @@ class Telemetry(Base):
     )
     event_type: Mapped[str] = mapped_column(
         "type", String(32), nullable=False, index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        index=True,
     )
     x: Mapped[float | None] = mapped_column(Float, nullable=True)
     y: Mapped[float | None] = mapped_column(Float, nullable=True)
@@ -53,6 +60,9 @@ class TelemetryService:
             if not session_id:
                 # I doubt we should just return here . how the hell do you know if logging was successful or not if you don't have a session id?
                 return
+
+            lat = round(lat, 4) if lat is not None else None
+            lng = round(lng, 4) if lng is not None else None
 
             sessionmaker = self.db_service.get_sessionmaker()
             async with sessionmaker() as session:
