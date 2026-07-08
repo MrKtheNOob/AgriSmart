@@ -31,9 +31,9 @@ async def init_management_db(db_service: DatabaseService | None) -> bool:
         logger.warning("Management DB not configured; management routes will remain disabled.")
         return False
 
-    await _db_service.create_tables(Base)
+    await _db_service.ensure_schema(Base)
 
-    logger.info("Management tables ensured.")
+    logger.info("Management schema ensured.")
     return True
 
 

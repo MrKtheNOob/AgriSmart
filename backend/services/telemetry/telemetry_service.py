@@ -42,8 +42,8 @@ class TelemetryService:
 
     async def init_table(self):
         try:
-            await self.db_service.create_tables(Base)
-            logger.info("Telemetry table ensured.")
+            await self.db_service.ensure_schema(Base)
+            logger.info("Telemetry schema ensured.")
         except Exception as e:
             logger.error(f"Failed to initialize telemetry table: {e}")
             raise
@@ -58,7 +58,7 @@ class TelemetryService:
     ):
         try:
             if not session_id:
-                # I doubt we should just return here . how the hell do you know if logging was successful or not if you don't have a session id?
+                # If there is no session id we could assume its from testing or a bot, we can choose to log it or ignore it. Here we don't log it.
                 return
 
             lat = round(lat, 4) if lat is not None else None

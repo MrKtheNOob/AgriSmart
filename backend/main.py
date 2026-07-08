@@ -19,6 +19,7 @@ from services.soil.isdasoil_service import iSDAsoilService
 from services.RAG.vector_store import VectorStore
 from services.soil.water_insight_service import WaterInsightService
 from services.telemetry.telemetry_service import TelemetryService
+from shared.rate_limiter import RateLimitMiddleware, RateLimitRule
 
 
 # Load environment variables
@@ -106,6 +107,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="AgriSmart API", lifespan=lifespan)
 app.include_router(management_router)
 app.include_router(telemetry_router)
+
+RATE_LIMIT_RULES = {
+    ("POST", "/analyze"): RateLimitRule(max_requests=12, window_seconds=60),
+    ("GET", "/analyze-stream"): RateLimitRule(max_requests=6, window_seconds=60),
+    ("POST", "/telemetry/visit"): RateLimitRule(max_requests=60, window_seconds=60),
+    ("POST", "/telemetry/download"): RateLimitRule(max_requests=20, window_seconds=60),
+    ("POST", "/management/farms"): RateLimitRule(max_requests=20, window_seconds=60),
+    ("POST", "/management/analysis-reports"): RateLimitRule(max_requests=20, window_seconds=60),
+}
+
+app.add_middleware(RateLimitMiddleware, rules=RATE_LIMIT_RULES)
 
 # CORS configuration
 app.add_middleware(
