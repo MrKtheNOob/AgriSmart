@@ -356,8 +356,8 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
 
   const maskStyle: PathOptions = {
     stroke: false,
-    fillColor: '#9ca3af',
-    fillOpacity: 0.55,
+    fillColor: '#f3f5f4',
+    fillOpacity: 0.16,
     interactive: false,
   }
 
