@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import { Search, X, MapPin } from 'lucide-react';
-import type { FeatureCollection, Geometry } from 'geojson';
+import type { FeatureCollection } from 'geojson';
 import senegalRegionsGeoJSONString from '../assets/senegal_adm1.geojson?raw';
 import senegalDepartmentsGeoJSONString from '../assets/senegal_adm2.geojson?raw';
+import {
+  findContainingFeature,
+  getFeatureName,
+  getGeometryCenter,
+} from '../utils/geo';
 
 interface Suggestion {
   id: string;
@@ -31,23 +36,6 @@ const senegalRegionsGeoJSON: FeatureCollection = JSON.parse(
 const senegalDepartmentsGeoJSON: FeatureCollection = JSON.parse(
   senegalDepartmentsGeoJSONString,
 );
-
-const getFeatureName = (properties: Record<string, unknown>) => {
-  const candidates = [
-    properties.shapeName,
-    properties.adm2_name,
-    properties.adm1_name,
-    properties.name,
-    properties.ADM2_EN,
-    properties.ADM1_EN,
-  ];
-
-  return (
-    candidates.find(
-      (value): value is string => typeof value === 'string' && value.trim().length > 0,
-    ) || 'Selected area'
-  );
-};
 
 const normalizeText = (value: string) =>
   value
@@ -90,101 +78,8 @@ const stripAdminWords = (value: string) => {
   return keptTokens.join(' ');
 };
 
-const getGeometryCenter = (geometry: Geometry): [number, number] => {
-  const points: Array<[number, number]> = [];
-
-  const collectPoints = (coords: unknown): void => {
-    if (!Array.isArray(coords) || coords.length === 0) return;
-
-    if (typeof coords[0] === 'number' && typeof coords[1] === 'number') {
-      points.push([coords[0] as number, coords[1] as number]);
-      return;
-    }
-
-    coords.forEach(collectPoints);
-  };
-
-  if (geometry.type === 'GeometryCollection') {
-    geometry.geometries.forEach((item) => {
-      const [lat, lon] = getGeometryCenter(item);
-      points.push([lon, lat]);
-    });
-  } else {
-    collectPoints(geometry.coordinates);
-  }
-
-  if (points.length === 0) {
-    return [14.5, -14.5];
-  }
-
-  const bounds = points.reduce(
-    (acc, [lng, lat]) => ({
-      minLat: Math.min(acc.minLat, lat),
-      maxLat: Math.max(acc.maxLat, lat),
-      minLng: Math.min(acc.minLng, lng),
-      maxLng: Math.max(acc.maxLng, lng),
-    }),
-    {
-      minLat: Number.POSITIVE_INFINITY,
-      maxLat: Number.NEGATIVE_INFINITY,
-      minLng: Number.POSITIVE_INFINITY,
-      maxLng: Number.NEGATIVE_INFINITY,
-    },
-  );
-
-  return [(bounds.minLat + bounds.maxLat) / 2, (bounds.minLng + bounds.maxLng) / 2];
-};
-
-const pointInRing = (
-  point: [number, number],
-  ring: number[][],
-): boolean => {
-  const [lng, lat] = point;
-  let inside = false;
-
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const intersect =
-      yi > lat !== yj > lat &&
-      lng < ((xj - xi) * (lat - yi)) / (yj - yi + 0.0000001) + xi;
-    if (intersect) inside = !inside;
-  }
-
-  return inside;
-};
-
-const pointInPolygon = (
-  point: [number, number],
-  polygon: number[][][],
-): boolean => {
-  if (polygon.length === 0) return false;
-  const [outerRing, ...holes] = polygon;
-  if (!pointInRing(point, outerRing)) return false;
-  return !holes.some((hole) => pointInRing(point, hole));
-};
-
-const pointInGeometry = (point: [number, number], geometry: Geometry): boolean => {
-  if (geometry.type === 'Polygon') {
-    return pointInPolygon(point, geometry.coordinates);
-  }
-
-  if (geometry.type === 'MultiPolygon') {
-    return geometry.coordinates.some((polygon) => pointInPolygon(point, polygon));
-  }
-
-  if (geometry.type === 'GeometryCollection') {
-    return geometry.geometries.some((item) => pointInGeometry(point, item));
-  }
-
-  return false;
-};
-
 const findParentRegion = (point: [number, number]) => {
-  const regionFeature = senegalRegionsGeoJSON.features.find((feature) => {
-    if (!feature.geometry) return false;
-    return pointInGeometry(point, feature.geometry);
-  });
+  const regionFeature = findContainingFeature(point, senegalRegionsGeoJSON);
 
   if (!regionFeature) return undefined;
 

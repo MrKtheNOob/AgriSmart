@@ -1,1 +1,39 @@
 @import 'tailwindcss';
+
+.map-text-label {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+  white-space: normal;
+}
+
+.map-text-label span {
+  line-height: 1.1;
+  text-shadow:
+    0 1px 2px rgb(255 255 255 / 95%),
+    0 0 5px rgb(255 255 255 / 90%);
+}
+
+.zone-map-label span {
+  color: #14532d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.region-map-label span {
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.department-map-label span {
+  color: #334155;
+  font-size: 9px;
+  font-weight: 600;
+}
