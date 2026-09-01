@@ -144,7 +144,6 @@ class CropRecommendation(BaseModel):
 async def root():
     return {"message": "Welcome to AgriSmart Precision Crop Planning API"}
 
-
 @app.get("/health")
 async def health():
     if agronomic_service:
