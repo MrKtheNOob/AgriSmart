@@ -35,12 +35,12 @@ const senegalDepartments: FeatureCollection = JSON.parse(
 )
 
 const ZONE_COLORS: Record<string, string> = {
-  ZSP: '#d6a85f',
-  NDK: '#5cc8c3',
-  BA: '#e8c65a',
-  VAL: '#65a9e8',
-  ZF: '#5dbb78',
-  ASP: '#9c7ad6',
+  ZSP: '#c8ad78',
+  NDK: '#69b9ad',
+  BA: '#d9ad55',
+  VAL: '#70a9b8',
+  ZF: '#78a77c',
+  ASP: '#958ab5',
 }
 
 const ZONE_LABEL_POSITIONS: Record<string, LatLngTuple> = {
@@ -196,6 +196,31 @@ function AdministrativeLabels({ zoomLevel }: { zoomLevel: number }) {
   )
 }
 
+function ZoneLegend() {
+  return (
+    <div className="agro-zone-legend" aria-label="Légende des zones agroécologiques">
+      <div className="agro-zone-legend__eyebrow">Territoire agricole</div>
+      <div className="agro-zone-legend__title">Zones agroécologiques</div>
+      <div className="agro-zone-legend__items">
+        {agroecologicalZones.features.map((feature) => {
+          const typedFeature = feature as GeoFeature
+          const code = getZoneCode(typedFeature)
+
+          return (
+            <div className="agro-zone-legend__item" key={`legend-${code}`}>
+              <span
+                className="agro-zone-legend__swatch"
+                style={{ backgroundColor: ZONE_COLORS[code] }}
+              />
+              <span>{getZoneName(typedFeature)}</span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
   const senegalBounds: LatLngBoundsExpression = [
     [12.2, -17.8],
@@ -204,46 +229,64 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
 
   const [zoomLevel, setZoomLevel] = useState(6)
   const zoneGeoJsonRef = useRef<LeafletGeoJSON | null>(null)
+  const selectedZoneLayerRef = useRef<L.Path | null>(null)
   const outsideMaskGeoJSON = useMemo(
     () => buildOutsideMask(senegalRegions),
     [],
   )
 
+  useEffect(() => {
+    if (markerPosition || !selectedZoneLayerRef.current) return
+
+    selectedZoneLayerRef.current
+      .getElement()
+      ?.classList.remove('agro-zone-selected')
+    zoneGeoJsonRef.current?.resetStyle(selectedZoneLayerRef.current)
+    selectedZoneLayerRef.current = null
+  }, [markerPosition])
+
   const zoneStyle = (feature?: GeoFeature): PathOptions => ({
-    color: '#ffffff',
-    weight: 1.4,
-    opacity: 0.9,
+    color: '#f8fafc',
+    weight: 1.15,
+    opacity: 0.95,
     fillColor: ZONE_COLORS[getZoneCode(feature)] ?? '#94a3b8',
-    fillOpacity: 0.34,
+    fillOpacity: 0.42,
   })
 
   const zoneHighlightStyle: PathOptions = {
-    color: '#166534',
-    weight: 2.5,
-    fillOpacity: 0.46,
+    color: '#ffffff',
+    weight: 1.8,
+    fillOpacity: 0.52,
+  }
+
+  const zoneSelectedStyle: PathOptions = {
+    color: '#315d50',
+    weight: 2.4,
+    opacity: 0.96,
+    fillOpacity: 0.58,
   }
 
   const regionBoundaryStyle: PathOptions = {
-    color: '#334155',
-    weight: 1.15,
-    opacity: 0.72,
+    color: '#526171',
+    weight: 0.85,
+    opacity: 0.58,
     fillOpacity: 0,
     interactive: false,
   }
 
   const departmentBoundaryStyle: PathOptions = {
-    color: '#475569',
-    weight: 0.7,
-    opacity: 0.48,
-    dashArray: '4 4',
+    color: '#697786',
+    weight: 0.55,
+    opacity: 0.42,
+    dashArray: '3 4',
     fillOpacity: 0,
     interactive: false,
   }
 
   const maskStyle: PathOptions = {
     stroke: false,
-    fillColor: '#9ca3af',
-    fillOpacity: 0.55,
+    fillColor: '#d9dde1',
+    fillOpacity: 0.76,
     interactive: false,
   }
 
@@ -275,13 +318,35 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
     layer.on({
       mouseover: (event: LeafletMouseEvent) => {
         const target = event.target as L.Path
-        target.setStyle(zoneHighlightStyle)
+        if (selectedZoneLayerRef.current !== target) {
+          target.setStyle(zoneHighlightStyle)
+          target.getElement()?.classList.add('agro-zone-hovered')
+        }
         target.bringToFront()
       },
       mouseout: (event: LeafletMouseEvent) => {
-        zoneGeoJsonRef.current?.resetStyle(event.target as L.Path)
+        const target = event.target as L.Path
+        target.getElement()?.classList.remove('agro-zone-hovered')
+        if (selectedZoneLayerRef.current !== target) {
+          zoneGeoJsonRef.current?.resetStyle(target)
+        }
       },
       click: (event: LeafletMouseEvent) => {
+        const target = event.target as L.Path
+        if (selectedZoneLayerRef.current !== target) {
+          selectedZoneLayerRef.current?.getElement()?.classList.remove(
+            'agro-zone-selected',
+          )
+          if (selectedZoneLayerRef.current) {
+            zoneGeoJsonRef.current?.resetStyle(selectedZoneLayerRef.current)
+          }
+          selectedZoneLayerRef.current = target
+          target.setStyle(zoneSelectedStyle)
+          target.getElement()?.classList.remove('agro-zone-hovered')
+          target.getElement()?.classList.add('agro-zone-selected')
+          target.bringToFront()
+        }
+
         const selection = selectCoordinate(
           event.latlng.lat,
           event.latlng.lng,
@@ -328,16 +393,19 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
       maxZoom={18}
       scrollWheelZoom
       style={{ height: '100%', width: '100%' }}
-      className="rounded-lg shadow-md"
+      className="premium-agri-map rounded-lg shadow-md"
     >
       <TileLayer
         minZoom={6}
         maxZoom={18}
-        attribution="© OpenStreetMap · Zones agroécologiques : Ministère de l'Agriculture du Sénégal"
+        opacity={0.48}
+        className="premium-basemap"
+        attribution="© OpenStreetMap contributors · Zones agroécologiques : Ministère de l'Agriculture du Sénégal"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
       <SearchBar />
+      <ZoneLegend />
       <GeoJSON data={outsideMaskGeoJSON} style={() => maskStyle} />
       <ZoomHandler />
 
