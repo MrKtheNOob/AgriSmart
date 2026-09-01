@@ -315,19 +315,17 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
   }
 
   const administrativeRegionStyle: PathOptions = {
-    color: '#5f6f67',
-    weight: 1.1,
-    opacity: 0.72,
-    fillColor: '#bed0c5',
-    fillOpacity: 0.34,
+    color: '#526171',
+    weight: 1.2,
+    opacity: 0.78,
+    fillOpacity: 0,
   }
 
   const administrativeDepartmentStyle: PathOptions = {
-    color: '#6f7d76',
+    color: '#697786',
     weight: 0.75,
     opacity: 0.62,
-    fillColor: '#d5dfda',
-    fillOpacity: 0.3,
+    fillOpacity: 0,
   }
 
   const administrativeHighlightStyle: PathOptions = {
