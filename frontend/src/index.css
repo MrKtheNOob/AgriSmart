@@ -59,6 +59,46 @@
   background: rgb(255 255 255 / 96%);
 }
 
+.map-mode-toggle {
+  backdrop-filter: blur(14px);
+  background: rgb(255 255 255 / 88%);
+  border: 1px solid rgb(148 163 184 / 24%);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgb(15 23 42 / 11%);
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 1000;
+}
+
+.map-mode-toggle button {
+  border: 0;
+  border-radius: 10px;
+  color: #5a6877;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 750;
+  padding: 8px 11px;
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.map-mode-toggle button:hover {
+  background: rgb(223 232 227 / 70%);
+  color: #264f43;
+}
+
+.map-mode-toggle button.is-active {
+  background: #2f6b59;
+  box-shadow: 0 4px 10px rgb(47 107 89 / 24%);
+  color: #ffffff;
+}
+
 .agro-zone-legend {
   backdrop-filter: blur(14px);
   background: rgb(255 255 255 / 86%);
@@ -156,4 +196,10 @@
   color: #526071;
   font-size: 8px;
   font-weight: 650;
+}
+
+@media (max-width: 768px) {
+  .map-mode-toggle {
+    top: 76px;
+  }
 }

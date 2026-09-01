@@ -130,9 +130,17 @@ interface MapProps {
   markerPosition: LatLngTuple | null
 }
 
-function AdministrativeLabels({ zoomLevel }: { zoomLevel: number }) {
+type MapMode = 'agroecological' | 'administrative'
+
+function AdministrativeLabels({
+  zoomLevel,
+  mapMode,
+}: {
+  zoomLevel: number
+  mapMode: MapMode
+}) {
   const showDepartments = zoomLevel >= 8
-  const showZones = zoomLevel <= 8
+  const showZones = mapMode === 'agroecological' && zoomLevel <= 8
 
   return (
     <>
@@ -196,6 +204,35 @@ function AdministrativeLabels({ zoomLevel }: { zoomLevel: number }) {
   )
 }
 
+function MapModeToggle({
+  value,
+  onChange,
+}: {
+  value: MapMode
+  onChange: (mode: MapMode) => void
+}) {
+  return (
+    <div className="map-mode-toggle" role="group" aria-label="Mode cartographique">
+      <button
+        type="button"
+        className={value === 'agroecological' ? 'is-active' : undefined}
+        aria-pressed={value === 'agroecological'}
+        onClick={() => onChange('agroecological')}
+      >
+        Pédologique
+      </button>
+      <button
+        type="button"
+        className={value === 'administrative' ? 'is-active' : undefined}
+        aria-pressed={value === 'administrative'}
+        onClick={() => onChange('administrative')}
+      >
+        Administratif
+      </button>
+    </div>
+  )
+}
+
 function ZoneLegend() {
   return (
     <div className="agro-zone-legend" aria-label="Légende des zones agroécologiques">
@@ -228,22 +265,33 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
   ]
 
   const [zoomLevel, setZoomLevel] = useState(6)
+  const [mapMode, setMapMode] = useState<MapMode>('agroecological')
   const zoneGeoJsonRef = useRef<LeafletGeoJSON | null>(null)
-  const selectedZoneLayerRef = useRef<L.Path | null>(null)
+  const regionGeoJsonRef = useRef<LeafletGeoJSON | null>(null)
+  const departmentGeoJsonRef = useRef<LeafletGeoJSON | null>(null)
+  const selectedAreaLayerRef = useRef<L.Path | null>(null)
+  const selectedAreaResetRef = useRef<(() => void) | null>(null)
   const outsideMaskGeoJSON = useMemo(
     () => buildOutsideMask(senegalRegions),
     [],
   )
 
-  useEffect(() => {
-    if (markerPosition || !selectedZoneLayerRef.current) return
-
-    selectedZoneLayerRef.current
-      .getElement()
+  const clearSelectedArea = () => {
+    selectedAreaLayerRef.current
+      ?.getElement()
       ?.classList.remove('agro-zone-selected')
-    zoneGeoJsonRef.current?.resetStyle(selectedZoneLayerRef.current)
-    selectedZoneLayerRef.current = null
+    selectedAreaResetRef.current?.()
+    selectedAreaLayerRef.current = null
+    selectedAreaResetRef.current = null
+  }
+
+  useEffect(() => {
+    if (!markerPosition) clearSelectedArea()
   }, [markerPosition])
+
+  useEffect(() => {
+    clearSelectedArea()
+  }, [mapMode])
 
   const zoneStyle = (feature?: GeoFeature): PathOptions => ({
     color: '#f8fafc',
@@ -266,6 +314,29 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
     fillOpacity: 0.58,
   }
 
+  const administrativeRegionStyle: PathOptions = {
+    color: '#5f6f67',
+    weight: 1.1,
+    opacity: 0.72,
+    fillColor: '#bed0c5',
+    fillOpacity: 0.34,
+  }
+
+  const administrativeDepartmentStyle: PathOptions = {
+    color: '#6f7d76',
+    weight: 0.75,
+    opacity: 0.62,
+    fillColor: '#d5dfda',
+    fillOpacity: 0.3,
+  }
+
+  const administrativeHighlightStyle: PathOptions = {
+    color: '#ffffff',
+    weight: 1.8,
+    fillColor: '#8eb29f',
+    fillOpacity: 0.5,
+  }
+
   const regionBoundaryStyle: PathOptions = {
     color: '#526171',
     weight: 0.85,
@@ -285,8 +356,8 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
 
   const maskStyle: PathOptions = {
     stroke: false,
-    fillColor: '#d9dde1',
-    fillOpacity: 0.76,
+    fillColor: '#9ca3af',
+    fillOpacity: 0.55,
     interactive: false,
   }
 
@@ -314,11 +385,48 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
     return { zoneName, regionName, departmentName }
   }
 
+  const selectAreaLayer = (
+    target: L.Path,
+    style: PathOptions,
+    reset: () => void,
+  ) => {
+    if (selectedAreaLayerRef.current === target) return
+
+    clearSelectedArea()
+    selectedAreaLayerRef.current = target
+    selectedAreaResetRef.current = reset
+    target.setStyle(style)
+    target.getElement()?.classList.remove('agro-zone-hovered')
+    target.getElement()?.classList.add('agro-zone-selected')
+    target.bringToFront()
+  }
+
+  const showSelectionPopup = (
+    event: LeafletMouseEvent,
+    selection: ReturnType<typeof selectCoordinate>,
+  ) => {
+    const lines = [
+      selection.departmentName
+        ? `<strong>Département :</strong> ${selection.departmentName}`
+        : null,
+      selection.regionName
+        ? `<strong>Région :</strong> ${selection.regionName}`
+        : null,
+      selection.zoneName
+        ? `<strong>Zone agricole :</strong> ${selection.zoneName}`
+        : null,
+    ].filter(Boolean)
+
+    ;(event.target as L.Path)
+      .bindPopup(lines.join('<br />'))
+      .openPopup(event.latlng)
+  }
+
   const onEachZone = (feature: GeoFeature, layer: L.Layer) => {
     layer.on({
       mouseover: (event: LeafletMouseEvent) => {
         const target = event.target as L.Path
-        if (selectedZoneLayerRef.current !== target) {
+        if (selectedAreaLayerRef.current !== target) {
           target.setStyle(zoneHighlightStyle)
           target.getElement()?.classList.add('agro-zone-hovered')
         }
@@ -327,46 +435,50 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
       mouseout: (event: LeafletMouseEvent) => {
         const target = event.target as L.Path
         target.getElement()?.classList.remove('agro-zone-hovered')
-        if (selectedZoneLayerRef.current !== target) {
+        if (selectedAreaLayerRef.current !== target) {
           zoneGeoJsonRef.current?.resetStyle(target)
         }
       },
       click: (event: LeafletMouseEvent) => {
         const target = event.target as L.Path
-        if (selectedZoneLayerRef.current !== target) {
-          selectedZoneLayerRef.current?.getElement()?.classList.remove(
-            'agro-zone-selected',
-          )
-          if (selectedZoneLayerRef.current) {
-            zoneGeoJsonRef.current?.resetStyle(selectedZoneLayerRef.current)
-          }
-          selectedZoneLayerRef.current = target
-          target.setStyle(zoneSelectedStyle)
-          target.getElement()?.classList.remove('agro-zone-hovered')
-          target.getElement()?.classList.add('agro-zone-selected')
-          target.bringToFront()
-        }
+        selectAreaLayer(target, zoneSelectedStyle, () =>
+          zoneGeoJsonRef.current?.resetStyle(target),
+        )
 
         const selection = selectCoordinate(
           event.latlng.lat,
           event.latlng.lng,
           feature,
         )
-        const lines = [
-          selection.departmentName
-            ? `<strong>Département :</strong> ${selection.departmentName}`
-            : null,
-          selection.regionName
-            ? `<strong>Région :</strong> ${selection.regionName}`
-            : null,
-          selection.zoneName
-            ? `<strong>Zone agricole :</strong> ${selection.zoneName}`
-            : null,
-        ].filter(Boolean)
+        showSelectionPopup(event, selection)
+      },
+    })
+  }
 
-        ;(event.target as L.Path)
-          .bindPopup(lines.join('<br />'))
-          .openPopup(event.latlng)
+  const onEachAdministrativeArea = (
+    _feature: GeoFeature,
+    layer: L.Layer,
+    resetStyle: (target: L.Path) => void,
+  ) => {
+    layer.on({
+      mouseover: (event: LeafletMouseEvent) => {
+        const target = event.target as L.Path
+        if (selectedAreaLayerRef.current !== target) {
+          target.setStyle(administrativeHighlightStyle)
+          target.getElement()?.classList.add('agro-zone-hovered')
+        }
+        target.bringToFront()
+      },
+      mouseout: (event: LeafletMouseEvent) => {
+        const target = event.target as L.Path
+        target.getElement()?.classList.remove('agro-zone-hovered')
+        if (selectedAreaLayerRef.current !== target) resetStyle(target)
+      },
+      click: (event: LeafletMouseEvent) => {
+        const target = event.target as L.Path
+        selectAreaLayer(target, zoneSelectedStyle, () => resetStyle(target))
+        const selection = selectCoordinate(event.latlng.lat, event.latlng.lng)
+        showSelectionPopup(event, selection)
       },
     })
   }
@@ -405,35 +517,66 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
       />
 
       <SearchBar />
-      <ZoneLegend />
+      <MapModeToggle value={mapMode} onChange={setMapMode} />
+      {mapMode === 'agroecological' ? <ZoneLegend /> : null}
       <GeoJSON data={outsideMaskGeoJSON} style={() => maskStyle} />
       <ZoomHandler />
 
-      <GeoJSON
-        key="agroecological-zones"
-        ref={zoneGeoJsonRef}
-        data={agroecologicalZones}
-        style={(feature) => zoneStyle(feature as GeoFeature | undefined)}
-        onEachFeature={onEachZone}
-      />
-
-      <GeoJSON
-        key="regions"
-        data={senegalRegions}
-        style={() => regionBoundaryStyle}
-        interactive={false}
-      />
-
-      {zoomLevel >= 8 ? (
+      {mapMode === 'agroecological' ? (
+        <>
+          <GeoJSON
+            key="agroecological-zones"
+            ref={zoneGeoJsonRef}
+            data={agroecologicalZones}
+            style={(feature) => zoneStyle(feature as GeoFeature | undefined)}
+            onEachFeature={onEachZone}
+          />
+          <GeoJSON
+            key="region-boundaries"
+            data={senegalRegions}
+            style={() => regionBoundaryStyle}
+            interactive={false}
+          />
+          {zoomLevel >= 8 ? (
+            <GeoJSON
+              key="department-boundaries"
+              data={senegalDepartments}
+              style={() => departmentBoundaryStyle}
+              interactive={false}
+            />
+          ) : null}
+        </>
+      ) : zoomLevel >= 8 ? (
         <GeoJSON
-          key="departments"
+          key="administrative-departments"
+          ref={departmentGeoJsonRef}
           data={senegalDepartments}
-          style={() => departmentBoundaryStyle}
-          interactive={false}
+          style={() => administrativeDepartmentStyle}
+          onEachFeature={(feature, layer) =>
+            onEachAdministrativeArea(
+              feature as GeoFeature,
+              layer,
+              (target) => departmentGeoJsonRef.current?.resetStyle(target),
+            )
+          }
         />
-      ) : null}
+      ) : (
+        <GeoJSON
+          key="administrative-regions"
+          ref={regionGeoJsonRef}
+          data={senegalRegions}
+          style={() => administrativeRegionStyle}
+          onEachFeature={(feature, layer) =>
+            onEachAdministrativeArea(
+              feature as GeoFeature,
+              layer,
+              (target) => regionGeoJsonRef.current?.resetStyle(target),
+            )
+          }
+        />
+      )}
 
-      <AdministrativeLabels zoomLevel={zoomLevel} />
+      <AdministrativeLabels zoomLevel={zoomLevel} mapMode={mapMode} />
       {markerPosition ? <Marker position={markerPosition} /> : null}
     </MapContainer>
   )
