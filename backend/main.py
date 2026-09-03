@@ -16,6 +16,8 @@ from services.climate.climate_service import ClimateService
 from shared.database_service import DatabaseService
 from services.telemetry.api import get_telemetry_service, router as telemetry_router
 from services.soil.isdasoil_service import iSDAsoilService
+from services.soil.soil_analysis_service import SoilAnalysisService
+from services.soil.zone_service import ZoneService
 from services.RAG.vector_store import VectorStore
 from services.soil.water_insight_service import WaterInsightService
 from services.telemetry.telemetry_service import TelemetryService
@@ -48,9 +50,15 @@ async def lifespan(app: FastAPI):
 
     # Define paths relative to this file
     base_dir = os.path.dirname(__file__)
-    feather_path = os.path.join(base_dir, "data/processed/senegal_climate.feather")
+    feather_path = os.path.join(
+        base_dir, "data/processed/senegal_climate_monthly.feather"
+    )
     markdown_file = os.path.join(base_dir, "data/RAG/agronomy_data.md")
     persist_directory = os.path.join(base_dir, "data/RAG/chroma_db")
+    soil_metadata_path = os.path.join(base_dir, "data/processed/soil_metadata.json")
+    zone_geojson_path = os.path.join(
+        base_dir, "data/geographic/senegal_agroecological_zones.geojson"
+    )
 
     try:
         # Database and telemetry service initialization
@@ -67,8 +75,14 @@ async def lifespan(app: FastAPI):
         app.state.telemetry_service = telemetry_service
 
         # Initialize sub-services
-        soil_service = iSDAsoilService(
+        isda_service = iSDAsoilService(
             email=os.getenv("ISDA_EMAIL",""), password=os.getenv("ISDA_PASSWORD","")
+        )
+        zone_service = ZoneService(zone_geojson_path)
+        soil_service = SoilAnalysisService(
+            isda_service=isda_service,
+            zone_service=zone_service,
+            metadata_path=soil_metadata_path,
         )
 
         # Async initialization

@@ -1,7 +1,7 @@
 from typing import Dict, Any
 import logging
 from services.climate.climate_service import ClimateMetrics
-from services.soil.isdasoil_service import SoilProfile
+from services.soil.schemas import SoilProfile
 
 logger = logging.getLogger(__name__)
 

@@ -1,125 +1,173 @@
-import logging
-import pandas as pd
-import numpy as np
-from pydantic import BaseModel
-import time
 import asyncio
+import logging
+import time
+from pathlib import Path
+from typing import Any, cast
+
+import numpy as np
+import pandas as pd
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
+DEFAULT_DATA_PATH = Path(__file__).resolve().parents[2] / "data/processed/senegal_climate_monthly.feather"
+
+
+class ClimateDataPeriod(BaseModel):
+    start: str
+    end: str
+
+
+class ClimateSummary(BaseModel):
+    temperature_mean_c: float
+    annual_precipitation_mean_mm: float
+    heat_days_mean: float
+    rainy_days_mean: float
+
+
+class MonthlyClimate(BaseModel):
+    month: int = Field(ge=1, le=12)
+    temperature_mean_c: float
+    temperature_min_c: float
+    temperature_max_c: float
+    relative_humidity_mean_pct: float
+    apparent_temperature_mean_c: float
+    precipitation_mean_mm: float
+    vapor_pressure_deficit_mean_kpa: float
+    heat_days_mean: float
+    rainy_days_mean: float
+    years_observed: int
 
 
 class ClimateMetrics(BaseModel):
     region: str
-    annual_stats: dict
-    seasonality: float
-    heat_days: int
-    rainy_days: int
-    drought_index: dict
+    latitude: float
+    longitude: float
+    data_period: ClimateDataPeriod
+    summary: ClimateSummary
+    monthly_climate: list[MonthlyClimate]
 
 
 class ClimateService:
-    def __init__(self, feather_path="../data/processed/senegal_climate.feather"):
-        # synchronous constructor remains for backward compatibility
-        logger.info(f"Loading climate data from {feather_path}")
+    def __init__(self, feather_path: str | Path = DEFAULT_DATA_PATH):
+        logger.info("Loading monthly climate data from %s", feather_path)
         self._load_feather(feather_path)
 
-    def _load_feather(self, feather_path: str):
+    def _load_feather(self, feather_path: str | Path) -> None:
         self.df = pd.read_feather(feather_path)
-        self.df["region"] = self.df["region"].astype(str)  # ensure string dtype
-        self.df["time"] = pd.to_datetime(self.df["time"])
-        self.df.set_index("time", inplace=True)
-        logger.debug(f"Climate data loaded: {len(self.df)} rows")
+        required_columns = {
+            "region",
+            "latitude",
+            "longitude",
+            "year",
+            "month",
+            "month_start",
+            "temperature_mean_c",
+            "temperature_min_c",
+            "temperature_max_c",
+            "relative_humidity_mean_pct",
+            "apparent_temperature_mean_c",
+            "precipitation_total_mm",
+            "vapor_pressure_deficit_mean_kpa",
+            "heat_days",
+            "rainy_days",
+        }
+        missing_columns = required_columns.difference(self.df.columns)
+        if missing_columns:
+            missing = ", ".join(sorted(missing_columns))
+            raise ValueError(f"Monthly climate dataset is missing columns: {missing}")
+
+        self.df["region"] = self.df["region"].astype(str)
+        self.df["month_start"] = pd.to_datetime(self.df["month_start"], utc=True)
+        logger.debug("Loaded %s monthly climate records", len(self.df))
 
     @classmethod
-    async def create(cls, feather_path: str = "../data/processed/senegal_climate.feather") -> "ClimateService":
-        """Async factory to create ClimateService and load feather in a thread."""
+    async def create(cls, feather_path: str | Path = DEFAULT_DATA_PATH) -> "ClimateService":
         self = cls.__new__(cls)
-        # run the blocking IO in a thread
         await asyncio.to_thread(self._load_feather, feather_path)
         return self
 
-    def _get_nearest_station(self, lat, lon):
-        """Finds the nearest station using Euclidean distance. Returns the region name (string)."""
-        df_stations = self.df[["latitude", "longitude", "region"]].drop_duplicates().reset_index(drop=True)
-        df_stations["distance"] = np.sqrt(
-            (df_stations["latitude"] - lat) ** 2 + (df_stations["longitude"] - lon) ** 2
+    def _get_nearest_station(self, lat: float, lon: float) -> tuple[str, float, float]:
+        stations = self.df[["latitude", "longitude", "region"]].drop_duplicates().reset_index(drop=True)
+        stations["distance"] = np.sqrt((stations["latitude"] - lat) ** 2 + (stations["longitude"] - lon) ** 2)
+        nearest = cast(
+            dict[str, Any],
+            stations.loc[stations["distance"].idxmin()].to_dict(),
         )
-        nearest = df_stations.loc[df_stations["distance"].idxmin(), "region"]
-        return str(nearest)  # force scalar string
+        return str(nearest["region"]), float(nearest["latitude"]), float(nearest["longitude"])
 
-    def _aggregate_annual_stats(self, region_name):
-        """Aggregates annual statistics for a region."""
-        region_df = self.df[self.df["region"] == region_name].copy()
-        region_df["year"] = region_df.index.year
-        stats = (
-            region_df.groupby("year")
-            .agg(
-                {
-                    "temperature_2m": "mean",
-                    "precipitation": "sum",
-                    "snowfall": "sum",
-                    "apparent_temperature": "mean",
-                }
+    def _build_profile(self, region: str, latitude: float, longitude: float) -> ClimateMetrics:
+        region_data = self.df[self.df["region"] == region].copy()
+        if region_data.empty:
+            raise ValueError(f"No monthly climate records found for {region}")
+
+        grouped = region_data.groupby("month", as_index=False).agg(
+            temperature_mean_c=("temperature_mean_c", "mean"),
+            temperature_min_c=("temperature_min_c", "mean"),
+            temperature_max_c=("temperature_max_c", "mean"),
+            relative_humidity_mean_pct=("relative_humidity_mean_pct", "mean"),
+            apparent_temperature_mean_c=("apparent_temperature_mean_c", "mean"),
+            precipitation_mean_mm=("precipitation_total_mm", "mean"),
+            vapor_pressure_deficit_mean_kpa=(
+                "vapor_pressure_deficit_mean_kpa",
+                "mean",
+            ),
+            heat_days_mean=("heat_days", "mean"),
+            rainy_days_mean=("rainy_days", "mean"),
+            years_observed=("year", "nunique"),
+        )
+        if len(grouped) != 12:
+            available = ", ".join(str(month) for month in grouped["month"].tolist())
+            raise ValueError(f"Expected 12 climate months for {region}; found {available}")
+
+        monthly_records = cast(
+            list[dict[str, Any]],
+            grouped.to_dict(orient="records"),
+        )
+        monthly_climate = [
+            MonthlyClimate(
+                month=int(row["month"]),
+                temperature_mean_c=round(float(row["temperature_mean_c"]), 2),
+                temperature_min_c=round(float(row["temperature_min_c"]), 2),
+                temperature_max_c=round(float(row["temperature_max_c"]), 2),
+                relative_humidity_mean_pct=round(float(row["relative_humidity_mean_pct"]), 2),
+                apparent_temperature_mean_c=round(float(row["apparent_temperature_mean_c"]), 2),
+                precipitation_mean_mm=round(float(row["precipitation_mean_mm"]), 2),
+                vapor_pressure_deficit_mean_kpa=round(float(row["vapor_pressure_deficit_mean_kpa"]), 3),
+                heat_days_mean=round(float(row["heat_days_mean"]), 1),
+                rainy_days_mean=round(float(row["rainy_days_mean"]), 1),
+                years_observed=int(row["years_observed"]),
             )
-            .to_dict(orient="index")
+            for row in monthly_records
+        ]
+
+        summary = ClimateSummary(
+            temperature_mean_c=round(float(grouped["temperature_mean_c"].mean()), 2),
+            annual_precipitation_mean_mm=round(float(grouped["precipitation_mean_mm"].sum()), 2),
+            heat_days_mean=round(float(grouped["heat_days_mean"].sum()), 1),
+            rainy_days_mean=round(float(grouped["rainy_days_mean"].sum()), 1),
         )
-        # Ensure keys (years) are strings for JSON serialization
-        return {str(k): v for k, v in stats.items()}
+        return ClimateMetrics(
+            region=region,
+            latitude=latitude,
+            longitude=longitude,
+            data_period=ClimateDataPeriod(
+                start=region_data["month_start"].min().date().isoformat(),
+                end=region_data["month_start"].max().date().isoformat(),
+            ),
+            summary=summary,
+            monthly_climate=monthly_climate,
+        )
 
-    def _compute_seasonality(self, rainfall_series):
-        monthly = rainfall_series.resample("ME").sum()
-        return monthly.std() / monthly.mean() if monthly.mean() != 0 else np.nan
-
-    def _compute_heat_days(self, temp_series, threshold=30):
-        daily = temp_series.resample("D").mean()
-        yearly_heat_days = (daily > threshold).resample("YE").sum()
-        return int(round(yearly_heat_days.mean())) if len(yearly_heat_days) else 0
-
-    def _compute_rainy_days(self, rainfall_series, threshold=1.0):
-        daily_rainfall = rainfall_series.resample("D").sum()
-        yearly_rainy_days = (daily_rainfall >= threshold).resample("YE").sum()
-        return int(round(yearly_rainy_days.mean())) if len(yearly_rainy_days) else 0
-
-    def _compute_drought_index(self, rainfall_series):
-        monthly = rainfall_series.resample("ME").sum()
-        mean = monthly.mean()
-        std = monthly.std()
-        drought_index = (monthly - mean) / std if std != 0 else np.nan
-        # Convert Timestamp keys to string for JSON serialization
-        return {str(k): v for k, v in drought_index.to_dict().items()} # type: ignore
-
-    async def get_climate_profile(self, lat, lon) -> ClimateMetrics:
-        """Async entry to compute climate profile; heavy pandas ops run in a thread."""
-        logger.info(f"Retrieving climate profile for lat={lat}, lon={lon}")
+    async def get_climate_profile(self, lat: float, lon: float) -> ClimateMetrics:
+        logger.info("Retrieving climate profile for lat=%s, lon=%s", lat, lon)
         try:
-            region_name = await asyncio.to_thread(self._get_nearest_station, lat, lon)
-
-            # slice region dataframe in thread to avoid blocking
-            region_df = await asyncio.to_thread(lambda: self.df[self.df["region"] == region_name])
-            annual_stats = await asyncio.to_thread(self._aggregate_annual_stats, region_name)
-            seasonality = await asyncio.to_thread(self._compute_seasonality, region_df["precipitation"])
-            heat_days = await asyncio.to_thread(self._compute_heat_days, region_df["temperature_2m"])
-            rainy_days = await asyncio.to_thread(self._compute_rainy_days, region_df["precipitation"])
-            drought_index = await asyncio.to_thread(self._compute_drought_index, region_df["precipitation"])
-
-            response = ClimateMetrics(
-                region=region_name,
-                annual_stats=annual_stats,
-                seasonality=seasonality,
-                heat_days=heat_days,
-                rainy_days=rainy_days,
-                drought_index=drought_index,
-            )
-
-            logger.info(
-                f"Climate profile retrieved: region={response.region}, heat_days={response.heat_days}, rainy_days={response.rainy_days}"
-            )
-
+            region, station_latitude, station_longitude = await asyncio.to_thread(self._get_nearest_station, lat, lon)
+            response = await asyncio.to_thread(self._build_profile, region, station_latitude, station_longitude)
+            logger.info("Climate profile retrieved from nearest station: %s", region)
             return response
-        except Exception as e:
-            logger.error(f"Error retrieving climate profile: {str(e)}", exc_info=True)
+        except Exception:
+            logger.exception("Failed to retrieve climate profile")
             raise
-
 
 
 if __name__ == "__main__":
@@ -128,18 +176,15 @@ if __name__ == "__main__":
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
     start_time = time.time()
-    logger.info("Starting ClimateService test")
-    try:
-        async def main():
-            service = await ClimateService.create()
-            
-            result = await service.get_climate_profile(lat=14.64544074287179, lon=-16.29337186288759)
-            print(result.model_dump_json())
 
-        asyncio.run(main())
+    async def main() -> None:
+        service = await ClimateService.create()
+        result = await service.get_climate_profile(
+            lat=14.64544074287179,
+            lon=-16.29337186288759,
+        )
+        output_path = Path(__file__).resolve().parents[2] / "data/processed/climate_profile.json"
+        output_path.write_text(result.model_dump_json(indent=2), encoding="utf-8")
 
-        logger.info("ClimateService test completed successfully")
-        elapsed_time = time.time() - start_time
-        logger.info(f"Total process time: {elapsed_time:.2f} seconds")
-    except Exception as e:
-        logger.error(f"Error in ClimateService test: {str(e)}", exc_info=True)
+    asyncio.run(main())
+    logger.info("Climate service test completed in %.2f seconds", time.time() - start_time)

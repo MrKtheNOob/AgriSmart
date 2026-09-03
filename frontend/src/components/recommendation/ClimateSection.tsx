@@ -5,23 +5,12 @@ interface ClimateSectionProps {
 }
 
 export default function ClimateSection({ climate }: ClimateSectionProps) {
-  const calculateAverages = (annualStats: Climate["annual_stats"]) => {
-    const years = Object.values(annualStats || {});
-    if (years.length === 0) {
-      return { avgTemp: 0, avgRainfall: 0 };
-    }
-    const totalTemp = years.reduce((sum, year) => sum + year.temperature_2m, 0);
-    const totalRainfall = years.reduce(
-      (sum, year) => sum + year.precipitation,
-      0,
-    );
-    return {
-      avgTemp: totalTemp / years.length,
-      avgRainfall: totalRainfall / years.length,
-    };
-  };
-
-  const { avgTemp, avgRainfall } = calculateAverages(climate.annual_stats);
+  const {
+    temperature_mean_c: avgTemp,
+    annual_precipitation_mean_mm: avgRainfall,
+    heat_days_mean: heatDays,
+    rainy_days_mean: rainyDays,
+  } = climate.summary;
 
   return (
     <section className="bg-orange-50 p-6 rounded-3xl border border-orange-100 animate-in fade-in slide-in-from-bottom-4">
@@ -52,26 +41,26 @@ export default function ClimateSection({ climate }: ClimateSectionProps) {
             Jours de forte chaleur / an
           </span>
           <span className="font-bold text-orange-900">
-            {climate.heat_days || 0}j/an
+            {heatDays || 0}j/an
           </span>
         </div>
         <div className="w-full bg-orange-200/50 rounded-full h-1.5">
           <div
             className="bg-orange-500 h-1.5 rounded-full"
-            style={{ width: `${((climate.heat_days || 0) / 365) * 100}%` }}
+            style={{ width: `${((heatDays || 0) / 365) * 100}%` }}
           ></div>
         </div>
 
         <div className="flex justify-between items-center text-sm mt-4">
           <span className="text-blue-700 font-medium">Jours de pluie / an</span>
           <span className="font-bold text-blue-900">
-            {climate.rainy_days || 0}j/an
+            {rainyDays || 0}j/an
           </span>
         </div>
         <div className="w-full bg-blue-200/50 rounded-full h-1.5">
           <div
             className="bg-blue-500 h-1.5 rounded-full"
-            style={{ width: `${((climate.rainy_days || 0) / 365) * 100}%` }}
+            style={{ width: `${((rainyDays || 0) / 365) * 100}%` }}
           ></div>
         </div>
       </div>

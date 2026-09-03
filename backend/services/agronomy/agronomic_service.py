@@ -4,7 +4,8 @@
 import logging
 import asyncio
 
-from services.soil.isdasoil_service import DesertLandError, iSDAsoilService
+from services.soil.isdasoil_service import DesertLandError
+from services.soil.soil_analysis_service import SoilAnalysisService
 from services.climate.climate_service import ClimateService
 
 from services.RAG.RAG_service import RAGService
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 class AgronomicService:
     def __init__(
         self,
-        soil_service: iSDAsoilService,
+        soil_service: SoilAnalysisService,
         climate_service: ClimateService,
         rag_service: RAGService,
         water_insight_service: WaterInsightService,

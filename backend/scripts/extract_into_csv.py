@@ -1,12 +1,14 @@
 """
 Script to gather Senegal weather data for the past 6 years
 """
+
 import openmeteo_requests
 import requests_cache
 import pandas as pd
 from retry_requests import retry
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+
 
 # -------------------------
 # Pydantic Data Model
@@ -33,7 +35,7 @@ class ClimateRecord(BaseModel):
 # -------------------------
 # Open-Meteo Client Setup
 # -------------------------
-cache_session = requests_cache.CachedSession('.cache', expire_after=-1)
+cache_session = requests_cache.CachedSession(".cache", expire_after=-1)
 retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
 openmeteo = openmeteo_requests.Client(session=retry_session)
 
@@ -41,7 +43,7 @@ openmeteo = openmeteo_requests.Client(session=retry_session)
 # -------------------------
 # Senegal Climate Regions
 # -------------------------
-regions = [
+weather_locations = [
     {"name": "Dakar", "lat": 14.6922, "lon": -17.4483},
     {"name": "Touba", "lat": 14.8646, "lon": -15.8833},
     {"name": "Thiès", "lat": 14.7915, "lon": -16.9297},
@@ -49,13 +51,22 @@ regions = [
     {"name": "Mbour", "lat": 14.4220, "lon": -16.9639},
     {"name": "Saint-Louis", "lat": 16.0179, "lon": -16.5042},
     {"name": "Ziguinchor", "lat": 12.5833, "lon": -16.2719},
+    {"name": "Diourbel", "lat": 14.6550, "lon": -16.2314},
+    {"name": "Louga", "lat": 15.6187, "lon": -16.2244},
+    {"name": "Tambacounda", "lat": 13.7707, "lon": -13.6673},
+    {"name": "Kolda", "lat": 12.8939, "lon": -14.9413},
+    {"name": "Kédougou", "lat": 12.5556, "lon": -12.1808},
+    {"name": "Matam", "lat": 15.6559, "lon": -13.2554},
+    {"name": "Fatick", "lat": 14.3390, "lon": -16.4111},
+    {"name": "Kaffrine", "lat": 14.1059, "lon": -15.5508},
+    {"name": "Sédhiou", "lat": 12.7081, "lon": -15.5569},
 ]
 
 # -------------------------
 # Date Range (Past 6 Years)
 # -------------------------
 end_date = datetime.utcnow().date()
-start_date = end_date - timedelta(days=365*6)
+start_date = end_date - timedelta(days=365 * 5)
 
 # -------------------------
 # Variables for AI Modeling
@@ -71,25 +82,22 @@ hourly_variables = [
     "surface_pressure",
     "cloud_cover",
     "shortwave_radiation",
-    "vapor_pressure_deficit"
+    "vapor_pressure_deficit",
 ]
 
 all_records = []
 
-for region in regions:
+for region in weather_locations:
     params = {
         "latitude": region["lat"],
         "longitude": region["lon"],
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
         "hourly": hourly_variables,
-        "timezone": "Africa/Dakar"
+        "timezone": "Africa/Dakar",
     }
 
-    responses = openmeteo.weather_api(
-        "https://archive-api.open-meteo.com/v1/archive",
-        params=params
-    )
+    responses = openmeteo.weather_api("https://archive-api.open-meteo.com/v1/archive", params=params)
 
     response = responses[0]
     hourly = response.Hourly()
@@ -99,7 +107,7 @@ for region in regions:
             start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
             end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
             freq=pd.Timedelta(seconds=hourly.Interval()),
-            inclusive="left"
+            inclusive="left",
         )
     }
 
@@ -109,12 +117,7 @@ for region in regions:
     df = pd.DataFrame(data)
 
     for _, row in df.iterrows():
-        record = ClimateRecord(
-            region=region["name"],
-            latitude=region["lat"],
-            longitude=region["lon"],
-            **row.to_dict()
-        )
+        record = ClimateRecord(region=region["name"], latitude=region["lat"], longitude=region["lon"], **row.to_dict())
         print(f"Processed: {record.region} at {record.time}")
         all_records.append(record.model_dump())
 

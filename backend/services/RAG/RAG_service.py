@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 
 
 from services.climate.climate_service import ClimateMetrics
-from services.soil.isdasoil_service import SoilProfile
+from services.soil.schemas import SoilProfile
 from services.RAG.vector_store import VectorStore
 
 
@@ -114,13 +114,10 @@ class RAGService:
         sand = props.get("Sand content", "Unknown")
         cec = props.get("Effective Cation Exchange Capacity", "Unknown")
 
-        # Compute climate averages
-        years = list(climate.annual_stats.values())
-        avg_temp = sum(y["temperature_2m"] for y in years) / len(years)
-        avg_precip = sum(y["precipitation"] for y in years) / len(years)
-
-        heat_days = climate.heat_days
-        rainy_days = climate.rainy_days
+        avg_temp = climate.summary.temperature_mean_c
+        avg_precip = climate.summary.annual_precipitation_mean_mm
+        heat_days = climate.summary.heat_days_mean
+        rainy_days = climate.summary.rainy_days_mean
 
         query = f"""
         Agronomic conditions in Senegal:
@@ -133,7 +130,7 @@ class RAGService:
         Sand content: {sand}
         Cation exchange capacity: {cec}
 
-        Climate (6-year average):
+        Historical climate summary:
         Average temperature: {avg_temp:.1f} °C
         Average annual precipitation: {avg_precip:.1f} mm
         Heat stress days per year: {heat_days}

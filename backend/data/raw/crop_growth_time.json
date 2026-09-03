@@ -1,0 +1,199 @@
+[
+  {
+    "crop": "Tomato",
+    "sowing_to_first_harvest_days": {
+      "minimum": 85,
+      "maximum": 125
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 25,
+        "maximum": 35
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 60,
+        "maximum": 90
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 85,
+        "maximum": 125
+      }
+    }
+  },
+  {
+    "crop": "Onion",
+    "sowing_to_first_harvest_days": {
+      "minimum": 110,
+      "maximum": 170
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 35,
+        "maximum": 50
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 90,
+        "maximum": 130
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 125,
+        "maximum": 180
+      }
+    }
+  },
+  {
+    "crop": "Chili Pepper",
+    "sowing_to_first_harvest_days": {
+      "minimum": 105,
+      "maximum": 150
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 35,
+        "maximum": 50
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 70,
+        "maximum": 100
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 105,
+        "maximum": 150
+      }
+    }
+  },
+  {
+    "crop": "Okra",
+    "sowing_to_first_harvest_days": {
+      "minimum": 50,
+      "maximum": 85
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 20,
+        "maximum": 30
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 40,
+        "maximum": 60
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 60,
+        "maximum": 90
+      }
+    }
+  },
+  {
+    "crop": "Eggplant",
+    "sowing_to_first_harvest_days": {
+      "minimum": 120,
+      "maximum": 175
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 30,
+        "maximum": 45
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 90,
+        "maximum": 130
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 120,
+        "maximum": 175
+      }
+    }
+  },
+  {
+    "crop": "Carrot",
+    "sowing_to_first_harvest_days": {
+      "minimum": 70,
+      "maximum": 110
+    },
+    "with_transplanting": null
+  },
+  {
+    "crop": "Cabbage",
+    "sowing_to_first_harvest_days": {
+      "minimum": 105,
+      "maximum": 155
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 25,
+        "maximum": 35
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 80,
+        "maximum": 120
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 105,
+        "maximum": 155
+      }
+    }
+  },
+  {
+    "crop": "Lettuce",
+    "sowing_to_first_harvest_days": {
+      "minimum": 45,
+      "maximum": 70
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 20,
+        "maximum": 30
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 25,
+        "maximum": 40
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 45,
+        "maximum": 70
+      }
+    }
+  },
+  {
+    "crop": "Watermelon",
+    "sowing_to_first_harvest_days": {
+      "minimum": 75,
+      "maximum": 105
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 15,
+        "maximum": 25
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 60,
+        "maximum": 85
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 75,
+        "maximum": 110
+      }
+    }
+  },
+  {
+    "crop": "Bell Pepper",
+    "sowing_to_first_harvest_days": {
+      "minimum": 110,
+      "maximum": 160
+    },
+    "with_transplanting": {
+      "nursery_days": {
+        "minimum": 35,
+        "maximum": 50
+      },
+      "transplanting_to_first_harvest_days": {
+        "minimum": 75,
+        "maximum": 110
+      },
+      "total_sowing_to_first_harvest_days": {
+        "minimum": 110,
+        "maximum": 160
+      }
+    }
+  }
+]

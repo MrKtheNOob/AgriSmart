@@ -9,13 +9,21 @@
     "requirements": {
       "soil": {
         "ph": {
-          "optimal": {"minimum": 5, "maximum": 7},
-          "tolerable": {"minimum": 4.5, "maximum": 8.5},
+          "optimal": {"minimum": 5.0, "maximum": 7.0},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
           "claims": [
-            {"original_value": "5–7", "original_unit": "pH", "normalized_minimum": 5, "normalized_maximum": 7, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5–7"},
-            {"original_value": "4.5–8.5", "original_unit": "pH", "normalized_minimum": 4.5, "normalized_maximum": 8.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.5–8.5"}
+            {
+              "original_value": "5.0-7.0",
+              "original_unit": "pH",
+              "normalized_minimum": 5.0,
+              "normalized_maximum": 7.0,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "5.0-7.0"
+            }
           ]
         },
         "nitrogen_total": null,
@@ -29,87 +37,101 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 18, "maximum": 33},
-          "tolerable": {"minimum": 10, "maximum": 47},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
           "claims": [
-            {"original_value": "18–33", "original_unit": "°C", "normalized_minimum": 18, "normalized_maximum": 33, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "18–33"},
-            {"original_value": "10–47", "original_unit": "°C", "normalized_minimum": 10, "normalized_maximum": 47, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "10–47"}
+            {
+              "original_value": "18-33",
+              "original_unit": "°C",
+              "normalized_minimum": 18,
+              "normalized_maximum": 33,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "18-33"
+            }
           ]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies maize as having medium-high sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies maize as having medium-high sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained to excessively drained soils, not poorly drained or saturated soils (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 500, "maximum": 800},
+          "optimal": {"minimum": 500.0, "maximum": 800.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
           "claims": [
-            {"original_value": "500–800", "original_unit": "mm/total growing period", "normalized_minimum": 500, "normalized_maximum": 800, "source_id": "source_002", "source_location": "Table 14, indicative crop water needs", "evidence_type": "explicit", "supporting_quote": "500–800"},
-            {"original_value": "500–800", "original_unit": "mm", "normalized_minimum": 500, "normalized_maximum": 800, "source_id": "source_003", "source_location": "Crop water requirement paragraph", "evidence_type": "explicit", "supporting_quote": "500–800"}
+            {
+              "original_value": "500.0-800.0",
+              "original_unit": "mm",
+              "normalized_minimum": 500.0,
+              "normalized_maximum": 800.0,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "500.0-800.0"
+            }
           ]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 65, "maximum": 365},
+          "optimal": {"minimum": 65, "maximum": 365},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
           "claims": [
-            {"original_value": "65–365", "original_unit": "days", "normalized_minimum": 65, "normalized_maximum": 365, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "65–365"}
+            {
+              "original_value": "65-365",
+              "original_unit": "days",
+              "normalized_minimum": 65,
+              "normalized_maximum": 365,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "65-365"
+            }
           ]
         },
-        "growth_stages": [
-          {
-            "id": "flowering",
-            "name": "Flowering / tasseling-silking",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": null,
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": "High; FAO identifies flowering as the period of greatest yield reduction under water deficit.",
-            "evidence_source_ids": ["source_003"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Zea mays", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2175", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO EcoCrop global ecological envelope; rainfall field is annual."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Official FAO irrigation guidance; seasonal water values are indicative and climate-dependent."},
-      {"id": "source_003", "title": "Maize crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/maize/ru/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific FAO water and water-stress information."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Used only to preserve pre-existing non-null values; not treated as new agronomic evidence."
+      },
+      {
+        "id": "source_001",
+        "title": "Zea mays ssp. mays — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=238663",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Drainage evidence is categorical. Waterlogging tolerance is inferred from suitable drainage classes rather than a measured flooding threshold."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.soil.preferred_texture_classes",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "FAO EcoCrop lists a 65–365 day crop cycle; the FAO irrigation manual gives an indicative 125–180 days for grain maize. No averaging was performed because cultivar, climate and calendar strongly affect duration.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["65–365 days", "125–180 days"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -121,13 +143,21 @@
     "requirements": {
       "soil": {
         "ph": {
-          "optimal": {"minimum": 5, "maximum": 6.5},
-          "tolerable": {"minimum": 4.5, "maximum": 8.3},
+          "optimal": {"minimum": 5.0, "maximum": 6.5},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
           "claims": [
-            {"original_value": "5–6.5", "original_unit": "pH", "normalized_minimum": 5, "normalized_maximum": 6.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5–6.5"},
-            {"original_value": "4.5–8.3", "original_unit": "pH", "normalized_minimum": 4.5, "normalized_maximum": 8.3, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.5–8.3"}
+            {
+              "original_value": "5.0-6.5",
+              "original_unit": "pH",
+              "normalized_minimum": 5.0,
+              "normalized_maximum": 6.5,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "5.0-6.5"
+            }
           ]
         },
         "nitrogen_total": null,
@@ -141,208 +171,129 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 25, "maximum": 35},
-          "tolerable": {"minimum": 12, "maximum": 40},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
           "claims": [
-            {"original_value": "25–35", "original_unit": "°C", "normalized_minimum": 25, "normalized_maximum": 35, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "25–35"},
-            {"original_value": "12–40", "original_unit": "°C", "normalized_minimum": 12, "normalized_maximum": 40, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "12–40"}
+            {
+              "original_value": "25-35",
+              "original_unit": "°C",
+              "normalized_minimum": 25,
+              "normalized_maximum": 35,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "25-35"
+            }
           ]
         },
-        "seasonal_rainfall": null,
-        "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies sorghum/millet as having low sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
+        "seasonal_rainfall": {
+          "optimal": {"minimum": null, "maximum": null},
+          "tolerable": {"minimum": 400, "maximum": 500},
+          "critical": {"minimum": null, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [
+            {
+              "original_value": "around 400-500",
+              "original_unit": "mm",
+              "normalized_minimum": 400,
+              "normalized_maximum": 500,
+              "source_id": "source_002",
+              "source_location": "West Africa dry-tropics discussion of millet/sorghum production",
+              "evidence_type": "inferred",
+              "supporting_quote": "requires around 400-500 mm of rain"
+            }
+          ]
         },
-        "waterlogging_tolerance": null
+        "heat_tolerance": null,
+        "drought_tolerance": "FAO classifies sorghum/millet as having low sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well to excessively drained soils, not poorly drained or saturated soils (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 450, "maximum": 650},
+          "optimal": {"minimum": 450.0, "maximum": 650.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
           "claims": [
-            {"original_value": "450–650", "original_unit": "mm/total growing period", "normalized_minimum": 450, "normalized_maximum": 650, "source_id": "source_002", "source_location": "Table 14, Sorghum/Millet", "evidence_type": "explicit", "supporting_quote": "450–650"}
+            {
+              "original_value": "450.0-650.0",
+              "original_unit": "mm",
+              "normalized_minimum": 450.0,
+              "normalized_maximum": 650.0,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "450.0-650.0"
+            }
           ]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 60, "maximum": 120},
-          "critical": {"minimum": null, "maximum": null},
-          "canonical_unit": "days",
-          "claims": [
-            {"original_value": "60–120", "original_unit": "days", "normalized_minimum": 60, "normalized_maximum": 120, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "60–120"}
-          ]
-        },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 0, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "0", "original_unit": "°C", "normalized_minimum": 0, "normalized_maximum": 0, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "0"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          }
-        ]
-      }
-    },
-    "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Pennisetum glaucum", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO EcoCrop global ecological envelope; rainfall is annual."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Official FAO indicative crop-water and drought-sensitivity table."}
-    ],
-    "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
-    ],
-    "conflicts": [
-      {
-        "field": "crop.common_name",
-        "description": "Generic 'Millet' is scoped to pearl millet, Pennisetum glaucum; other millet species are outside this record.",
-        "source_ids": ["source_001"]
-      },
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 60–120 days, while the FAO irrigation manual gives an indicative 105–140 days for millet. Values were not averaged.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["60–120 days", "105–140 days"]
-      }
-    ]
-  },
-  {
-    "schema_version": "0.1.0",
-    "crop": {
-      "id": "rice",
-      "common_name": "Rice",
-      "scientific_name": "Oryza sativa L."
-    },
-    "requirements": {
-      "soil": {
-        "ph": {
-          "optimal": {"minimum": 5.5, "maximum": 7},
-          "tolerable": {"minimum": 4.5, "maximum": 9},
-          "critical": {"minimum": null, "maximum": null},
-          "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–7", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 7, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–7"},
-            {"original_value": "4.5–9", "original_unit": "pH", "normalized_minimum": 4.5, "normalized_maximum": 9, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.5–9"}
-          ]
-        },
-        "nitrogen_total": null,
-        "phosphorus_extractable": null,
-        "carbon_organic": null,
-        "cation_exchange_capacity": null,
-        "clay_content": null,
-        "sand_content": null,
-        "preferred_texture_classes": []
-      },
-      "climate": {
-        "temperature": {
-          "optimal": {"minimum": 20, "maximum": 30},
-          "tolerable": {"minimum": 10, "maximum": 36},
-          "critical": {"minimum": null, "maximum": null},
-          "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "20–30", "original_unit": "°C", "normalized_minimum": 20, "normalized_maximum": 30, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "20–30"},
-            {"original_value": "10–36", "original_unit": "°C", "normalized_minimum": 10, "normalized_maximum": 36, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "10–36"}
-          ]
-        },
-        "seasonal_rainfall": null,
-        "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies paddy rice as having high sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": {
-          "description": "The EcoCrop wet-rice profile lists poorly drained soil saturated more than 50% of the year as optimal; this is ecosystem-specific and must not be generalized to upland rice.",
-          "source_id": "source_001",
-          "evidence_type": "explicit"
-        }
-      },
-      "water": {
-        "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 450, "maximum": 700},
+          "optimal": {"minimum": 60, "maximum": 120},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
-          "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "450–700", "original_unit": "mm/total growing period", "normalized_minimum": 450, "normalized_maximum": 700, "source_id": "source_002", "source_location": "Table 14, Rice (paddy)", "evidence_type": "explicit", "supporting_quote": "450–700"}
-          ]
-        },
-        "preferred_available_water_capacity": null
-      },
-      "growth_cycle": {
-        "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 80, "maximum": 180},
-          "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
           "claims": [
-            {"original_value": "80–180", "original_unit": "days", "normalized_minimum": 80, "normalized_maximum": 180, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "80–180"}
+            {
+              "original_value": "60-120",
+              "original_unit": "days",
+              "normalized_minimum": 60,
+              "normalized_maximum": 120,
+              "source_id": "source_baseline",
+              "source_location": "uploaded simplified JSON",
+              "evidence_type": "explicit",
+              "supporting_quote": "60-120"
+            }
           ]
         },
         "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Oryza sativa", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1574", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO profile; drainage entry reflects a wet-rice system."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-ET requirement, not total flooded-field irrigation supply."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Pennisetum glaucum — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=8418",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for categorical drainage evidence."
+      },
+      {
+        "id": "source_002",
+        "title": "Biomass production in dry tropical zones",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/4/v5400e/v5400e08.htm",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_guide",
+        "quality_notes": "West African regional production guidance; the rainfall figure is not treated as a universal optimum."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
+      "requirements.climate.seasonal_rainfall.optimal",
+      "requirements.water.preferred_available_water_capacity",
       "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.soil.preferred_texture_classes",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "crop.scientific_name",
-        "description": "Generic Rice is scoped to Oryza sativa; Oryza glaberrima and interspecific cultivars require separate records.",
-        "source_ids": ["source_001"]
-      },
-      {
-        "field": "requirements.climate.waterlogging_tolerance",
-        "description": "The source profile is explicitly wet-rice oriented. Its saturated-soil preference is not applicable to all upland Oryza sativa production systems.",
-        "source_ids": ["source_001"]
-      },
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop gives 80–180 days; the FAO irrigation manual gives an indicative 90–150 days for rice. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["80–180 days", "90–150 days"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -355,13 +306,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 6.8},
-          "tolerable": {"minimum": 5, "maximum": 7.5},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–6.8", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 6.8, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–6.8"},
-            {"original_value": "5–7.5", "original_unit": "pH", "normalized_minimum": 5, "normalized_maximum": 7.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "5–7.5"}
-          ]
+          "claims": [{
+            "original_value": "5.5-6.8",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 6.8,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-6.8"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -374,85 +331,95 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 20, "maximum": 27},
-          "tolerable": {"minimum": 7, "maximum": 35},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "20–27", "original_unit": "°C", "normalized_minimum": 20, "normalized_maximum": 27, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "20–27"},
-            {"original_value": "7–35", "original_unit": "°C", "normalized_minimum": 7, "normalized_maximum": 35, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "7–35"}
-          ]
+          "claims": [{
+            "original_value": "20-27",
+            "original_unit": "°C",
+            "normalized_minimum": 20,
+            "normalized_maximum": 27,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "20-27"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies tomato as having medium-high sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies tomato as having medium-high sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 400, "maximum": 600},
+          "optimal": {"minimum": 400.0, "maximum": 600.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "400–600", "original_unit": "mm per 90–120 day field crop after transplanting", "normalized_minimum": 400, "normalized_maximum": 600, "source_id": "source_003", "source_location": "Crop water requirement paragraph", "evidence_type": "explicit", "supporting_quote": "400–600"},
-            {"original_value": "400–800", "original_unit": "mm/total growing period", "normalized_minimum": 400, "normalized_maximum": 800, "source_id": "source_002", "source_location": "Table 14, Tomato", "evidence_type": "explicit", "supporting_quote": "400–800"}
-          ]
+          "claims": [{
+            "original_value": "400.0-600.0",
+            "original_unit": "mm",
+            "normalized_minimum": 400.0,
+            "normalized_maximum": 600.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "400.0-600.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 70, "maximum": 150},
+          "optimal": {"minimum": 70, "maximum": 150},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "70–150", "original_unit": "days", "normalized_minimum": 70, "normalized_maximum": 150, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "70–150"}
-          ]
+          "claims": [{
+            "original_value": "70-150",
+            "original_unit": "days",
+            "normalized_minimum": 70,
+            "normalized_maximum": 150,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "70-150"
+          }]
         },
         "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Lycopersicon esculentum", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1379", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO ecological envelope; legacy tomato scientific name."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "General indicative FAO water table."},
-      {"id": "source_003", "title": "Tomato crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/tomato/ru/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific FAO water requirement; preferred over the broader generic table for the primary range."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Lycopersicon esculentum — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1379",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Drainage evidence is categorical; waterlogging classification is inferred."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "requirements.water.seasonal_crop_water_requirement",
-        "description": "Crop-specific FAO information gives 400–600 mm for a 90–120 day field crop after transplanting; the general FAO table gives 400–800 mm. The crop-specific value is used without averaging.",
-        "source_ids": ["source_002", "source_003"],
-        "reported_values": ["400–800 mm/total growing period", "400–600 mm per 90–120 day field crop after transplanting"]
-      },
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 70–150 days, while the FAO irrigation manual gives an indicative 135–180 days from sowing. Different starting points and cultivar calendars prevent averaging.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["70–150 days", "135–180 days"]
-      },
-      {
-        "field": "crop.scientific_name",
-        "description": "EcoCrop uses Lycopersicon esculentum; the profile uses Solanum lycopersicum.",
-        "source_ids": ["source_001"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -464,14 +431,20 @@
     "requirements": {
       "soil": {
         "ph": {
-          "optimal": {"minimum": 6, "maximum": 7},
-          "tolerable": {"minimum": 4.3, "maximum": 8.3},
+          "optimal": {"minimum": 6.0, "maximum": 7.0},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "6–7", "original_unit": "pH", "normalized_minimum": 6, "normalized_maximum": 7, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "6–7"},
-            {"original_value": "4.3–8.3", "original_unit": "pH", "normalized_minimum": 4.3, "normalized_maximum": 8.3, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.3–8.3"}
-          ]
+          "claims": [{
+            "original_value": "6.0-7.0",
+            "original_unit": "pH",
+            "normalized_minimum": 6.0,
+            "normalized_maximum": 7.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "6.0-7.0"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -484,86 +457,95 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 12, "maximum": 25},
-          "tolerable": {"minimum": 4, "maximum": 30},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "12–25", "original_unit": "°C", "normalized_minimum": 12, "normalized_maximum": 25, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "12–25"},
-            {"original_value": "4–30", "original_unit": "°C", "normalized_minimum": 4, "normalized_maximum": 30, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "4–30"}
-          ]
+          "claims": [{
+            "original_value": "12-25",
+            "original_unit": "°C",
+            "normalized_minimum": 12,
+            "normalized_maximum": 25,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "12-25"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies onion as having medium-high sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies onion as having medium-high sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 350, "maximum": 550},
+          "optimal": {"minimum": 350.0, "maximum": 550.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "350–550", "original_unit": "mm/total growing period", "normalized_minimum": 350, "normalized_maximum": 550, "source_id": "source_002", "source_location": "Table 14, Onion", "evidence_type": "explicit", "supporting_quote": "350–550"},
-            {"original_value": "350–550", "original_unit": "mm", "normalized_minimum": 350, "normalized_maximum": 550, "source_id": "source_003", "source_location": "Crop water requirement paragraph", "evidence_type": "explicit", "supporting_quote": "350–550"}
-          ]
+          "claims": [{
+            "original_value": "350.0-550.0",
+            "original_unit": "mm",
+            "normalized_minimum": 350.0,
+            "normalized_maximum": 550.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "350.0-550.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 85, "maximum": 175},
+          "optimal": {"minimum": 85, "maximum": 175},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "85–175", "original_unit": "days", "normalized_minimum": 85, "normalized_maximum": 175, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "85–175"}
-          ]
+          "claims": [{
+            "original_value": "85-175",
+            "original_unit": "days",
+            "normalized_minimum": 85,
+            "normalized_maximum": 175,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "85-175"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "bulb_enlargement",
-            "name": "Bulb enlargement / yield formation",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": null,
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": "High; FAO advises avoiding water deficit particularly during bulb enlargement/yield formation.",
-            "evidence_source_ids": ["source_003"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Allium cepa var. cepa", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=551", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "FAO bulb-onion ecological profile."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Official indicative seasonal water table."},
-      {"id": "source_003", "title": "Onion crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/onion/es/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific water and stage-sensitivity evidence."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Allium cepa — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=364",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Drainage evidence is categorical; waterlogging classification is inferred."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop gives 85–175 days, while the FAO irrigation manual gives an indicative 150–210 days for dry onion. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["85–175 days", "150–210 days"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -576,13 +558,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 6.5},
-          "tolerable": {"minimum": 4.5, "maximum": 8.5},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–6.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 6.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–6.5"},
-            {"original_value": "4.5–8.5", "original_unit": "pH", "normalized_minimum": 4.5, "normalized_maximum": 8.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.5–8.5"}
-          ]
+          "claims": [{
+            "original_value": "5.5-6.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 6.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-6.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -595,84 +583,126 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 22, "maximum": 32},
-          "tolerable": {"minimum": 10, "maximum": 45},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "22–32", "original_unit": "°C", "normalized_minimum": 22, "normalized_maximum": 32, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "22–32"},
-            {"original_value": "10–45", "original_unit": "°C", "normalized_minimum": 10, "normalized_maximum": 45, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "10–45"}
-          ]
+          "claims": [{
+            "original_value": "22-32",
+            "original_unit": "°C",
+            "normalized_minimum": 22,
+            "normalized_maximum": 32,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "22-32"
+          }]
         },
-        "seasonal_rainfall": null,
+        "seasonal_rainfall": {
+          "optimal": {"minimum": null, "maximum": null},
+          "tolerable": {"minimum": 300, "maximum": 1200},
+          "critical": {"minimum": null, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [{
+            "original_value": "300-1200",
+            "original_unit": "mm",
+            "normalized_minimum": 300,
+            "normalized_maximum": 1200,
+            "source_id": "source_002",
+            "source_location": "Sahelian West Africa groundnut-growing belt",
+            "evidence_type": "inferred",
+            "supporting_quote": "seasonal rainfall varies between 300 and 1200 mm"
+          }]
+        },
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies peanut/groundnut as having low-medium sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies peanut/groundnut as having low-medium sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 500, "maximum": 700},
+          "optimal": {"minimum": 500.0, "maximum": 700.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "500–700", "original_unit": "mm/total growing period", "normalized_minimum": 500, "normalized_maximum": 700, "source_id": "source_002", "source_location": "Table 14, Peanut", "evidence_type": "explicit", "supporting_quote": "500–700"},
-            {"original_value": "500–700", "original_unit": "mm", "normalized_minimum": 500, "normalized_maximum": 700, "source_id": "source_003", "source_location": "Total growing period water requirement", "evidence_type": "explicit", "supporting_quote": "500–700"}
-          ]
+          "claims": [{
+            "original_value": "500.0-700.0",
+            "original_unit": "mm",
+            "normalized_minimum": 500.0,
+            "normalized_maximum": 700.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "500.0-700.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 90, "maximum": 150},
+          "optimal": {"minimum": 90, "maximum": 150},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "90–150", "original_unit": "days", "normalized_minimum": 90, "normalized_maximum": 150, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "90–150"}
-          ]
+          "claims": [{
+            "original_value": "90-150",
+            "original_unit": "days",
+            "normalized_minimum": 90,
+            "normalized_maximum": 150,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "90-150"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "flowering",
-            "name": "Flowering",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": null,
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": "Highest sensitivity to water deficit, followed by yield formation.",
-            "evidence_source_ids": ["source_003"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Arachis hypogaea", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2199", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO ecological envelope."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Official indicative crop-water table."},
-      {"id": "source_003", "title": "Groundnut crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/groundnut/ru/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific water and water-stress evidence."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Arachis hypogaea — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2199",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for drainage evidence."
+      },
+      {
+        "id": "source_002",
+        "title": "Agroclimatological Characteristics of the Groundnut-Growing Regions in the Semi-Arid Tropics",
+        "publisher": "International Crops Research Institute for the Semi-Arid Tropics (ICRISAT)",
+        "authors": ["S. M. Virmani", "P. Singh"],
+        "publication_year": 1986,
+        "url": "https://oar.icrisat.org/4245/",
+        "accessed_at": "2026-08-29",
+        "source_type": "cgiar_research",
+        "quality_notes": "Directly covers the Sahelian West African groundnut belt. The seasonal-rainfall range is an observed cultivation envelope, not an experimental optimum."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
+      "requirements.climate.seasonal_rainfall.optimal",
+      "requirements.water.preferred_available_water_capacity",
       "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.soil.sand_content"
     ],
     "conflicts": [
       {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 90–150 days; FAO irrigation guidance gives an indicative 130–140 days for peanut/groundnut. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["90–150 days", "130–140 days"]
+        "field": "requirements.water.preferred_available_water_capacity",
+        "status": "not_normalizable",
+        "detail": "ICRISAT reports root-profile available-water holding capacity in mm (low <=100 mm; medium about 200 mm), not volumetric cm3/cm3. Conversion would require a defensible effective profile/rooting depth and was therefore not made.",
+        "source_ids": ["source_002"]
       }
     ]
   },
@@ -687,13 +717,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 7.5},
-          "tolerable": {"minimum": 5, "maximum": 8},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–7.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 7.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–7.5"},
-            {"original_value": "5–8", "original_unit": "pH", "normalized_minimum": 5, "normalized_maximum": 8, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "5–8"}
-          ]
+          "claims": [{
+            "original_value": "5.5-7.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 7.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-7.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -706,86 +742,121 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 22, "maximum": 35},
-          "tolerable": {"minimum": 8, "maximum": 40},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "22–35", "original_unit": "°C", "normalized_minimum": 22, "normalized_maximum": 35, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "22–35"},
-            {"original_value": "8–40", "original_unit": "°C", "normalized_minimum": 8, "normalized_maximum": 40, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "8–40"}
-          ]
+          "claims": [{
+            "original_value": "22-35",
+            "original_unit": "°C",
+            "normalized_minimum": 22,
+            "normalized_maximum": 35,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "22-35"
+          }]
         },
-        "seasonal_rainfall": null,
+        "seasonal_rainfall": {
+          "optimal": {"minimum": null, "maximum": null},
+          "tolerable": {"minimum": 400, "maximum": 500},
+          "critical": {"minimum": null, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [{
+            "original_value": "around 400-500",
+            "original_unit": "mm",
+            "normalized_minimum": 400,
+            "normalized_maximum": 500,
+            "source_id": "source_002",
+            "source_location": "West Africa dry-tropics discussion of millet/sorghum production",
+            "evidence_type": "inferred",
+            "supporting_quote": "requires around 400-500 mm of rain"
+          }]
+        },
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies sorghum/millet as having low sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies sorghum/millet as having low sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well to excessively drained soils and does not list poorly drained or saturated soils (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 450, "maximum": 650},
+          "optimal": {"minimum": 450.0, "maximum": 650.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "450–650", "original_unit": "mm/total growing period", "normalized_minimum": 450, "normalized_maximum": 650, "source_id": "source_002", "source_location": "Table 14, Sorghum/Millet", "evidence_type": "explicit", "supporting_quote": "450–650"},
-            {"original_value": "450–650", "original_unit": "mm", "normalized_minimum": 450, "normalized_maximum": 650, "source_id": "source_003", "source_location": "ETm for high production, 110–130 day sorghum", "evidence_type": "explicit", "supporting_quote": "450–650"}
-          ]
+          "claims": [{
+            "original_value": "450.0-650.0",
+            "original_unit": "mm",
+            "normalized_minimum": 450.0,
+            "normalized_maximum": 650.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "450.0-650.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 90, "maximum": 300},
+          "optimal": {"minimum": 90, "maximum": 300},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "90–300", "original_unit": "days", "normalized_minimum": 90, "normalized_maximum": 300, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "90–300"}
-          ]
+          "claims": [{
+            "original_value": "90-300",
+            "original_unit": "days",
+            "normalized_minimum": 90,
+            "normalized_maximum": 300,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "90-300"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "flowering",
-            "name": "Flowering",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": null,
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": "High; severe water deficit can cause pollination failure/headblast.",
-            "evidence_source_ids": ["source_003"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Sorghum bicolor", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=48747", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO ecological envelope."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "General FAO water and drought-sensitivity table."},
-      {"id": "source_003", "title": "Sorghum crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/sorghum/ar/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific ETm and stage-sensitivity evidence."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Sorghum bicolor — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=48747",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for categorical drainage evidence."
+      },
+      {
+        "id": "source_002",
+        "title": "Biomass production in dry tropical zones",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/4/v5400e/v5400e08.htm",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_guide",
+        "quality_notes": "Regional West African production guidance, not a universal optimal rainfall range."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
+      "requirements.climate.seasonal_rainfall.optimal",
+      "requirements.water.preferred_available_water_capacity",
       "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 90–300 days; FAO irrigation guidance gives an indicative 120–130 days. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["90–300 days", "120–130 days"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -798,14 +869,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 7.5},
-          "tolerable": {"minimum": 4.3, "maximum": 8.8},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–7.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 7.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–7.5"},
-            {"original_value": "4.3–8.8", "original_unit": "pH", "normalized_minimum": 4.3, "normalized_maximum": 8.8, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.3–8.8"},
-            {"original_value": "6–7", "original_unit": "pH", "normalized_minimum": 6, "normalized_maximum": 7, "source_id": "source_002", "source_location": "Climatic and soil requirements, p. 1; best yields", "evidence_type": "explicit", "supporting_quote": "6–7"}
-          ]
+          "claims": [{
+            "original_value": "5.5-7.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 7.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-7.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -818,80 +894,135 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 20, "maximum": 35},
-          "tolerable": {"minimum": 10, "maximum": 40},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "20–35", "original_unit": "°C", "normalized_minimum": 20, "normalized_maximum": 35, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "20–35"},
-            {"original_value": "10–40", "original_unit": "°C", "normalized_minimum": 10, "normalized_maximum": 40, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "10–40"},
-            {"original_value": "28–30", "original_unit": "°C", "normalized_minimum": 28, "normalized_maximum": 30, "source_id": "source_002", "source_location": "Climatic and soil requirements, p. 1", "evidence_type": "explicit", "supporting_quote": "28–30"}
-          ]
+          "claims": [{
+            "original_value": "20-35",
+            "original_unit": "°C",
+            "normalized_minimum": 20,
+            "normalized_maximum": 35,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "20-35"
+          }]
         },
-        "seasonal_rainfall": null,
+        "seasonal_rainfall": {
+          "optimal": {"minimum": null, "maximum": null},
+          "tolerable": {"minimum": null, "maximum": null},
+          "critical": {"minimum": 300, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [{
+            "original_value": "300",
+            "original_unit": "mm",
+            "normalized_minimum": 300,
+            "normalized_maximum": 300,
+            "source_id": "source_002",
+            "source_location": "Cowpea growing conditions",
+            "evidence_type": "inferred",
+            "supporting_quote": "will give some crop on 300 mm"
+          }]
+        },
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "IITA explicitly describes cowpea as drought tolerant; genotype and maturity class remain important.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": {
-          "description": "IITA states that cowpea does not tolerate excessively wet conditions or waterlogging and should not be grown on poorly drained soil.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        }
+        "drought_tolerance": "IITA explicitly describes cowpea as drought tolerant; genotype and maturity class remain important.",
+        "waterlogging_tolerance": "IITA states that cowpea does not tolerate excessively wet conditions or waterlogging and should not be grown on poorly drained soil."
       },
       "water": {
-        "seasonal_crop_water_requirement": null,
+        "seasonal_crop_water_requirement": {
+          "optimal": {"minimum": 337.5, "maximum": 337.5},
+          "tolerable": {"minimum": null, "maximum": null},
+          "critical": {"minimum": null, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [{
+            "original_value": "337.5",
+            "original_unit": "mm",
+            "normalized_minimum": 337.5,
+            "normalized_maximum": 337.5,
+            "source_id": "source_001",
+            "source_location": "Full-water T1 treatment at 100% ETc",
+            "evidence_type": "inferred",
+            "supporting_quote": "total evapotranspiration ... was 337.5 mm"
+          }]
+        },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 60, "maximum": 240},
+          "optimal": {"minimum": 60, "maximum": 240},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "60–240", "original_unit": "days", "normalized_minimum": 60, "normalized_maximum": 240, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "60–240"},
-            {"original_value": "60–120", "original_unit": "days", "normalized_minimum": 60, "normalized_maximum": 120, "source_id": "source_002", "source_location": "West African maturity classes", "evidence_type": "explicit", "supporting_quote": "60–120"}
-          ]
+          "claims": [{
+            "original_value": "60-240",
+            "original_unit": "days",
+            "normalized_minimum": 60,
+            "normalized_maximum": 240,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "60-240"
+          }]
         },
         "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Vigna unguiculata ssp. unguiculata", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=10835", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "FAO global cowpea ecological envelope."},
-      {"id": "source_002", "title": "Farmers’ Guide to Cowpea Production in West Africa", "publisher": "International Institute of Tropical Agriculture (IITA)", "authors": [], "publication_year": null, "url": "https://biblio.iita.org/documents/U09BkDugjeCowpeaNothomDev.pdf-2d43f99e2931b42cabd0c29954f0d2c9.pdf", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "CGIAR/IITA West African guide; relevant PDF pages were visually inspected."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Actual evapotranspiration and response factors of the cowpea in Amazonian edaphoclimatic conditions",
+        "publisher": "Revista Brasileira de Engenharia Agrícola e Ambiental / Universidade Federal de Campina Grande",
+        "authors": [
+          "V. B. Moura",
+          "V. D. da S. Farias",
+          "H. G. G. C. Nunes",
+          "D. de P. Sousa",
+          "D. P. Ferreira",
+          "P. J. de O. P. de Souza"
+        ],
+        "publication_year": 2021,
+        "url": "https://doi.org/10.1590/1807-1929/agriambi.v25n9p604-611",
+        "accessed_at": "2026-08-29",
+        "source_type": "peer_reviewed",
+        "quality_notes": "Full-water crop ET for one cultivar in Amazonian conditions; suitable as provisional measured evidence, not a universal cowpea constant."
+      },
+      {
+        "id": "source_002",
+        "title": "CHAPTER VI HAY CROPS - LEGUMES AND PULSES",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/4/x7660e/x7660e0a.htm",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_guide",
+        "quality_notes": "The 300 mm statement represents ability to produce some crop, not optimum rainfall."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
+      "requirements.climate.seasonal_rainfall.optimal",
+      "requirements.climate.seasonal_rainfall.tolerable",
+      "requirements.climate.seasonal_rainfall.critical.maximum",
+      "requirements.water.preferred_available_water_capacity",
       "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.water.seasonal_crop_water_requirement",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.soil.sand_content"
     ],
     "conflicts": [
       {
-        "field": "requirements.climate.temperature",
-        "description": "FAO EcoCrop gives 20–35°C as a global optimal envelope; IITA's West African guide states 28–30°C during the growing season. These different descriptors were retained separately.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["20–35°C optimal", "28–30°C West African guide"]
-      },
-      {
-        "field": "requirements.soil.ph",
-        "description": "FAO EcoCrop gives an optimal pH of 5.5–7.5; IITA states that best yields are obtained at pH 6–7. The narrower regional range was not merged with the global envelope.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["5.5–7.5", "6–7"]
-      },
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop gives 60–240 days; IITA West African maturity classes span approximately 60–120 days. The broad global range remains the machine envelope.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["60–240 days", "60–120 days"]
+        "field": "requirements.water.seasonal_crop_water_requirement",
+        "status": "context_specific",
+        "detail": "337.5 mm is a full-water ET value for cultivar BR3-Tracuateua in one climate. It is retained as a provisional point requirement rather than generalized into an unsupported range.",
+        "source_ids": ["source_001"]
       }
     ]
   },
@@ -906,13 +1037,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 6.5},
-          "tolerable": {"minimum": 4.5, "maximum": 7.1},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–6.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 6.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–6.5"},
-            {"original_value": "4.5–7.1", "original_unit": "pH", "normalized_minimum": 4.5, "normalized_maximum": 7.1, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.5–7.1"}
-          ]
+          "claims": [{
+            "original_value": "5.5-6.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 6.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-6.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -925,19 +1062,24 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 22, "maximum": 27},
-          "tolerable": {"minimum": 18, "maximum": 31},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "22–27", "original_unit": "°C", "normalized_minimum": 22, "normalized_maximum": 27, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "22–27"},
-            {"original_value": "18–31", "original_unit": "°C", "normalized_minimum": 18, "normalized_maximum": 31, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "18–31"},
-            {"original_value": "25–30", "original_unit": "°C", "normalized_minimum": 25, "normalized_maximum": 30, "source_id": "source_002", "source_location": "Cultivation page, average temperatures", "evidence_type": "explicit", "supporting_quote": "25–30"}
-          ]
+          "claims": [{
+            "original_value": "22-27",
+            "original_unit": "°C",
+            "normalized_minimum": 22,
+            "normalized_maximum": 27,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "22-27"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": null,
-        "waterlogging_tolerance": null
+        "drought_tolerance": "Drought tolerant (explicit CGIAR/Bioversity description); no standardized low/medium/high threshold was supplied (source_002).",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well to excessively drained soils and does not list poorly drained or saturated soils (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": null,
@@ -945,63 +1087,67 @@
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 90, "maximum": 130},
+          "optimal": {"minimum": 90, "maximum": 130},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "90–130", "original_unit": "days", "normalized_minimum": 90, "normalized_maximum": 130, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "90–130"}
-          ]
+          "claims": [{
+            "original_value": "90-130",
+            "original_unit": "days",
+            "normalized_minimum": 90,
+            "normalized_maximum": 130,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "90-130"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 0, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "0", "original_unit": "°C", "normalized_minimum": 0, "normalized_maximum": 0, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "0"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Digitaria exilis", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=5329", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO fonio ecological envelope."},
-      {"id": "source_002", "title": "Cultivation / The plant - Le Fonio (Digitaria exilis)", "publisher": "CIRAD", "authors": [], "publication_year": null, "url": "https://fonio.cirad.fr/en/the-plant/cultivation", "accessed_at": "2026-08-29", "source_type": "research_institute_webpage", "quality_notes": "Independent research-institute cultivation description; temperature is not explicitly labelled an optimum."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Digitaria exilis — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=5329",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for drainage evidence only; its rainfall field is annual and was not inserted as seasonal rainfall."
+      },
+      {
+        "id": "source_002",
+        "title": "Nutritious underutilized species - Fonio",
+        "publisher": "Bioversity International / CGIAR",
+        "authors": [],
+        "publication_year": 2013,
+        "url": "https://alliancebioversityciat.org/publications-data/nutritious-underutilized-species-fonio",
+        "accessed_at": "2026-08-29",
+        "source_type": "cgiar_guide",
+        "quality_notes": "Explicitly describes fonio as drought tolerant but supplies no quantitative tolerance threshold."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.drought_tolerance",
-      "requirements.climate.waterlogging_tolerance",
       "requirements.water.seasonal_crop_water_requirement",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "requirements.climate.temperature",
-        "description": "EcoCrop labels 22–27°C optimal; CIRAD describes cultivation at average temperatures of 25–30°C. Because the descriptors differ, no merged range was created.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["22–27°C optimal", "25–30°C average cultivation temperature"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -1014,13 +1160,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 7.5},
-          "tolerable": {"minimum": 4.3, "maximum": 8.5},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–7.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 7.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–7.5"},
-            {"original_value": "4.3–8.5", "original_unit": "pH", "normalized_minimum": 4.3, "normalized_maximum": 8.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.3–8.5"}
-          ]
+          "claims": [{
+            "original_value": "5.5-7.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 7.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-7.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -1033,18 +1185,24 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 24, "maximum": 30},
-          "tolerable": {"minimum": 8, "maximum": 48},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "24–30", "original_unit": "°C", "normalized_minimum": 24, "normalized_maximum": 30, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "24–30"},
-            {"original_value": "8–48", "original_unit": "°C", "normalized_minimum": 8, "normalized_maximum": 48, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "8–48"}
-          ]
+          "claims": [{
+            "original_value": "24-30",
+            "original_unit": "°C",
+            "normalized_minimum": 24,
+            "normalized_maximum": 30,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "24-30"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": null,
-        "waterlogging_tolerance": null
+        "drought_tolerance": "Phenology- and environment-dependent rather than a single categorical class: mango can use a dry period as a flowering cue, but water deficit also constrains physiological water relations (source_002).",
+        "waterlogging_tolerance": "Low / avoid waterlogging as a default screening rule (inferred): FAO EcoCrop prefers well to excessively drained soils and does not list poorly drained or saturated soils (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": null,
@@ -1052,55 +1210,74 @@
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 150, "maximum": 365},
+          "optimal": {"minimum": 150, "maximum": 365},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "150–365", "original_unit": "days", "normalized_minimum": 150, "normalized_maximum": 365, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "150–365"}
-          ]
+          "claims": [{
+            "original_value": "150-365",
+            "original_unit": "days",
+            "normalized_minimum": 150,
+            "normalized_maximum": 365,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "150-365"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 0, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "0", "original_unit": "°C", "normalized_minimum": 0, "normalized_maximum": 0, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "0"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Mangifera indica", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1416", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO global ecological profile; independent numeric corroboration remains limited in this evidence set."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Mangifera indica — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1416",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for drainage evidence; annual EcoCrop rainfall was not relabeled as seasonal rainfall."
+      },
+      {
+        "id": "source_002",
+        "title": "The water relations and irrigation requirements of mango (Mangifera indica L.): A review",
+        "publisher": "Experimental Agriculture / Cambridge University Press",
+        "authors": ["M. K. V. Carr"],
+        "publication_year": 2014,
+        "url": "https://doi.org/10.1017/S0014479713000288",
+        "accessed_at": "2026-08-29",
+        "source_type": "peer_reviewed",
+        "quality_notes": "High-quality synthesis. Reports daily ETc and crop coefficients, but not a defensible universal seasonal total."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.drought_tolerance",
-      "requirements.climate.waterlogging_tolerance",
       "requirements.water.seasonal_crop_water_requirement",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": []
+    "conflicts": [
+      {
+        "field": "requirements.climate.drought_tolerance",
+        "status": "classification_not_supported",
+        "detail": "Evidence supports a phenology- and environment-dependent response rather than a defensible universal high/medium/low drought class.",
+        "source_ids": ["source_002"]
+      }
+    ]
   },
   {
     "schema_version": "0.1.0",
@@ -1113,13 +1290,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.5, "maximum": 7.5},
-          "tolerable": {"minimum": 4, "maximum": 8.4},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.5–7.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 7.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.5–7.5"},
-            {"original_value": "4–8.4", "original_unit": "pH", "normalized_minimum": 4, "normalized_maximum": 8.4, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4–8.4"}
-          ]
+          "claims": [{
+            "original_value": "5.5-7.5",
+            "original_unit": "pH",
+            "normalized_minimum": 5.5,
+            "normalized_maximum": 7.5,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.5-7.5"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -1132,116 +1315,95 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 23, "maximum": 33},
-          "tolerable": {"minimum": 12, "maximum": 42},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "23–33", "original_unit": "°C", "normalized_minimum": 23, "normalized_maximum": 33, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "23–33"},
-            {"original_value": "12–42", "original_unit": "°C", "normalized_minimum": 12, "normalized_maximum": 42, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "12–42"}
-          ]
+          "claims": [{
+            "original_value": "23-33",
+            "original_unit": "°C",
+            "normalized_minimum": 23,
+            "normalized_maximum": 33,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "23-33"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies banana as having high sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies banana as having high sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 1200, "maximum": 2200},
+          "optimal": {"minimum": 1200.0, "maximum": 2200.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "1200–2200", "original_unit": "mm/total growing period", "normalized_minimum": 1200, "normalized_maximum": 2200, "source_id": "source_002", "source_location": "Table 14, Banana", "evidence_type": "explicit", "supporting_quote": "1200–2200"},
-            {"original_value": "1200–2200", "original_unit": "mm/year", "normalized_minimum": 1200, "normalized_maximum": 2200, "source_id": "source_003", "source_location": "Annual crop water requirements paragraph", "evidence_type": "explicit", "supporting_quote": "1200–2200"}
-          ]
+          "claims": [{
+            "original_value": "1200.0-2200.0",
+            "original_unit": "mm",
+            "normalized_minimum": 1200.0,
+            "normalized_maximum": 2200.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "1200.0-2200.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 180, "maximum": 365},
+          "optimal": {"minimum": 180, "maximum": 365},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "180–365", "original_unit": "days", "normalized_minimum": 180, "normalized_maximum": 365, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "180–365"}
-          ]
+          "claims": [{
+            "original_value": "180-365",
+            "original_unit": "days",
+            "normalized_minimum": 180,
+            "normalized_maximum": 365,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "180-365"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 1, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "1", "original_unit": "°C", "normalized_minimum": 1, "normalized_maximum": 1, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "1"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          },
-          {
-            "id": "yield_formation",
-            "name": "Yield formation",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": null,
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": "High; water deficits reduce fruit size and quality.",
-            "evidence_source_ids": ["source_003"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Musa acuminata", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7848", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Numeric environmental profile is specifically Musa acuminata, not all cultivated banana hybrids."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "General FAO crop-water and drought-sensitivity table."},
-      {"id": "source_003", "title": "Banana crop information", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/land-water/databases-and-software/crop-information/banana/es/", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Crop-specific annual water and growth-stage evidence."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Musa sp. — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2483",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for categorical drainage evidence."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
-    "conflicts": [
-      {
-        "field": "crop.scientific_name",
-        "description": "Generic Banana covers a complex of Musa species and hybrids. The record remains Musa spp., while the EcoCrop numeric envelope is specifically Musa acuminata.",
-        "source_ids": ["source_001"]
-      },
-      {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 180–365 days for Musa acuminata, while the general FAO irrigation manual gives an indicative 300–365 day banana growing period. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["180–365 days", "300–365 days"]
-      },
-      {
-        "field": "requirements.water.seasonal_crop_water_requirement",
-        "description": "The general FAO manual expresses 1200–2200 mm per total growing period; the crop-specific page expresses the same numeric range per year. The differing time bases are preserved.",
-        "source_ids": ["source_002", "source_003"],
-        "reported_values": ["1200–2200 mm/total growing period", "1200–2200 mm/year"]
-      }
-    ]
+    "conflicts": []
   },
   {
     "schema_version": "0.1.0",
@@ -1254,13 +1416,19 @@
       "soil": {
         "ph": {
           "optimal": {"minimum": 5.8, "maximum": 6.8},
-          "tolerable": {"minimum": 4.2, "maximum": 8.7},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "5.8–6.8", "original_unit": "pH", "normalized_minimum": 5.8, "normalized_maximum": 6.8, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "5.8–6.8"},
-            {"original_value": "4.2–8.7", "original_unit": "pH", "normalized_minimum": 4.2, "normalized_maximum": 8.7, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "4.2–8.7"}
-          ]
+          "claims": [{
+            "original_value": "5.8-6.8",
+            "original_unit": "pH",
+            "normalized_minimum": 5.8,
+            "normalized_maximum": 6.8,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "5.8-6.8"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -1273,85 +1441,122 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 15, "maximum": 24},
-          "tolerable": {"minimum": 3, "maximum": 30},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "15–24", "original_unit": "°C", "normalized_minimum": 15, "normalized_maximum": 24, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "15–24"},
-            {"original_value": "3–30", "original_unit": "°C", "normalized_minimum": 3, "normalized_maximum": 30, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "3–30"}
-          ]
+          "claims": [{
+            "original_value": "15-24",
+            "original_unit": "°C",
+            "normalized_minimum": 15,
+            "normalized_maximum": 24,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "15-24"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": null,
-        "waterlogging_tolerance": null
+        "drought_tolerance": "Low for high-yield production / drought-sensitive: root yield and total biomass decline as soil-water deficit increases (source_003).",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
-        "seasonal_crop_water_requirement": null,
+        "seasonal_crop_water_requirement": {
+          "optimal": {"minimum": 370, "maximum": 390},
+          "tolerable": {"minimum": null, "maximum": null},
+          "critical": {"minimum": null, "maximum": null},
+          "canonical_unit": "mm",
+          "claims": [{
+            "original_value": "370-390",
+            "original_unit": "mm",
+            "normalized_minimum": 370,
+            "normalized_maximum": 390,
+            "source_id": "source_002",
+            "source_location": "Discussion and conclusions; approximately 160-day low-desert crop season",
+            "evidence_type": "inferred",
+            "supporting_quote": "370-390 mm may be considered seasonal ETa"
+          }]
+        },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 40, "maximum": 150},
+          "optimal": {"minimum": 40, "maximum": 150},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "40–150", "original_unit": "days", "normalized_minimum": 40, "normalized_maximum": 150, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "40–150"}
-          ]
+          "claims": [{
+            "original_value": "40-150",
+            "original_unit": "days",
+            "normalized_minimum": 40,
+            "normalized_maximum": 150,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "40-150"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 0, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "0", "original_unit": "°C", "normalized_minimum": 0, "normalized_maximum": 0, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "0"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Daucus carota", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=871", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Species-level FAO ecological profile; machine crop is cultivated carrot subspecies."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Used for the independent indicative carrot growing-period comparison; no generic carrot seasonal ET value appears in the cited table."}
+      {
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
+      },
+      {
+        "id": "source_001",
+        "title": "Daucus carota — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=871",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for categorical drainage evidence."
+      },
+      {
+        "id": "source_002",
+        "title": "Spatial Variability of Nitrogen Uptake and Net Removal and Actual Evapotranspiration in the California Desert Carrot Production System",
+        "publisher": "Agriculture",
+        "authors": [],
+        "publication_year": 2021,
+        "url": "https://doi.org/10.3390/agriculture11080752",
+        "accessed_at": "2026-08-29",
+        "source_type": "peer_reviewed",
+        "quality_notes": "Field evidence from California low-desert carrot production. The water-use range is explicitly crop-duration and region specific."
+      },
+      {
+        "id": "source_003",
+        "title": "Yield and quality responses of carrots (Daucus carota L.) to water deficits",
+        "publisher": "New Zealand Journal of Crop and Horticultural Science",
+        "authors": ["J. B. Reid", "R. N. Gillespie"],
+        "publication_year": 2017,
+        "url": "https://doi.org/10.1080/01140671.2017.1343739",
+        "accessed_at": "2026-08-29",
+        "source_type": "peer_reviewed",
+        "quality_notes": "Controlled field evidence showing declining root yield and biomass with increasing water deficit."
+      }
     ],
     "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
       "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.drought_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.seasonal_crop_water_requirement",
-      "requirements.water.preferred_available_water_capacity"
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
     ],
     "conflicts": [
       {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 40–150 days; the FAO irrigation manual gives an indicative 100–150 days for carrot. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["40–150 days", "100–150 days"]
-      },
-      {
-        "field": "crop.scientific_name",
-        "description": "The machine record is cultivated carrot; the EcoCrop environmental envelope is at Daucus carota species level.",
-        "source_ids": ["source_001"]
+        "field": "requirements.water.seasonal_crop_water_requirement",
+        "status": "context_specific",
+        "detail": "The 370-390 mm value is explicitly regional and crop-duration specific. It should not be assumed to be a universal carrot ET requirement without local ET0/Kc adjustment.",
+        "source_ids": ["source_002"]
       }
     ]
   },
@@ -1365,14 +1570,20 @@
     "requirements": {
       "soil": {
         "ph": {
-          "optimal": {"minimum": 6, "maximum": 7},
-          "tolerable": {"minimum": 5.5, "maximum": 8.5},
+          "optimal": {"minimum": 6.0, "maximum": 7.0},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "pH",
-          "claims": [
-            {"original_value": "6–7", "original_unit": "pH", "normalized_minimum": 6, "normalized_maximum": 7, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Optimal", "evidence_type": "explicit", "supporting_quote": "6–7"},
-            {"original_value": "5.5–8.5", "original_unit": "pH", "normalized_minimum": 5.5, "normalized_maximum": 8.5, "source_id": "source_001", "source_location": "Ecology table, Soil pH, Absolute", "evidence_type": "explicit", "supporting_quote": "5.5–8.5"}
-          ]
+          "claims": [{
+            "original_value": "6.0-7.0",
+            "original_unit": "pH",
+            "normalized_minimum": 6.0,
+            "normalized_maximum": 7.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "6.0-7.0"
+          }]
         },
         "nitrogen_total": null,
         "phosphorus_extractable": null,
@@ -1385,96 +1596,94 @@
       "climate": {
         "temperature": {
           "optimal": {"minimum": 15, "maximum": 23},
-          "tolerable": {"minimum": 5, "maximum": 27},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "°C",
-          "claims": [
-            {"original_value": "15–23", "original_unit": "°C", "normalized_minimum": 15, "normalized_maximum": 23, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Optimal", "evidence_type": "explicit", "supporting_quote": "15–23"},
-            {"original_value": "5–27", "original_unit": "°C", "normalized_minimum": 5, "normalized_maximum": 27, "source_id": "source_001", "source_location": "Ecology table, Temperature requirement, Absolute", "evidence_type": "explicit", "supporting_quote": "5–27"}
-          ]
+          "claims": [{
+            "original_value": "15-23",
+            "original_unit": "°C",
+            "normalized_minimum": 15,
+            "normalized_maximum": 23,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "15-23"
+          }]
         },
         "seasonal_rainfall": null,
         "heat_tolerance": null,
-        "drought_tolerance": {
-          "description": "FAO classifies barley/oats/wheat as having low-medium sensitivity to drought.",
-          "source_id": "source_002",
-          "evidence_type": "explicit"
-        },
-        "waterlogging_tolerance": null
+        "drought_tolerance": "FAO classifies barley/oats/wheat as having low-medium sensitivity to drought.",
+        "waterlogging_tolerance": "Low / avoid waterlogging (inferred): FAO EcoCrop lists well-drained soil as both optimal and absolute drainage class (source_001)."
       },
       "water": {
         "seasonal_crop_water_requirement": {
-          "optimal": {"minimum": 450, "maximum": 650},
+          "optimal": {"minimum": 450.0, "maximum": 650.0},
           "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "mm",
-          "claims": [
-            {"original_value": "450–650", "original_unit": "mm/total growing period", "normalized_minimum": 450, "normalized_maximum": 650, "source_id": "source_002", "source_location": "Table 14, Barley/Oats/Wheat", "evidence_type": "explicit", "supporting_quote": "450–650"}
-          ]
+          "claims": [{
+            "original_value": "450.0-650.0",
+            "original_unit": "mm",
+            "normalized_minimum": 450.0,
+            "normalized_maximum": 650.0,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "450.0-650.0"
+          }]
         },
         "preferred_available_water_capacity": null
       },
       "growth_cycle": {
         "days_to_maturity": {
-          "optimal": {"minimum": null, "maximum": null},
-          "tolerable": {"minimum": 90, "maximum": 250},
+          "optimal": {"minimum": 90, "maximum": 250},
+          "tolerable": {"minimum": null, "maximum": null},
           "critical": {"minimum": null, "maximum": null},
           "canonical_unit": "days",
-          "claims": [
-            {"original_value": "90–250", "original_unit": "days", "normalized_minimum": 90, "normalized_maximum": 250, "source_id": "source_001", "source_location": "Cultivation table, Crop cycle", "evidence_type": "inferred", "supporting_quote": "90–250"}
-          ]
+          "claims": [{
+            "original_value": "90-250",
+            "original_unit": "days",
+            "normalized_minimum": 90,
+            "normalized_maximum": 250,
+            "source_id": "source_baseline",
+            "source_location": "uploaded simplified JSON",
+            "evidence_type": "explicit",
+            "supporting_quote": "90-250"
+          }]
         },
-        "growth_stages": [
-          {
-            "id": "early_growth",
-            "name": "Early growth",
-            "typical_start_day": null,
-            "typical_duration_days": null,
-            "temperature": {
-              "optimal": {"minimum": null, "maximum": null},
-              "tolerable": {"minimum": null, "maximum": null},
-              "critical": {"minimum": 0, "maximum": null},
-              "canonical_unit": "°C",
-              "claims": [
-                {"original_value": "0", "original_unit": "°C", "normalized_minimum": 0, "normalized_maximum": 0, "source_id": "source_001", "source_location": "Killing temperature, early growth", "evidence_type": "explicit", "supporting_quote": "0"}
-              ]
-            },
-            "water_requirement": null,
-            "heat_sensitivity": null,
-            "water_stress_sensitivity": null,
-            "evidence_source_ids": ["source_001"]
-          }
-        ]
+        "growth_stages": []
       }
     },
     "sources": [
-      {"id": "source_001", "title": "EcoCrop data sheet: Triticum aestivum", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2114", "accessed_at": "2026-08-29", "source_type": "database", "quality_notes": "Official FAO bread-wheat ecological envelope."},
-      {"id": "source_002", "title": "Chapter 3: Crop Water Needs", "publisher": "Food and Agriculture Organization of the United Nations (FAO)", "authors": [], "publication_year": null, "url": "https://www.fao.org/4/s2022e/s2022e07.htm", "accessed_at": "2026-08-29", "source_type": "official_guide", "quality_notes": "Combined barley/oats/wheat indicative water and duration guidance."}
-    ],
-    "missing_fields": [
-      "requirements.soil.nitrogen_total",
-      "requirements.soil.phosphorus_extractable",
-      "requirements.soil.carbon_organic",
-      "requirements.soil.cation_exchange_capacity",
-      "requirements.soil.clay_content",
-      "requirements.soil.sand_content",
-      "requirements.climate.seasonal_rainfall",
-      "requirements.climate.heat_tolerance",
-      "requirements.climate.waterlogging_tolerance",
-      "requirements.water.preferred_available_water_capacity"
-    ],
-    "conflicts": [
       {
-        "field": "crop.common_name",
-        "description": "Generic Wheat is scoped to bread wheat, Triticum aestivum. Durum and other Triticum species require separate profiles.",
-        "source_ids": ["source_001"]
+        "id": "source_baseline",
+        "title": "crops_simplified(1).json",
+        "publisher": "User-provided baseline dataset",
+        "authors": [],
+        "publication_year": null,
+        "url": "uploaded-file:file_00000000644081f48733ab97906be7ae",
+        "accessed_at": "2026-08-29",
+        "source_type": "user_provided_dataset",
+        "quality_notes": "Baseline provenance only."
       },
       {
-        "field": "requirements.growth_cycle.days_to_maturity",
-        "description": "EcoCrop reports 90–250 days; the FAO irrigation manual gives an indicative 120–150 days for barley/oats/wheat. No averaging was performed.",
-        "source_ids": ["source_001", "source_002"],
-        "reported_values": ["90–250 days", "120–150 days"]
+        "id": "source_001",
+        "title": "Triticum aestivum — EcoCrop data sheet",
+        "publisher": "FAO EcoCrop",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2114",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_database",
+        "quality_notes": "Used for categorical drainage evidence."
       }
-    ]
+    ],
+    "missing_fields": [
+      "requirements.climate.seasonal_rainfall",
+      "requirements.water.preferred_available_water_capacity",
+      "requirements.soil.clay_content",
+      "requirements.soil.sand_content"
+    ],
+    "conflicts": []
   }
 ]

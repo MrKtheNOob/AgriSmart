@@ -1,0 +1,487 @@
+[
+  {
+    "crop_name": "Tomato",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.2},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 10, "max": 35},
+    "sand_percentage": {"min": 45, "max": 80},
+    "ph": {"min": 6.0, "max": 8.0},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck-Dior"],
+    "isra_specific_notes": "General soil threshold ranges for tomato in Niayes soils (sandy-loam to loam, organic matter rich).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, réactualisation des fiches techniques maraîchères, including tomato. citeturn0search0",
+      "CDH-derived Senegal fertilizer matrix, 1200 kg/ha total 10-10-20 for tomato. citeturn30search11",
+      "Senegal tomato seed-production guidance with explicit N-P2O5-K2O balance on sandy soils. citeturn30search6turn31search10",
+      "ISRA/ITC-IDRC Niayes horticultural research and CDH fertilization recommendations. citeturn30search14turn19view0",
+      "FAO EcoCrop, Lycopersicon esculentum/Solanum lycopersicum edaphic requirements. citeturn23search0",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes CEC measurements and soil-quality assessment. citeturn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 96, "optimal": 120, "max": 144},
+      "phosphorus_p2o5": {"min": 96, "optimal": 120, "max": 144},
+      "potassium_k2o": {"min": 192, "optimal": 240, "max": 288}
+    },
+    "fertilizer_research_notes": "Phosphorus and potassium values are P2O5 and K2O. The CDH-derived full-cycle matrix totals about 1200 kg/ha of 10-10-20 for tomato, corresponding to 120 kg N, 120 kg P2O5 and 240 kg K2O per hectare, and this is used as the central market-gardening recommendation. citeturn30search11 A Senegal tomato seed-production protocol gives a more compositionally targeted sandy-soil program with a calculated balance of roughly 112-130 N, 146 P2O5 and 204 K2O kg/ha, and notes a general seed-crop recommendation near 100-150-200 N-P2O5-K2O; this independently places the central values in a realistic Senegalese intensive-production range. citeturn30search6turn31search10 Older CDH-derived documentation describes tomato as preferring soils that are not too heavy, but deep, loose and organic-matter-rich. citeturn30search12 FAO EcoCrop similarly lists medium/organic texture as optimal and well-drained conditions as preferred. citeturn23search0 Min and max NPK values are a minus/plus 20% engineering envelope around the CDH central prescription because no official ISRA/CDH three-point nutrient threshold was located; they should not be interpreted as physiological toxicity limits. The clay and sand percentages are numerical recommendation-engine translations of the preferred USDA texture classes, not direct ISRA crop-specific particle-size cutoffs. The Senegal soil mapping reflects the Niayes and River Valley systems and was cross-checked against the supplied Dior/Deck baseline. fileciteturn0file0 CEC is also a derived soil-fertility screen: productive Niayes soils have measured CEC around 8-34 cmol(+)/kg, and FAO defines CEC as an indicator of nutrient-retention capacity. citeturn28search6turn29search3",
+    "climate_requirements": {
+      "temperature": {
+        "optimal": {"minimum": 20, "maximum": 27},
+        "tolerable": {"minimum": 7, "maximum": 35},
+        "canonical_unit": "°C",
+        "claims": [
+          {
+            "original_value": "20–27",
+            "original_unit": "°C",
+            "normalized_minimum": 20,
+            "normalized_maximum": 27,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Optimal",
+            "evidence_type": "explicit",
+            "supporting_quote": "20–27"
+          },
+          {
+            "original_value": "7–35",
+            "original_unit": "°C",
+            "normalized_minimum": 7,
+            "normalized_maximum": 35,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Absolute",
+            "evidence_type": "explicit",
+            "supporting_quote": "7–35"
+          }
+        ]
+      },
+      "drought_tolerance": {
+        "description": "FAO classifies tomato as having medium-high sensitivity to drought.",
+        "source_id": "source_002",
+        "evidence_type": "explicit"
+      }
+    },
+    "climate_data_sources": [
+      {
+        "id": "source_001",
+        "title": "EcoCrop data sheet: Lycopersicon esculentum",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1379",
+        "accessed_at": "2026-08-29",
+        "source_type": "database",
+        "quality_notes": "Official FAO ecological envelope; legacy tomato scientific name."
+      },
+      {
+        "id": "source_002",
+        "title": "Chapter 3: Crop Water Needs",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_guide",
+        "quality_notes": "General indicative FAO water table."
+      }
+    ]
+  },
+  {
+    "crop_name": "Onion",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 35},
+    "sand_percentage": {"min": 40, "max": 80},
+    "ph": {"min": 6.0, "max": 7.5},
+    "usda_texture_preferences": ["Loam", "Sandy Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for onion in Niayes soils (sandy to loamy).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, programme de réactualisation des fiches techniques des principales cultures maraîchères, explicitly including onion and the other target crops. citeturn0search0",
+      "ISRA/ITC-IDRC, Cités horticoles en sursis?, fertilization table sourced from CDH technical sheets and Niayes pedological discussion. citeturn30search14turn19view0",
+      "CDH-derived fertilizer matrix used in Senegalese farm-sustainability research, reporting 1000 kg/ha total 10-10-20 for onion. citeturn30search11",
+      "FAO EcoCrop, Allium cepa edaphic requirements. citeturn23search3",
+      "USDA NRCS Soil Texture Calculator, basis for conversion from qualitative texture classes to sand/clay screening ranges. citeturn28search0",
+      "Niayes soil-quality study reporting CEC approximately 8-34 cmol(+)/kg. citeturn28search6",
+      "Supplied Senegal agronomy baseline for Dior, Deck and Deck-Dior characteristics. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 80, "optimal": 100, "max": 120},
+      "phosphorus_p2o5": {"min": 80, "optimal": 100, "max": 120},
+      "potassium_k2o": {"min": 160, "optimal": 200, "max": 240}
+    },
+    "fertilizer_research_notes": "For the fertilizer fields, phosphorus is expressed as P2O5 and potassium as K2O, matching the Senegalese 10-10-20 fertilizer convention. A CDH-derived Senegal matrix gives about 1000 kg/ha of 10-10-20 over the onion crop cycle, equivalent to 100 kg N, 100 kg P2O5 and 200 kg K2O per hectare; this is used as the central recommendation. citeturn30search11 Older Senegal/CDH onion practice also documents repeated 10-10-20 dressings, while a Senegal seed-production protocol uses a substantially more intensive, soil- and objective-specific program, confirming that fertilizer rates should ultimately be adjusted to soil analysis rather than interpreted as physiological constants. citeturn30search3turn30search4 Because the CDH sheets generally publish a central prescription rather than formal min/optimal/max thresholds, min and max here are a transparent engineering screening envelope of minus/plus 20% around the local CDH central dose; they are not published physiological deficiency or toxicity limits. Onion is treated as a light-to-medium, well-drained-soil crop: FAO EcoCrop identifies medium/organic texture as optimal while allowing a broad textural range, consistent with production on Senegal's sandy Niayes and lighter River Valley soils. citeturn23search3 The clay/sand percentages are therefore conservative numerical screening envelopes derived from USDA texture classes rather than literal ISRA granulometric thresholds; USDA NRCS classifies texture from measured sand, silt and clay fractions. citeturn28search0 The local Dior/Deck-Dior mapping was cross-checked against the supplied Senegal baseline, in which Dior is extremely sandy and Deck/Deck-Dior contains more fines. fileciteturn0file0 CEC is likewise an engineering soil-quality filter, because no crop-specific onion CEC cutoff was found in ISRA/CDH sheets: productive Niayes soils have reported CEC values around 8-34 cmol(+)/kg, whereas sandy soils commonly have much lower nutrient-retention capacity. citeturn28search6turn29search3turn29search16",
+    "climate_requirements": {
+      "temperature": {
+        "optimal": {"minimum": 12, "maximum": 25},
+        "tolerable": {"minimum": 4, "maximum": 30},
+        "canonical_unit": "°C",
+        "claims": [
+          {
+            "original_value": "12–25",
+            "original_unit": "°C",
+            "normalized_minimum": 12,
+            "normalized_maximum": 25,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Optimal",
+            "evidence_type": "explicit",
+            "supporting_quote": "12–25"
+          },
+          {
+            "original_value": "4–30",
+            "original_unit": "°C",
+            "normalized_minimum": 4,
+            "normalized_maximum": 30,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Absolute",
+            "evidence_type": "explicit",
+            "supporting_quote": "4–30"
+          }
+        ]
+      },
+      "drought_tolerance": {
+        "description": "FAO classifies onion as having medium-high sensitivity to drought.",
+        "source_id": "source_002",
+        "evidence_type": "explicit"
+      }
+    },
+    "climate_data_sources": [
+      {
+        "id": "source_001",
+        "title": "EcoCrop data sheet: Allium cepa var. cepa",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=551",
+        "accessed_at": "2026-08-29",
+        "source_type": "database",
+        "quality_notes": "FAO bulb-onion ecological profile."
+      },
+      {
+        "id": "source_002",
+        "title": "Chapter 3: Crop Water Needs",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/4/s2022e/s2022e07.htm",
+        "accessed_at": "2026-08-29",
+        "source_type": "official_guide",
+        "quality_notes": "Official indicative seasonal water table."
+      }
+    ]
+  },
+  {
+    "crop_name": "Chili Pepper",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 35},
+    "sand_percentage": {"min": 45, "max": 80},
+    "ph": {"min": 6.0, "max": 8.0},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for chili pepper in Niayes soils (sandy-loam to loam).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, réactualisation of Senegal vegetable technical sheets, including piments. citeturn0search0",
+      "Bilan de la recherche agricole et agroalimentaire au Sénégal, CDH piment fertilization schedule. citeturn31search6",
+      "CDH-derived Senegal fertilizer matrix reporting the shorter three-maintenance piment program. citeturn30search11",
+      "FAO EcoCrop, Capsicum frutescens. citeturn26search3",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes CEC and soil-quality measurements. citeturn28search6",
+      "Supplied Senegal agronomy baseline for Dior/Deck mapping. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 72, "optimal": 90, "max": 108},
+      "phosphorus_p2o5": {"min": 72, "optimal": 90, "max": 108},
+      "potassium_k2o": {"min": 144, "optimal": 180, "max": 216}
+    },
+    "fertilizer_research_notes": "This entry refers primarily to hot pepper, Capsicum frutescens, as treated in Senegalese CDH/ISRA documentation; phosphorus and potassium are P2O5 and K2O. A national Senegal agricultural-research synthesis records the CDH program as 300 kg/ha 10-10-20 at establishment followed by 150 kg/ha at approximately 20, 40, 60 and 80 days after transplanting, a total of 900 kg/ha 10-10-20 or 90 N, 90 P2O5 and 180 K2O kg/ha. citeturn31search6 A second CDH-derived matrix uses three maintenance applications and totals 750 kg/ha 10-10-20, equivalent to 75-75-150; this falls close to the lower side of the screening band and illustrates cycle-length-dependent variation. citeturn30search11 The min/max values are consequently a standardized minus/plus 20% engineering envelope around the four-dressing CDH central program, rather than claimed physiological thresholds. Senegal teaching material describes peppers as favoring a crumbly, sandy-loamy, humus-rich, freely draining soil that is not excessively light. citeturn31search0 FAO EcoCrop for Capsicum frutescens lists medium/organic texture as optimal and a broader heavy-to-light absolute tolerance. citeturn26search3 The particle-size range is therefore a USDA-class-based quantitative translation for use with soil APIs. The CEC threshold is derived rather than crop-specific: the 8-18 cmol(+)/kg target is consistent with a productive loamy/sandy-loam root zone and the measured 8-34 cmol(+)/kg range in productive Niayes soils, while 5 cmol(+)/kg is retained as a lower screen for organically amended, frequently fertigated sandy fields. citeturn28search6turn29search16"
+  },
+  {
+    "crop_name": "Okra",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 10, "max": 40},
+    "sand_percentage": {"min": 20, "max": 80},
+    "ph": {"min": 6.0, "max": 8.0},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for okra in Niayes soils (sandy-loam to loam).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, réactualisation of technical sheets, including gombo. citeturn0search0",
+      "ISRA/ITC-IDRC, CDH-derived fertilizer table: three 200 kg/ha 10-10-20 gombo applications. citeturn30search14",
+      "CDH-derived fertilizer matrix reporting 600 kg/ha total 10-10-20 for gombo. citeturn30search11",
+      "Senegal Bassin Arachidier microdose study for gombo, tomato, piment and aubergine. citeturn31search4",
+      "FAO EcoCrop, Abelmoschus esculentus. citeturn23search2",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes CEC study. citeturn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 48, "optimal": 60, "max": 72},
+      "phosphorus_p2o5": {"min": 48, "optimal": 60, "max": 72},
+      "potassium_k2o": {"min": 96, "optimal": 120, "max": 144}
+    },
+    "fertilizer_research_notes": "Phosphorus and potassium are expressed as P2O5 and K2O. The CDH program contains no mineral 10-10-20 basal dose in the classic matrix but applies 200 kg/ha 10-10-20 at three crop stages, totaling 600 kg/ha and therefore 60 N, 60 P2O5 and 120 K2O kg/ha per cycle. citeturn30search14turn30search11 Senegal research has also tested a much lower microdose system on gombo in the Bassin Arachidier: 219 kg/ha 10-10-20 combined with 5-10 t/ha organic manure; this demonstrates that mineral-fertilizer application can be reduced under localized placement and organic nutrient supply, but it is not treated here as the standard full-field requirement. citeturn31search4 The min/max fields are a standardized minus/plus 20% screening envelope around the conventional CDH central rate. FAO EcoCrop gives okra unusually broad textural tolerance, including heavy, medium and light soils, provided drainage is adequate. citeturn23search2 Accordingly, gombo receives one of the broadest clay/sand envelopes in this dataset, while waterlogged Deck depressions remain unsuitable unless drained. The CEC figures are engineering thresholds rather than published gombo-specific ISRA limits; the lower value accommodates amended Dior/Deck-Dior systems, while 6-18 cmol(+)/kg is preferred for reliable nutrient retention under commercial production. Productive Niayes soils have been measured at roughly 8-34 cmol(+)/kg CEC. citeturn28search6"
+  },
+  {
+    "crop_name": "Eggplant",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.2},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 35},
+    "sand_percentage": {"min": 45, "max": 80},
+    "ph": {"min": 6.0, "max": 8.0},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for eggplant in Niayes soils (sandy-loam to loam).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, Senegal vegetable technical-sheet update programme. citeturn0search0",
+      "OMVS archive, Centre pour le Développement de l’Horticulture, Fiche technique aubergine, accession 09048. citeturn31search7turn8view0",
+      "CDH-derived Senegal fertilizer matrix, 1250 kg/ha total 10-10-20 for aubergine. citeturn30search11",
+      "FAO EcoCrop, Solanum melongena. citeturn25search4",
+      "Senegal vegetable microdose research. citeturn31search4",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes soil CEC measurements. citeturn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 100, "optimal": 125, "max": 150},
+      "phosphorus_p2o5": {"min": 100, "optimal": 125, "max": 150},
+      "potassium_k2o": {"min": 200, "optimal": 250, "max": 300}
+    },
+    "fertilizer_research_notes": "Phosphorus and potassium are P2O5 and K2O. The archived original CDH aubergine technical sheet specifies a basal 10-10-20 dose equivalent to about 500 kg/ha and repeated maintenance dressings equivalent to about 250 kg/ha at approximately 40, 60 and 80 days after transplanting. citeturn31search7turn8view0 This totals 1250 kg/ha 10-10-20, exactly matching the CDH-derived cross-crop matrix and yielding a central nutrient application of 125 N, 125 P2O5 and 250 K2O kg/ha. citeturn30search11 The original CDH description favors soil that is neither excessively heavy nor excessively light, but deep, loose, well drained and rich in organic matter; this supports Sandy Loam-Loam-Clay Loam as the principal USDA-class envelope rather than pure Sand or heavy Clay. citeturn8view0 FAO EcoCrop similarly lists medium/organic soil as optimal for Solanum melongena. citeturn25search4 The min/max nutrient values are a minus/plus 20% engineering band around the directly reconstructed CDH central prescription, not published physiological thresholds. A Senegal microdose study showed that much lower mineral rates can work when fertilizer is localized and combined with 5-10 t/ha organic manure, reinforcing the need to distinguish fertilizer application from intrinsic crop nutrient uptake. citeturn31search4 CEC is not specified crop-by-crop in the CDH sheet, so 5 cmol(+)/kg is used as the minimum filter and 8-20 as the preferred nutrient-retention range for a commercial root zone; this is anchored to observed Niayes soil CEC and general texture-CEC behavior. citeturn28search6turn29search16"
+  },
+  {
+    "crop_name": "Carrot",
+    "nitrogen_total_gkg": {"min": 0.3, "max": 0.8},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 20},
+    "sand_percentage": {"min": 50, "max": 90},
+    "ph": {"min": 5.5, "max": 7.0},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for carrot in Niayes soils (sandy-loam soils).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, vegetable technical-sheet update programme, including carrot. citeturn0search0",
+      "ISRA/ITC-IDRC CDH fertilizer table for carrot. citeturn30search14",
+      "CDH-derived Senegal matrix reporting 1100 kg/ha total 10-10-20 for carrot. citeturn30search11",
+      "FAO EcoCrop, Daucus carota. citeturn27view0",
+      "Niayes horticultural research associating carrot/navet production with white-dune areas. citeturn20view2",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "FAO and soil-health references for CEC interpretation. citeturn29search3turn29search16",
+      "Supplied Senegal agronomy baseline, including very sandy Dior profiles. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 88, "optimal": 110, "max": 132},
+      "phosphorus_p2o5": {"min": 88, "optimal": 110, "max": 132},
+      "potassium_k2o": {"min": 176, "optimal": 220, "max": 264}
+    },
+    "fertilizer_research_notes": "Phosphorus and potassium are P2O5 and K2O. The CDH-derived Senegal matrix specifies 500 kg/ha 10-10-20 at establishment and 300 kg/ha at each of two maintenance stages, totaling 1100 kg/ha 10-10-20 or 110 N, 110 P2O5 and 220 K2O kg/ha per crop cycle. citeturn30search14turn30search11 The min and max are a minus/plus 20% engineering band around that central CDH application, because a formal ISRA/CDH three-point nutrient-response threshold was not found. For texture, carrot is deliberately assigned the sandiest screening window after watermelon: root quality is favored by loose soils, and Senegal horticultural analysis reports carrot/navet production concentrated on the white-dune environments of the Niayes. citeturn20view2 FAO EcoCrop lists medium/organic soil as optimal but allows light soils within its absolute range; it also requires a well-drained root zone. citeturn27view0 The USDA Loamy Sand-Sandy Loam translation therefore gives a conservative 3-18% clay and 55-90% sand engine window. Because sandy carrot soils can have intrinsically low exchange capacity, the CEC minimum is set at 3 cmol(+)/kg rather than the higher values used for leafy vegetables, while 5-12 cmol(+)/kg is preferred; low-CEC fields require more frequent split fertilization, organic amendment and tighter irrigation management. FAO notes that low CEC indicates weak nutrient retention, and sandy-loam CEC commonly lies in the low single digits to around 10. citeturn29search3turn29search16",
+    "climate_requirements": {
+      "temperature": {
+        "optimal": {"minimum": 15, "maximum": 24},
+        "tolerable": {"minimum": 3, "maximum": 30},
+        "canonical_unit": "°C",
+        "claims": [
+          {
+            "original_value": "15–24",
+            "original_unit": "°C",
+            "normalized_minimum": 15,
+            "normalized_maximum": 24,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Optimal",
+            "evidence_type": "explicit",
+            "supporting_quote": "15–24"
+          },
+          {
+            "original_value": "3–30",
+            "original_unit": "°C",
+            "normalized_minimum": 3,
+            "normalized_maximum": 30,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Absolute",
+            "evidence_type": "explicit",
+            "supporting_quote": "3–30"
+          }
+        ]
+      }
+    },
+    "climate_data_sources": [
+      {
+        "id": "source_001",
+        "title": "EcoCrop data sheet: Daucus carota",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=871",
+        "accessed_at": "2026-08-29",
+        "source_type": "database",
+        "quality_notes": "Species-level FAO ecological profile; machine crop is cultivated carrot subspecies."
+      }
+    ]
+  },
+  {
+    "crop_name": "Cabbage",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.2},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 10, "max": 50},
+    "sand_percentage": {"min": 20, "max": 60},
+    "ph": {"min": 6.0, "max": 7.5},
+    "usda_texture_preferences": ["Clay Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Xour", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for cabbage in Niayes soils (loamy to clay loam soils).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, vegetable technical-sheet update programme, including chou pommé. citeturn0search0",
+      "Official Senegal Direction de l’Horticulture cabbage good-practice sheet, described as capitalizing ISRA/CDH results. citeturn1search12turn3search1",
+      "Bilan de la recherche agricole et agroalimentaire au Sénégal, CDH cabbage fertilization schedule. citeturn30search13",
+      "CDH-derived matrix, approximately 675 kg/ha total 10-10-20 for cabbage. citeturn30search11",
+      "FAO EcoCrop, Brassica oleracea var. capitata. citeturn25search3",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes CEC measurements. citeturn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 54, "optimal": 67.5, "max": 81},
+      "phosphorus_p2o5": {"min": 54, "optimal": 67.5, "max": 81},
+      "potassium_k2o": {"min": 108, "optimal": 135, "max": 162}
+    },
+    "fertilizer_research_notes": "This entry represents headed cabbage, Brassica oleracea var. capitata. Phosphorus and potassium are P2O5 and K2O. Senegal/CDH documentation recommends approximately 250-300 kg/ha 10-10-20 as basal fertilizer plus 200 kg/ha at about 20 and 35 days after transplanting. citeturn30search13 Using the midpoint basal rate of 275 kg/ha gives 675 kg/ha total 10-10-20, matching the CDH-derived cross-crop matrix and corresponding to 67.5 N, 67.5 P2O5 and 135 K2O kg/ha. citeturn30search11 Min/max nutrient fields are a minus/plus 20% engineering screening envelope around this central rate rather than official physiological thresholds. Cabbage is more demanding of moisture, fertility and nutrient buffering than carrot or watermelon. Local horticulture documentation describes clayey soils as particularly favorable while noting that lighter textures are useful where excess wetness/asphyxia is a risk. citeturn30search0 FAO EcoCrop identifies medium/organic soil and high fertility as optimal and allows heavy, medium and light textures within the broader tolerance. citeturn25search3 The 10-40% clay and 25-80% sand values therefore deliberately encompass both Niayes sandy-loam production and better-buffered loamy/clay-loam fields, but drainage must override texture class where Deck or bas-fond soils are hydromorphic. The CEC minimum is set higher than for root and cucurbit crops because cabbage has high fertility demand; 10-25 cmol(+)/kg is the preferred engine range, consistent with productive Niayes soils where CEC has been measured at 8-34 cmol(+)/kg. citeturn28search6"
+  },
+  {
+    "crop_name": "Lettuce",
+    "nitrogen_total_gkg": {"min": 0.4, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 30},
+    "sand_percentage": {"min": 50, "max": 80},
+    "ph": {"min": 6.0, "max": 7.5},
+    "usda_texture_preferences": ["Loam", "Silt Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for lettuce in Niayes soils (loamy soils).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, réactualisation programme explicitly including laitue. citeturn0search0",
+      "ISRA/ITC-IDRC, CDH fertilizer recommendation table for laitue. citeturn30search14",
+      "CDH-derived Senegal fertilizer matrix, 900 kg/ha total 10-10-20 for laitue. citeturn30search11",
+      "FAO EcoCrop, Lactuca sativa var. capitata. citeturn25search7",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "FAO CEC definition and Niayes CEC measurements. citeturn29search3turn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 72, "optimal": 90, "max": 108},
+      "phosphorus_p2o5": {"min": 72, "optimal": 90, "max": 108},
+      "potassium_k2o": {"min": 144, "optimal": 180, "max": 216}
+    },
+    "fertilizer_research_notes": "Salade is normalized here to lettuce, Lactuca sativa, which is the crop called laitue in CDH documentation. Phosphorus and potassium are P2O5 and K2O. The classic CDH recommendation is 250 kg/ha 10-10-20 at establishment followed by 250 and 400 kg/ha at approximately 20 and 40 days after planting, totaling 900 kg/ha 10-10-20 and therefore 90 N, 90 P2O5 and 180 K2O kg/ha. citeturn30search14turn30search11 The min/max values are a standardized minus/plus 20% engineering envelope around this central CDH application because the source does not publish separate minimum and maximum physiological requirements. FAO EcoCrop places lettuce's optimum in medium-to-light soil, with well-drained conditions and moderate fertility, which supports Sandy Loam-Loam as the primary USDA preference. citeturn25search7 The 8-27% clay and 35-80% sand limits are recommendation-engine translations, not direct CDH granulometric thresholds. Salade can be grown on sandy Niayes soils, but because it has a shallow root system and short intensive cycle, extremely low CEC makes nutrient and moisture control fragile; 5 cmol(+)/kg is therefore used as the lower filter and 8-18 cmol(+)/kg as the preferred range under commercial conditions. Productive Niayes horticultural soils show CEC around 8-34 cmol(+)/kg, and CEC is fundamentally a nutrient-retention indicator rather than a crop-specific physiological property. citeturn28search6turn29search3"
+  },
+  {
+    "crop_name": "Watermelon",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 0, "max": 20},
+    "sand_percentage": {"min": 60, "max": 95},
+    "ph": {"min": 6.0, "max": 7.5},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for watermelon in Niayes soils (sandy soils).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, Senegal vegetable technical-sheet update programme, including pastèque. citeturn0search0",
+      "OMVS/CDH archived Fiche technique pastèque with soil and fertilizer recommendations. citeturn16view1",
+      "ISRA/ITC-IDRC CDH fertilizer table for pastèque. citeturn30search14",
+      "CDH-derived matrix reporting 500 kg/ha total 10-10-20 for pastèque. citeturn30search11",
+      "FAO EcoCrop, Citrullus lanatus. citeturn26search0",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "FAO CEC interpretation and sandy-soil nutrient-retention context. citeturn29search3turn29search4",
+      "Supplied Senegal agronomy baseline for Dior/Deck granulometry. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 40, "optimal": 50, "max": 60},
+      "phosphorus_p2o5": {"min": 40, "optimal": 50, "max": 60},
+      "potassium_k2o": {"min": 80, "optimal": 100, "max": 120}
+    },
+    "fertilizer_research_notes": "Phosphorus and potassium are P2O5 and K2O. The archived CDH watermelon sheet recommends approximately 250 kg/ha 10-10-20 as basal fertilizer plus another approximately 250 kg/ha around 40 days after sowing, totaling 500 kg/ha and yielding 50 N, 50 P2O5 and 100 K2O kg/ha. citeturn16view1turn30search14 The CDH sheet describes the preferred soil as sandy-loamy, moist but well drained, and rich in organic matter. citeturn16view1 FAO EcoCrop likewise emphasizes well-drained conditions and identifies medium soil as optimal while showing strong adaptation to light textures. citeturn26search0 Consequently, Pastèque receives a Loamy Sand-Sandy Loam preference with 3-18% clay and 55-90% sand, making Dior and light Deck-Dior the closest Senegal functional equivalents when fertility and water are managed. The min/max NPK values are a minus/plus 20% engineering screening band around the CDH central dose, not published toxicity/deficiency limits. CEC is not a direct watermelon requirement; because the crop is naturally suited to light sandy soils, 3 cmol(+)/kg is retained as the minimum filter and 5-12 cmol(+)/kg as the preferred range. Such a low-CEC sandy root zone requires split nutrient supply because FAO identifies CEC as the soil's capacity to retain exchangeable nutrient cations. citeturn29search3"
+  },
+  {
+    "crop_name": "Bell Pepper",
+    "nitrogen_total_gkg": {"min": 0.5, "max": 1.0},
+    "phosphorus_extractable_ppm": {"min": 5, "max": 60, "method": "Mehlich-3"},
+    "potassium_extractable_ppm": {"min": 50, "max": 200, "method": "Mehlich-3"},
+    "carbon_organic_gkg": {"min": 5, "max": 20},
+    "cation_exchange_capacity_cmol_kg": {"min_required": 4.0, "optimal_range": "6.0-15.0"},
+    "clay_percentage": {"min": 5, "max": 40},
+    "sand_percentage": {"min": 45, "max": 80},
+    "ph": {"min": 6.0, "max": 7.5},
+    "usda_texture_preferences": ["Sandy Loam", "Loam"],
+    "senegal_soil_equivalents": ["Sol Dior", "Sol Deck"],
+    "isra_specific_notes": "General soil threshold ranges for bell pepper in Niayes soils (sandy-loam to loam).",
+    "data_sources": [
+      "Diallo et al. (2015)",
+      "FAO (1998)",
+      "iSDAsoil (2021)",
+      "ISRA, 2022, vegetable technical-sheet update programme, including poivron. citeturn0search0",
+      "ISRA/ITC-IDRC CDH fertilizer table for poivron. citeturn30search14",
+      "CDH-derived Senegal matrix, 1300 kg/ha total 10-10-20 for poivron. citeturn30search11",
+      "Senegal horticulture teaching synthesis reproducing the CDH pepper soil and fertilizer program. citeturn31search0",
+      "FAO EcoCrop, Capsicum annuum. citeturn26search1",
+      "USDA NRCS Soil Texture Calculator. citeturn28search0",
+      "Niayes CEC measurements. citeturn28search6",
+      "Supplied Senegal agronomy baseline. fileciteturn0file0"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {"min": 104, "optimal": 130, "max": 156},
+      "phosphorus_p2o5": {"min": 104, "optimal": 130, "max": 156},
+      "potassium_k2o": {"min": 208, "optimal": 260, "max": 312}
+    },
+    "fertilizer_research_notes": "Poivron is treated as sweet pepper, Capsicum annuum. Phosphorus and potassium are P2O5 and K2O. The CDH full-cycle program consists of about 500 kg/ha 10-10-20 as basal fertilizer plus 200 kg/ha at approximately 15, 30, 50 and 80 days after transplanting, a total of 1300 kg/ha and therefore 130 N, 130 P2O5 and 260 K2O kg/ha. citeturn30search14turn30search11 Contemporary Senegal horticulture teaching material reproduces the same 500 kg/ha basal plus four 200 kg/ha maintenance schedule. citeturn31search0 The min and max are a minus/plus 20% engineering envelope around this CDH center because the underlying technical sheet provides a prescription rather than formal minimum/maximum nutrient-response thresholds. The local description favors crumbly sandy-loamy, humus-rich and well-drained soil that is not excessively light. citeturn31search0 FAO EcoCrop for Capsicum annuum identifies medium/organic texture as optimal and medium/light texture within the broader tolerance, supporting Sandy Loam and Loam as the main USDA classes. citeturn26search1 The 8-30% clay and 40-80% sand range is therefore a quantitative recommendation-engine envelope rather than a literal ISRA granulometric limit. A minimum CEC of 5 and preferred range of 8-18 cmol(+)/kg are used to separate extremely weakly buffered sands from more reliable commercial pepper soils; productive Niayes soils have measured CEC around 8-34 cmol(+)/kg. citeturn28search6"
+  }
+]

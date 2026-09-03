@@ -20,17 +20,31 @@ export interface WaterInsight {
 
 export interface Climate {
   region: string;
-  annual_stats: Record<
-    string,
-    {
-      temperature_2m: number;
-      precipitation: number;
-      snowfall: number;
-      apparent_temperature: number;
-    }
-  >;
-  heat_days: number;
-  rainy_days: number;
+  latitude: number;
+  longitude: number;
+  data_period: {
+    start: string;
+    end: string;
+  };
+  summary: {
+    temperature_mean_c: number;
+    annual_precipitation_mean_mm: number;
+    heat_days_mean: number;
+    rainy_days_mean: number;
+  };
+  monthly_climate: Array<{
+    month: number;
+    temperature_mean_c: number;
+    temperature_min_c: number;
+    temperature_max_c: number;
+    relative_humidity_mean_pct: number;
+    apparent_temperature_mean_c: number;
+    precipitation_mean_mm: number;
+    vapor_pressure_deficit_mean_kpa: number;
+    heat_days_mean: number;
+    rainy_days_mean: number;
+    years_observed: number;
+  }>;
 }
 
 export interface RecommendationResponse {
