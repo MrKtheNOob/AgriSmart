@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from schemas import AgroecologicalZone
+from .schemas import AgroecologicalZone
 
 
 Position = tuple[float, float]

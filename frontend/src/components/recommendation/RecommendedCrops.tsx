@@ -17,7 +17,7 @@ export default function RecommendedCrops({ crops }: RecommendedCropsProps) {
                 : "bg-white border-slate-200 hover:border-green-200"
             }`}
           >
-            <div className="flex justify-between items-start mb-3">
+            <div className="flex justify-between items-start gap-4 mb-3">
               <h3
                 className={`font-bold text-xl ${
                   idx === 0 ? "text-green-800" : "text-slate-800"
@@ -27,19 +27,43 @@ export default function RecommendedCrops({ crops }: RecommendedCropsProps) {
                 {crop.name}
               </h3>
 
-              {idx === 0 && (
-                <span className="px-3 py-1 bg-green-200 text-green-800 text-[10px] font-black uppercase rounded-full">
-                  Top Match
+              <div className="flex shrink-0 flex-col items-end gap-2">
+                {idx === 0 && (
+                  <span className="px-3 py-1 bg-green-200 text-green-800 text-[10px] font-black uppercase rounded-full">
+                    Top Match
+                  </span>
+                )}
+                <span className="text-2xl font-black text-green-700">
+                  {crop.overall_score.toFixed(1)}%
                 </span>
-              )}
+              </div>
             </div>
 
             <p className="text-sm text-slate-600 leading-relaxed mb-5">
               {crop.reason}
             </p>
 
+            <div className="grid grid-cols-2 gap-3 border-t border-green-100 pt-4">
+              <div className="rounded-2xl bg-white/80 px-4 py-3">
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Sol
+                </span>
+                <span className="text-base font-black text-slate-800">
+                  {crop.soil_score.toFixed(1)}%
+                </span>
+              </div>
+              <div className="rounded-2xl bg-white/80 px-4 py-3 text-right">
+                <span className="block text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Climat
+                </span>
+                <span className="text-base font-black text-slate-800">
+                  {crop.climate_score.toFixed(1)}%
+                </span>
+              </div>
+            </div>
+
             {(crop.revenue_per_ha || crop.profitability_index) && (
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-green-100">
+              <div className="grid grid-cols-2 gap-4 pt-4 mt-4 border-t border-green-100">
                 {crop.revenue_per_ha ? (
                   <div>
                     <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">

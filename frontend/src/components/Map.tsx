@@ -144,8 +144,8 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
 
   const maskStyle: PathOptions = {
     stroke: false,
-    fillColor: "#f3f5f4",
-    fillOpacity: 0.16,
+    fillColor: "#64748b",
+    fillOpacity: 0.42,
     interactive: false,
   };
 
@@ -298,9 +298,12 @@ export default function SenegalMap({ onMapClick, markerPosition }: MapProps) {
       <TileLayer
         minZoom={6}
         maxZoom={18}
-        opacity={0.48}
-        className="premium-basemap"
-        attribution="© OpenStreetMap contributors · Zones agroécologiques : Ministère de l'Agriculture du Sénégal"
+        opacity={1}
+        attribution={
+          mapMode === "agroecological"
+            ? "© OpenStreetMap contributors · Zones agroécologiques : Ministère de l'Agriculture du Sénégal"
+            : "© OpenStreetMap contributors"
+        }
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 

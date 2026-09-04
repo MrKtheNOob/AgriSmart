@@ -1,8 +1,11 @@
 export interface Crop {
   name: string;
   reason: string;
-  revenue_per_ha: number;
-  profitability_index: number;
+  soil_score: number;
+  climate_score: number;
+  overall_score: number;
+  revenue_per_ha?: number;
+  profitability_index?: number;
 }
 
 export interface Soil {
@@ -16,6 +19,15 @@ export interface WaterInsight {
   retention_score: number;
   category: string;
   insight: string;
+}
+
+export interface CropRanking {
+  crop_name: string;
+  soil_score: number;
+  climate_score: number;
+  overall_score: number;
+  planting_month: number;
+  growing_months: number;
 }
 
 export interface Climate {
@@ -55,6 +67,7 @@ export interface RecommendationResponse {
   soil: Soil;
   climate: Climate;
   water_insight?: WaterInsight;
+  crop_rankings: CropRanking[] | null;
   recommendation: {
     recommended_crops: Crop[];
   };

@@ -17,9 +17,9 @@ class WaterInsightService:
         raw = soil_data.raw_properties
         
         # Inputs (as percentages 0-100)
-        clay = raw.get("clay_content", 20.0)
-        sand = raw.get("sand_content", 40.0)
-        om = raw.get("carbon_organic", 10.0) / 10.0 # g/kg to % approx
+        clay = raw["clay_content"]
+        sand = raw["sand_content"]
+        om = raw["carbon_organic"] / 10.0 # g/kg to % approx
         
         # Available Water Capacity (AWC) estimation (cm/cm)
         # Simplified linear heuristic for demonstration
@@ -41,9 +41,15 @@ class WaterInsightService:
             category = "Élevée (Risque d'Asphyxie)"
             insight = "Forte rétention. Attention au drainage pour éviter le pourrissement des racines."
 
-        return {
+        result = {
             "awc_value": round(awc, 3),
             "retention_score": round(retention_score, 1),
             "category": category,
             "insight": insight
         }
+        logger.info(
+            "Water insight calculated: retention_score=%s, category=%s",
+            result["retention_score"],
+            result["category"],
+        )
+        return result

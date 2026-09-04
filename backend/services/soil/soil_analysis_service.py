@@ -5,9 +5,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from isdasoil_service import iSDAsoilService
-from .schemas import PropertyResponse, SoilProfile, SoilPropertyMetadata
-from zone_service import ZoneService
+from .schemas import SoilProfile, SoilPropertyMetadata
+from .isdasoil_service import iSDAsoilService, PropertyResponse
+from .zone_service import ZoneService
+
+
+logger = logging.getLogger(__name__)
 
 
 class SoilAnalysisService:
@@ -27,11 +30,17 @@ class SoilAnalysisService:
         self, lat: float, lon: float, depth: str = "0-20"
     ) -> SoilProfile:
         """Build one domain result from provider properties and local zone data."""
+        logger.info("Retrieving soil profile for lat=%s, lon=%s", lat, lon)
         # Keep remote acquisition in the adapter, then enrich its result locally.
         # Zone lookup is independent of iSDA and therefore still replaceable.
         provider_data = await self.isda_service.get_soil_properties(lat, lon, depth)
         profile = self._interpret_agronomy(provider_data, depth)
         profile.agroecological_zone = self.zone_service.find_zone(lat, lon)
+        logger.info(
+            "Soil profile retrieved: classification=%s, zone=%s",
+            profile.classification,
+            profile.agroecological_zone.code if profile.agroecological_zone else "unknown",
+        )
         return profile
 
     @staticmethod
@@ -45,7 +54,7 @@ class SoilAnalysisService:
                 for name, value in data["property"].items()
             }
         except Exception as error:
-            logging.error("Could not load soil metadata: %s", error)
+            logger.exception("Could not load soil metadata from %s", path)
             raise
 
     def _interpret_agronomy(self, data: PropertyResponse, depth: str) -> SoilProfile:
@@ -119,11 +128,11 @@ class SoilAnalysisService:
     @staticmethod
     def _classify_senegal_soil(raw_properties: dict[str, float]) -> str:
         """Classify a profile using ordered Senegal-specific heuristic rules."""
-        sand = raw_properties.get("sand_content", 0.0)
-        clay = raw_properties.get("clay_content", 0.0)
-        silt = raw_properties.get("silt_content", 0.0)
-        ph = raw_properties.get("ph", 6.5)
-        organic_carbon = raw_properties.get("carbon_organic", 0.0)
+        sand = raw_properties["sand_content"]
+        clay = raw_properties["clay_content"]
+        silt = raw_properties["silt_content"]
+        ph = raw_properties["ph"]
+        organic_carbon = raw_properties["carbon_organic"]
 
         # Chemical hazards and distinctive organic profiles take precedence over
         # texture, after which increasingly specific clay/sand rules are applied.
@@ -134,38 +143,34 @@ class SoilAnalysisService:
             return "Niayes"
         if clay >= 40.0:
             return "Hollaldé"
-        if 20.0 <= clay < 40.0 and silt >= 20.0:
-            return "Fondé"
-        if 20.0 <= clay < 40.0 and silt < 20.0:
-            return "Deck"
+        if clay >= 20.0:
+            return "Fondé" if silt >= 20.0 else "Deck"
         if sand >= 80.0 and clay <= 10.0:
             return "Dior"
-        if 60.0 <= sand < 80.0 and 10.0 < clay < 20.0:
-            return "Deck-Dior"
-        return "Indéterminé"
+        return "Deck-Dior"
 
 
 if __name__ == "__main__":
     import asyncio
 
-    from isdasoil_service import iSDAsoilService
-    from zone_service import ZoneService
+    from .isdasoil_service import iSDAsoilService
+    from .zone_service import ZoneService
 
     async def main():
         load_dotenv()
         isda_service = iSDAsoilService(email=os.getenv("ISDA_EMAIL",""), password=os.getenv("ISDA_PASSWORD",""))
-        zone_service = ZoneService(geojson_path="../../data/geographic/senegal_agroecological_zones.geojson")
+        zone_service = ZoneService(geojson_path="./data/geographic/senegal_agroecological_zones.geojson")
         soil_analysis_service = SoilAnalysisService(
             isda_service=isda_service,
             zone_service=zone_service,
-            metadata_path="../../data/processed/soil_metadata.json",
+            metadata_path="./data/processed/soil_metadata.json",
         )
 
-        lat, lon = 14.6928, -17.4467  # Example coordinates
+        lat, lon = 14.64544074287179, -16.29337186288759  # Example coordinates
         depth = "0-20"
         soil_profile = await soil_analysis_service.get_soil_analysis(lat, lon, depth)
         j=json.dumps(soil_profile.model_dump(), indent=2, ensure_ascii=False)
-        with open("../../data/processed/soil_analysis_output.json", "w", encoding="utf-8") as f:
+        with open("./data/processed/soil_analysis_output.json", "w", encoding="utf-8") as f:
             f.write(j)
 
     asyncio.run(main())

@@ -7,10 +7,6 @@
     'Segoe UI', sans-serif;
 }
 
-.premium-basemap {
-  filter: grayscale(0.92) saturate(0.18) brightness(1.1) contrast(0.78);
-}
-
 .premium-agri-map .leaflet-overlay-pane path {
   transition:
     fill-opacity 180ms ease,

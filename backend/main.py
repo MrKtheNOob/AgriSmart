@@ -1,121 +1,47 @@
-import asyncio
 import os
 import logging
 import json
 from contextlib import asynccontextmanager
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from dotenv import load_dotenv
 from sse_starlette.sse import EventSourceResponse
 
-from management.api import close_management_db, init_management_db, router as management_router
-from services.RAG.RAG_service import RAGService
+from app_config import Settings
+from api_schemas import AnalysisRequest
+from logging_config import configure_logging
+
+configure_logging()
+
+from management.api import router as management_router
+from service_setup import ApplicationServices, create_application_services
 from services.agronomy.agronomic_service import AgronomicService
-from services.climate.climate_service import ClimateService
-from shared.database_service import DatabaseService
 from services.telemetry.api import get_telemetry_service, router as telemetry_router
-from services.soil.isdasoil_service import iSDAsoilService
-from services.soil.soil_analysis_service import SoilAnalysisService
-from services.soil.zone_service import ZoneService
-from services.RAG.vector_store import VectorStore
-from services.soil.water_insight_service import WaterInsightService
 from services.telemetry.telemetry_service import TelemetryService
 from shared.rate_limiter import RateLimitMiddleware, RateLimitRule
 
 
-# Load environment variables
-load_dotenv()
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, 
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    force=True
-)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-# --- Global Service Instance ---
-agronomic_service: AgronomicService | None = None
-telemetry_service: TelemetryService | None= None
-db_service: DatabaseService | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global agronomic_service, telemetry_service, db_service
-
     logger.info("Initializing AgriSmart Services...")
-
-    # Define paths relative to this file
-    base_dir = os.path.dirname(__file__)
-    feather_path = os.path.join(
-        base_dir, "data/processed/senegal_climate_monthly.feather"
-    )
-    markdown_file = os.path.join(base_dir, "data/RAG/agronomy_data.md")
-    persist_directory = os.path.join(base_dir, "data/RAG/chroma_db")
-    soil_metadata_path = os.path.join(base_dir, "data/processed/soil_metadata.json")
-    zone_geojson_path = os.path.join(
-        base_dir, "data/geographic/senegal_agroecological_zones.geojson"
-    )
-
     try:
-        # Database and telemetry service initialization
-        db_uri = os.getenv("DB_URI")
-        if not db_uri:
-            raise RuntimeError("No database URI found for database service.")
-
-        db_service = DatabaseService(db_uri)
-        await db_service.connect()
-        telemetry_service = TelemetryService(db_service)
-        await telemetry_service.init_table()
-        await init_management_db(db_service)
-        app.state.db_service = db_service
-        app.state.telemetry_service = telemetry_service
-
-        # Initialize sub-services
-        isda_service = iSDAsoilService(
-            email=os.getenv("ISDA_EMAIL",""), password=os.getenv("ISDA_PASSWORD","")
-        )
-        zone_service = ZoneService(zone_geojson_path)
-        soil_service = SoilAnalysisService(
-            isda_service=isda_service,
-            zone_service=zone_service,
-            metadata_path=soil_metadata_path,
-        )
-
-        # Async initialization
-
-        climate_service, vector_store = await asyncio.gather(
-            ClimateService.create(feather_path=feather_path),
-            VectorStore.create(
-                markdown_file=markdown_file, persist_directory=persist_directory
-            ),
-        )
-
-        rag_service = RAGService(vector_store)
-        water_insight_service = WaterInsightService()
-        # Master service
-        agronomic_service = AgronomicService(
-            soil_service=soil_service,
-            climate_service=climate_service,
-            rag_service=rag_service,
-            water_insight_service=water_insight_service,
-        )
-
+        services = await create_application_services(Settings.from_environment())
+        app.state.application_services = services
+        app.state.db_service = services.database
+        app.state.telemetry_service = services.telemetry
         logger.info("AgriSmart Services successfully initialized.")
-    except Exception as e:
-        logger.error(f"Failed to initialize services: {e}", exc_info=True)
+        yield
+    except Exception as error:
+        logger.error("Failed to initialize services: %s", error, exc_info=True)
         raise
-        # We don't raise here to allow the app to start (and maybe show health errors),
-        # but the endpoint will fail.
-
-    yield
-    logger.info("Shutting down AgriSmart Services...")
-    await close_management_db()
-    if db_service:
-        await db_service.close()
+    finally:
+        initialized = getattr(app.state, "application_services", None)
+        if initialized is not None:
+            logger.info("Shutting down AgriSmart Services...")
+            await initialized.close()
 
 
 app = FastAPI(title="AgriSmart API", lifespan=lifespan)
@@ -127,8 +53,10 @@ RATE_LIMIT_RULES = {
     ("GET", "/analyze-stream"): RateLimitRule(max_requests=6, window_seconds=60),
     ("POST", "/telemetry/visit"): RateLimitRule(max_requests=60, window_seconds=60),
     ("POST", "/telemetry/download"): RateLimitRule(max_requests=20, window_seconds=60),
-    ("POST", "/management/farms"): RateLimitRule(max_requests=20, window_seconds=60),
-    ("POST", "/management/analysis-reports"): RateLimitRule(max_requests=20, window_seconds=60),
+    # ("POST", "/management/farms"): RateLimitRule(max_requests=20, window_seconds=60),
+    # ("POST", "/management/analysis-reports"): RateLimitRule(
+    #     max_requests=20, window_seconds=60
+    # ),
 }
 
 app.add_middleware(RateLimitMiddleware, rules=RATE_LIMIT_RULES)
@@ -142,29 +70,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- Data Models ---
-
-class AnalysisRequest(BaseModel):
-    lat: float
-    lng: float
-    session_id: str | None = None
-
-
-class CropRecommendation(BaseModel):
-    name: str
-    reason: str
-
 @app.get("/")
 async def root():
     return {"message": "Welcome to AgriSmart Precision Crop Planning API"}
 
 @app.get("/health")
-async def health():
-    if agronomic_service:
+async def health(request: Request):
+    if getattr(request.app.state, "application_services", None) is not None:
         return {"status": "healthy", "services": "initialized"}
     return {"status": "unhealthy", "services": "not_initialized"}
 
 
+def get_agronomic_service(request: Request) -> AgronomicService:
+    services: ApplicationServices | None = getattr(
+        request.app.state, "application_services", None
+    )
+    if services is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Agronomic service is not initialized",
+        )
+    return services.agronomic
+
+
+# this should be inside the according service , not here in the api layer
 def parse_recommendation(result):
     # The RAG service returns a JSON string, we should parse it if it's not already a dict
     if isinstance(result.get("recommendation"), str):
@@ -187,14 +116,12 @@ def parse_recommendation(result):
 async def analyze(
     request: AnalysisRequest,
     telemetry_service: TelemetryService = Depends(get_telemetry_service),
+    agronomic_service: AgronomicService = Depends(get_agronomic_service),
 ):
-    if not agronomic_service:
-        raise HTTPException(status_code=503, detail="Services not initialized")
-
     try:
         lat = round(request.lat, 3)
         lng = round(request.lng, 3)
-        
+
         result = await agronomic_service.analyze(lat, lng)
         parsed_result = parse_recommendation(result)
 
@@ -220,13 +147,10 @@ async def analyze_stream(
     lng: float,
     session_id: str | None = None,
     telemetry_service: TelemetryService = Depends(get_telemetry_service),
+    agronomic_service: AgronomicService = Depends(get_agronomic_service),
 ):
     
     async def event_generator():
-        global agronomic_service
-        if not agronomic_service:
-            yield {"data": json.dumps({"type": "error", "message": "Services not initialized"})}
-            return
         try:
             async for event in agronomic_service.analyze_stream(lat, lng):
                 if event["type"] == "result":

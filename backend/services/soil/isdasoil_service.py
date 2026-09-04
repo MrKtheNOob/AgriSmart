@@ -5,7 +5,7 @@ import time
 import httpx
 from typing import Optional
 
-from schemas import PropertyResponse
+from .schemas import PropertyResponse
 
 logger = logging.getLogger(__name__)
 DEFAULT_TOKEN_TTL = 3600  # 1 hour
@@ -68,11 +68,11 @@ class iSDAsoilService:
             expires_at = payload.get("expires_at")
             if token and expires_at:
                 if int(time.time()) >= int(expires_at):
-                    logging.info("Stored token expired")
+                    logger.info("Stored token expired")
                     return None
             return token
         except Exception:
-            logging.exception("Failed to read token file")
+            logger.exception("Failed to read token file")
             return None
 
     async def get_soil_properties(
@@ -91,7 +91,7 @@ class iSDAsoilService:
         match response.status_code:
             # If token expired or invalid, try obtaining a new token and retry once
             case 401 | 403:
-                logging.info("Token invalid or expired, refreshing token , retrying ...")
+                logger.info("Token invalid or expired; refreshing and retrying")
                 await self._get_token()
                 headers = {"Authorization": f"Bearer {self._token}"}
                 response = await self.client.get(

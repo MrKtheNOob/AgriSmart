@@ -15,7 +15,8 @@ class RateLimitRule:
     max_requests: int
     window_seconds: int
 
-
+# I need to change this implementation to use a library . Ain't no need to hardcode your own rate limiter
+# When its not what the project is about
 class RateLimitMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, rules: dict[tuple[str, str], RateLimitRule]):
         super().__init__(app)

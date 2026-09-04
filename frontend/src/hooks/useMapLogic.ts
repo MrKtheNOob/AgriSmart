@@ -1,62 +1,7 @@
 import { useState, useCallback } from 'react';
 import { BASE_URL } from '../utils';
 import { getTelemetrySessionId } from '../services/telemetry';
-
-interface Crop {
-  name: string;
-  reason: string;
-  revenue_per_ha: number;
-  profitability_index: number;
-}
-
-interface RecommendationResponse {
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  soil: {
-    target_depth: string;
-    classification: string;
-    properties: Record<string, string>;
-  };
-  climate: {
-    region: string;
-    latitude: number;
-    longitude: number;
-    data_period: {
-      start: string;
-      end: string;
-    };
-    summary: {
-      temperature_mean_c: number;
-      annual_precipitation_mean_mm: number;
-      heat_days_mean: number;
-      rainy_days_mean: number;
-    };
-    monthly_climate: Array<{
-      month: number;
-      temperature_mean_c: number;
-      temperature_min_c: number;
-      temperature_max_c: number;
-      relative_humidity_mean_pct: number;
-      apparent_temperature_mean_c: number;
-      precipitation_mean_mm: number;
-      vapor_pressure_deficit_mean_kpa: number;
-      heat_days_mean: number;
-      rainy_days_mean: number;
-      years_observed: number;
-    }>;
-  };
-  water_insight?: {
-    awc_value: number;
-    retention_score: number;
-    category: string;
-    insight: string;
-  };
-  recommendation: {
-    recommended_crops: Crop[];
-  };
-}
+import type { RecommendationResponse } from '../components/recommendation/types';
 
 interface MapLogic {
   markerPosition: [number, number] | null;

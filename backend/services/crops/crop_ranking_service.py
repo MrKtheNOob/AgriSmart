@@ -1,12 +1,18 @@
 from datetime import UTC, datetime
+import json
+import logging
 from math import ceil
 from numbers import Real
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel
 
 from services.climate.climate_service import ClimateMetrics
 from services.soil.schemas import SoilProfile
+
+
+logger = logging.getLogger(__name__)
 
 
 class CropRankingResult(BaseModel):
@@ -47,6 +53,11 @@ class CropRankingService:
             preference.casefold().removeprefix("sol ") in normalized_actual
             for preference in preferences
         )
+    @classmethod
+    def create(cls, crop_data_path: str | Path) -> "CropRankingService":
+        """Create a service by loading its crop dataset from a JSON file."""
+        with Path(crop_data_path).open(encoding="utf-8") as crop_file:
+            return cls(json.load(crop_file))
 
     def match_soil(self, crop: dict[str, Any], soil_profile: SoilProfile) -> float:
         """Score all required soil properties, failing on incomplete pipeline data."""
@@ -158,17 +169,22 @@ class CropRankingService:
             growing_months=self._growth_months(crop),
         )
 
-    def rank_crops(
-        self,
-        soil_profile: SoilProfile,
-        climate_data: ClimateMetrics,
-    ) -> list[CropRankingResult]:
+    def rank_crops(self,soil_profile: SoilProfile,climate_data: ClimateMetrics) -> list[CropRankingResult]:
+        logger.info("Ranking %s crops", len(self.crop_dataset))
         results = [
             self.rank_crop(crop, soil_profile, climate_data)
             for crop in self.crop_dataset
         ]
-        return sorted(
+        top_crops = sorted(
             results,
             key=lambda result: result.overall_score,
             reverse=True,
+        )[:3]
+        logger.info(
+            "Top crop rankings: %s",
+            ", ".join(
+                f"{result.crop_name} ({result.overall_score:.1f})"
+                for result in top_crops
+            ),
         )
+        return top_crops

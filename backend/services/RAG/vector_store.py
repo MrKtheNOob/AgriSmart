@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import logging
+from pathlib import Path
 from dotenv import load_dotenv
 from typing import Optional, List
 import hashlib
@@ -25,7 +26,7 @@ class VectorStore:
 
     def __init__(
         self,
-        markdown_file: str,
+        markdown_file: str | Path,
         persist_directory: str,
         collection_name: str,
         embedding_model: str,
@@ -60,7 +61,7 @@ class VectorStore:
     @classmethod
     async def create(
         cls,
-        markdown_file: str,
+        markdown_file: str | Path,
         persist_directory: str,
         collection_name: str = "agronomic_knowledge_base",
         embedding_model: str = "text-embedding-3-small",

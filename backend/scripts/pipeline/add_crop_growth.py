@@ -14,5 +14,5 @@ with open("../../data/processed/crops_merged.json", "r", encoding="utf-8") as f:
                 main_crop["growth_time"] = crop["sowing_to_first_harvest_days"]
 
 # Add encoding="utf-8" and ensure_ascii=False to write human-readable characters
-with open("./output.json", "w", encoding="utf-8") as f:
+with open("./crops_merged.json", "w", encoding="utf-8") as f:
     json.dump(main_crops, f, indent=2, ensure_ascii=False)
