@@ -23,16 +23,17 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
       {/* Sheet */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-[1001] flex h-[85vh] flex-col rounded-t-[32px] bg-white shadow-2xl transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) ${
+        className={`fixed inset-x-0 bottom-0 z-[1001] flex h-[85vh] flex-col rounded-t-[2px] bg-paper shadow-none transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
       >
         {/* Handle */}
         <div className="flex justify-center p-4" onClick={onClose}>
-          <div className="h-1.5 w-12 rounded-full bg-slate-200" />
+          <div className="h-1.5 w-12 rounded-[2px] bg-slate-200" />
         </div>
 
         <button
+          aria-label="Fermer l’analyse"
           onClick={onClose}
           className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 transition-colors"
         >

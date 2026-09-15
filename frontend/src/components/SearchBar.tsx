@@ -261,7 +261,7 @@ export default function SearchBar() {
   return (
     <div 
       ref={containerRef}
-      className="absolute top-4 left-1/2 z-[1000] -translate-x-1/2 w-[90%] max-w-md pointer-events-auto"
+      className="relative min-w-0 flex-1 basis-64 pointer-events-auto"
     >
       <div className="relative group">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -270,15 +270,17 @@ export default function SearchBar() {
         
         <input
           type="text"
+          aria-label="Rechercher une région ou un département"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher une ville, une commune, un département..."
-          className="w-full bg-white/95 backdrop-blur-md border border-slate-200 py-3.5 pl-12 pr-12 rounded-2xl shadow-xl text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300"
+          placeholder="Rechercher une région, un département…"
+          className="w-full bg-paper border border-line py-3 pl-12 pr-12 rounded-[2px] text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-300"
         />
 
         {query && (
           <button
             onClick={clearSearch}
+            aria-label="Effacer la recherche"
             className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
           >
             <X className="w-5 h-5" />
@@ -287,7 +289,7 @@ export default function SearchBar() {
       </div>
 
       {isOpen && suggestions.length > 0 && (
-        <div className="mt-2 bg-white/95 backdrop-blur-md border border-slate-100 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute inset-x-0 top-full z-10 mt-2 max-h-[45dvh] overflow-y-auto bg-paper border border-line rounded-[2px] shadow-[0_4px_12px_#233e3014] animate-in fade-in slide-in-from-top-2 duration-200">
           <ul className="divide-y divide-slate-50">
             {suggestions.map((suggestion) => (
               <li key={suggestion.id}>
@@ -301,7 +303,7 @@ export default function SearchBar() {
                       {suggestion.display_name.split(',')[0]}
                     </p>
                     <p className="text-xs text-slate-400 line-clamp-1">
-                      {suggestion.kind}
+                      {suggestion.kind === 'Region' ? 'Région' : 'Département'}
                       {suggestion.parentRegion ? ` · ${suggestion.parentRegion}` : ''}
                     </p>
                   </div>

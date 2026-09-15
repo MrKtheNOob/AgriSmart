@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import os
+from datetime import UTC, datetime
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -21,6 +22,16 @@ You are a senior agronomic analyst specializing in Senegal and semi-arid environ
 
 The crops below have already been selected and ordered by a deterministic suitability
 algorithm. You are an explanation layer, not a recommendation or scoring engine.
+
+Current date (UTC, also Senegal local time): {current_date}
+For each crop, focus on the growing window starting at its planting_month and
+lasting growing_months, wrapping into the next year when necessary. Use the
+corresponding monthly climate records to describe upcoming seasonal conditions.
+These records are historical monthly averages, not weather forecasts. Describe
+what is typically favorable or unfavorable, without promising future weather.
+The climate score currently measures temperature suitability only. Humidity and
+rainfall may inform evidence-supported caveats, but are not included in that score.
+Suitability percentages are index scores, not probabilities of harvest success.
 
 Authoritative crop rankings:
 {rankings_json}
@@ -134,12 +145,14 @@ class RAGService:
             "Generating explanations for ranked crops: %s",
             ", ".join(ranking.crop_name for ranking in crop_rankings),
         )
+        current_date = datetime.now(UTC).date().isoformat()
         query = self.build_rag_query(soil_data, climate_data, crop_rankings)
         docs = await self.vector_service.similarity_search(query, k=6)
         logger.info("Retrieved %s relevant documents from vector store", len(docs))
         context = "\n\n".join(document.page_content for document in docs)
 
         prompt = PROMPT.format(
+            current_date=current_date,
             rankings_json=json.dumps(
                 [ranking.model_dump() for ranking in crop_rankings],
                 ensure_ascii=False,

@@ -1,0 +1,49 @@
+{
+  "target_depth": "0-20 centimeters",
+  "classification": "Indéterminé",
+  "properties": {
+    "Aluminium, extractable": "108.9 ppm",
+    "pH": "6.1",
+    "Nitrogen, total": "0.4 g/kg",
+    "Phosphorus, extractable": "6.4 ppm",
+    "Potassium, extractable": "53.6 ppm",
+    "Magnesium, extractable": "89.0 ppm",
+    "Calcium, extractable": "329.3 ppm",
+    "Iron, extractable": "39.4 ppm",
+    "Zinc, extractable": "1.2 ppm",
+    "Sulphur, extractable": "17.2 ppm",
+    "Carbon, total": "5.0 g/kg",
+    "Carbon, organic": "3.1 g/kg",
+    "Bulk density, <2mm fraction": "1.6 g/cm³",
+    "Stone content": "1.2 %",
+    "Silt content": "9 %",
+    "Clay content": "11 %",
+    "Sand content": "80 %",
+    "Classe texturale (USDA)": "Sandy Loam",
+    "Effective Cation Exchange Capacity": "4.0 cmol(+)/kg"
+  },
+  "raw_properties": {
+    "aluminium_extractable": 108.9,
+    "ph": 6.1,
+    "nitrogen_total": 0.4,
+    "phosphorous_extractable": 6.4,
+    "potassium_extractable": 53.6,
+    "magnesium_extractable": 89.0,
+    "calcium_extractable": 329.3,
+    "iron_extractable": 39.4,
+    "zinc_extractable": 1.2,
+    "sulphur_extractable": 17.2,
+    "carbon_total": 5.0,
+    "carbon_organic": 3.1,
+    "bulk_density": 1.6,
+    "stone_content": 1.2,
+    "silt_content": 9.0,
+    "clay_content": 11.0,
+    "sand_content": 80.0,
+    "cation_exchange_capacity": 4.0
+  },
+  "agroecological_zone": {
+    "code": "BA",
+    "name": "Bassin Arachidier"
+  }
+}

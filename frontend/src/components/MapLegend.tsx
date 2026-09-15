@@ -1,6 +1,6 @@
 import L from 'leaflet'
 import type { LatLngTuple } from 'leaflet'
-import { Marker } from 'react-leaflet'
+import { Marker, Pane } from 'react-leaflet'
 import { getFeatureName, getGeometryCenter, type GeoFeature } from '../utils/geo'
 import {
   agroecologicalZones,
@@ -37,62 +37,97 @@ export function AdministrativeLabels({
   mapMode: MapMode
 }) {
   const showDepartments = zoomLevel >= 8
-  const showZones = mapMode === 'agroecological' && zoomLevel <= 8
+  const showZones = zoomLevel <= 8
 
   return (
     <>
-      {showZones
-        ? agroecologicalZones.features.map((feature, index) => {
-            if (!feature.geometry) return null
-            const zone = feature as GeoFeature
-            const code = getZoneCode(zone)
-            const position = ZONE_LABEL_POSITIONS[code] ?? getGeometryCenter(feature.geometry)
+      {/* Labels use a higher pane so colored polygons cannot dim their text. */}
+      <Pane
+        name="agroecological-labels"
+        className={`map-mode-pane${
+          mapMode === 'agroecological' ? '' : ' is-hidden'
+        }`}
+        style={{ zIndex: 650 }}
+      >
+        {showZones
+          ? agroecologicalZones.features.map((feature, index) => {
+              if (!feature.geometry) return null
+              const zone = feature as GeoFeature
+              const code = getZoneCode(zone)
+              const position =
+                ZONE_LABEL_POSITIONS[code] ??
+                getGeometryCenter(feature.geometry)
 
-            return (
-              <Marker
-                key={`zone-label-${code}-${index}`}
-                position={position}
-                icon={createLabelIcon(getZoneName(zone), 'zone-map-label', 180)}
-                interactive={false}
-              />
-            )
-          })
-        : null}
+              return (
+                <Marker
+                  key={`zone-label-${code}-${index}`}
+                  position={position}
+                  icon={createLabelIcon(
+                    getZoneName(zone),
+                    'zone-map-label',
+                    180,
+                  )}
+                  interactive={false}
+                />
+              )
+            })
+          : null}
+      </Pane>
 
-      {senegalRegions.features.map((feature, index) => {
-        if (!feature.geometry) return null
-        const name = getFeatureName(feature.properties as Record<string, unknown>)
-        return (
-          <Marker
-            key={`region-label-${name}-${index}`}
-            position={getGeometryCenter(feature.geometry)}
-            icon={createLabelIcon(name, 'region-map-label', 120)}
-            interactive={false}
-          />
-        )
-      })}
+      <Pane
+        name="administrative-labels"
+        className={`map-mode-pane${
+          mapMode === 'administrative' ? '' : ' is-hidden'
+        }`}
+        style={{ zIndex: 650 }}
+      >
+        {senegalRegions.features.map((feature, index) => {
+          if (!feature.geometry) return null
+          const name = getFeatureName(
+            feature.properties as Record<string, unknown>,
+          )
+          return (
+            <Marker
+              key={`region-label-${name}-${index}`}
+              position={getGeometryCenter(feature.geometry)}
+              icon={createLabelIcon(name, 'region-map-label', 120)}
+              interactive={false}
+            />
+          )
+        })}
 
-      {showDepartments
-        ? senegalDepartments.features.map((feature, index) => {
-            if (!feature.geometry) return null
-            const name = getFeatureName(feature.properties as Record<string, unknown>)
-            return (
-              <Marker
-                key={`department-label-${name}-${index}`}
-                position={getGeometryCenter(feature.geometry)}
-                icon={createLabelIcon(name, 'department-map-label', 100)}
-                interactive={false}
-              />
-            )
-          })
-        : null}
+        {showDepartments
+          ? senegalDepartments.features.map((feature, index) => {
+              if (!feature.geometry) return null
+              const name = getFeatureName(
+                feature.properties as Record<string, unknown>,
+              )
+              return (
+                <Marker
+                  key={`department-label-${name}-${index}`}
+                  position={getGeometryCenter(feature.geometry)}
+                  icon={createLabelIcon(
+                    name,
+                    'department-map-label',
+                    100,
+                  )}
+                  interactive={false}
+                />
+              )
+            })
+          : null}
+      </Pane>
     </>
   )
 }
 
-export function ZoneLegend() {
+export function ZoneLegend({ visible }: { visible: boolean }) {
   return (
-    <div className="agro-zone-legend" aria-label="Légende des zones agroécologiques">
+    <div
+      className={`agro-zone-legend ${visible ? '' : 'is-hidden'}`}
+      aria-hidden={!visible}
+      aria-label="Légende des zones agroécologiques"
+    >
       <div className="agro-zone-legend__eyebrow">Territoire agricole</div>
       <div className="agro-zone-legend__title">Zones agroécologiques</div>
       <div className="agro-zone-legend__items">

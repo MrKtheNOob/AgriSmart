@@ -41,7 +41,9 @@ class AgronomicService:
         # Calculate water insight
         water_insight = await self.water_insight_service.get_water_insight(soil_data, climate_data)
         crop_rankings = self.crop_ranking_service.rank_crops(soil_data, climate_data)
-
+        logger.info("Crop ranking completed for lat=%s, lng=%s", lat, lng)
+        
+        logger.info("Generating RAG recommendation for lat=%s, lng=%s", lat, lng)
         # RAG service is async — call it directly
         recommendation = await self.rag_service.generate_recommendation(
             soil_data,

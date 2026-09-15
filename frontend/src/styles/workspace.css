@@ -1,0 +1,9 @@
+/* Leaflet owns these elements, so their styling stays in CSS. */
+.workspace .premium-agri-map { font-family: var(--agri-sans); border: 0; border-radius: 0; box-shadow: none; }
+.workspace :is(.map-mode-toggle, .agro-zone-legend) { background: var(--agri-paper); border: 1px solid var(--agri-line); border-radius: 2px; backdrop-filter: none; box-shadow: 0 2px 5px #233e3010; }
+.workspace .map-mode-toggle__indicator { border-radius: 1px; background: var(--agri-ink); box-shadow: none; }
+.workspace .map-mode-toggle button { border-radius: 1px; }
+.workspace .map-mode-toggle button.is-active { color: #fff; }
+.workspace .agro-zone-legend__title { font-family: var(--agri-serif); font-size: 17px; font-weight: 400; }
+.workspace .leaflet-control-zoom { border-radius: 2px; box-shadow: none; border: 1px solid var(--agri-line); }
+.workspace .leaflet-control-zoom a { background: var(--agri-paper); color: var(--agri-ink); }

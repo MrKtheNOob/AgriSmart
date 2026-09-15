@@ -175,6 +175,7 @@ class CropRankingService:
             self.rank_crop(crop, soil_profile, climate_data)
             for crop in self.crop_dataset
         ]
+        logger.info("Rankings: %s", results)
         top_crops = sorted(
             results,
             key=lambda result: result.overall_score,

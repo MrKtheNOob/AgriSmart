@@ -1,0 +1,173 @@
+{
+  "region": "Diourbel",
+  "latitude": 14.655,
+  "longitude": -16.231,
+  "data_period": {
+    "start": "2021-09-01",
+    "end": "2026-08-01"
+  },
+  "summary": {
+    "temperature_mean_c": 27.69,
+    "annual_precipitation_mean_mm": 483.68,
+    "heat_days_mean": 43.0,
+    "rainy_days_mean": 54.2
+  },
+  "monthly_climate": [
+    {
+      "month": 1,
+      "temperature_mean_c": 25.57,
+      "temperature_min_c": 16.01,
+      "temperature_max_c": 37.2,
+      "relative_humidity_mean_pct": 27.4,
+      "apparent_temperature_mean_c": 22.48,
+      "precipitation_mean_mm": 0.7,
+      "vapor_pressure_deficit_mean_kpa": 2.607,
+      "heat_days_mean": 0.0,
+      "rainy_days_mean": 0.2,
+      "years_observed": 5
+    },
+    {
+      "month": 2,
+      "temperature_mean_c": 26.76,
+      "temperature_min_c": 16.53,
+      "temperature_max_c": 39.08,
+      "relative_humidity_mean_pct": 24.64,
+      "apparent_temperature_mean_c": 23.46,
+      "precipitation_mean_mm": 0.02,
+      "vapor_pressure_deficit_mean_kpa": 2.928,
+      "heat_days_mean": 1.4,
+      "rainy_days_mean": 0.0,
+      "years_observed": 5
+    },
+    {
+      "month": 3,
+      "temperature_mean_c": 27.1,
+      "temperature_min_c": 17.13,
+      "temperature_max_c": 40.58,
+      "relative_humidity_mean_pct": 35.69,
+      "apparent_temperature_mean_c": 25.0,
+      "precipitation_mean_mm": 0.04,
+      "vapor_pressure_deficit_mean_kpa": 2.696,
+      "heat_days_mean": 4.6,
+      "rainy_days_mean": 0.0,
+      "years_observed": 5
+    },
+    {
+      "month": 4,
+      "temperature_mean_c": 28.7,
+      "temperature_min_c": 18.08,
+      "temperature_max_c": 42.22,
+      "relative_humidity_mean_pct": 37.41,
+      "apparent_temperature_mean_c": 27.14,
+      "precipitation_mean_mm": 0.0,
+      "vapor_pressure_deficit_mean_kpa": 2.907,
+      "heat_days_mean": 9.4,
+      "rainy_days_mean": 0.0,
+      "years_observed": 5
+    },
+    {
+      "month": 5,
+      "temperature_mean_c": 29.48,
+      "temperature_min_c": 19.38,
+      "temperature_max_c": 43.63,
+      "relative_humidity_mean_pct": 44.02,
+      "apparent_temperature_mean_c": 29.43,
+      "precipitation_mean_mm": 6.0,
+      "vapor_pressure_deficit_mean_kpa": 2.703,
+      "heat_days_mean": 11.2,
+      "rainy_days_mean": 0.4,
+      "years_observed": 5
+    },
+    {
+      "month": 6,
+      "temperature_mean_c": 28.92,
+      "temperature_min_c": 21.0,
+      "temperature_max_c": 40.37,
+      "relative_humidity_mean_pct": 60.86,
+      "apparent_temperature_mean_c": 31.25,
+      "precipitation_mean_mm": 26.24,
+      "vapor_pressure_deficit_mean_kpa": 1.837,
+      "heat_days_mean": 6.2,
+      "rainy_days_mean": 2.6,
+      "years_observed": 5
+    },
+    {
+      "month": 7,
+      "temperature_mean_c": 28.73,
+      "temperature_min_c": 23.12,
+      "temperature_max_c": 37.45,
+      "relative_humidity_mean_pct": 70.59,
+      "apparent_temperature_mean_c": 32.49,
+      "precipitation_mean_mm": 74.94,
+      "vapor_pressure_deficit_mean_kpa": 1.314,
+      "heat_days_mean": 3.6,
+      "rainy_days_mean": 11.2,
+      "years_observed": 5
+    },
+    {
+      "month": 8,
+      "temperature_mean_c": 27.62,
+      "temperature_min_c": 22.95,
+      "temperature_max_c": 35.06,
+      "relative_humidity_mean_pct": 79.88,
+      "apparent_temperature_mean_c": 32.24,
+      "precipitation_mean_mm": 170.26,
+      "vapor_pressure_deficit_mean_kpa": 0.844,
+      "heat_days_mean": 1.2,
+      "rainy_days_mean": 19.2,
+      "years_observed": 5
+    },
+    {
+      "month": 9,
+      "temperature_mean_c": 27.32,
+      "temperature_min_c": 22.6,
+      "temperature_max_c": 34.46,
+      "relative_humidity_mean_pct": 82.51,
+      "apparent_temperature_mean_c": 32.34,
+      "precipitation_mean_mm": 172.1,
+      "vapor_pressure_deficit_mean_kpa": 0.725,
+      "heat_days_mean": 0.0,
+      "rainy_days_mean": 15.8,
+      "years_observed": 5
+    },
+    {
+      "month": 10,
+      "temperature_mean_c": 28.56,
+      "temperature_min_c": 20.35,
+      "temperature_max_c": 37.58,
+      "relative_humidity_mean_pct": 70.59,
+      "apparent_temperature_mean_c": 32.63,
+      "precipitation_mean_mm": 29.56,
+      "vapor_pressure_deficit_mean_kpa": 1.331,
+      "heat_days_mean": 3.4,
+      "rainy_days_mean": 4.0,
+      "years_observed": 5
+    },
+    {
+      "month": 11,
+      "temperature_mean_c": 27.62,
+      "temperature_min_c": 18.62,
+      "temperature_max_c": 37.64,
+      "relative_humidity_mean_pct": 43.94,
+      "apparent_temperature_mean_c": 27.49,
+      "precipitation_mean_mm": 0.54,
+      "vapor_pressure_deficit_mean_kpa": 2.3,
+      "heat_days_mean": 2.0,
+      "rainy_days_mean": 0.2,
+      "years_observed": 5
+    },
+    {
+      "month": 12,
+      "temperature_mean_c": 25.95,
+      "temperature_min_c": 16.46,
+      "temperature_max_c": 37.23,
+      "relative_humidity_mean_pct": 30.35,
+      "apparent_temperature_mean_c": 23.32,
+      "precipitation_mean_mm": 3.28,
+      "vapor_pressure_deficit_mean_kpa": 2.532,
+      "heat_days_mean": 0.0,
+      "rainy_days_mean": 0.6,
+      "years_observed": 5
+    }
+  ]
+}

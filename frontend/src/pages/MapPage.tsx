@@ -118,11 +118,11 @@ export default function MapPage() {
 
   return (
     <div className="flex flex-col h-full md:flex-row">
-      <div className="grow md:w-7/12 lg:w-3/4 h-[50vh] md:h-full relative border-r border-slate-200">
+      <div className="grow md:w-7/12 lg:w-3/4 h-full relative border-r border-slate-200">
         <SenegalMap onMapClick={handleMapClick} markerPosition={markerPosition} />
       </div>
 
-      <aside className="hidden md:block md:w-5/12 lg:w-1/4 bg-white shadow-xl z-10 overflow-y-auto">
+      <aside className="hidden min-w-[350px] border-l border-line bg-paper md:block md:w-5/12 lg:w-1/4 z-10 overflow-y-auto">
         <Sidebar
           loading={loading}
           error={error}

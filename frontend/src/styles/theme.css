@@ -1,0 +1,54 @@
+/* One shared Tailwind palette for AgriSmart. No theme switching. */
+@theme {
+  --color-ink: #233e30;
+  --color-paper: #f6f3eb;
+  --color-muted: #646b60;
+  --color-line: #d5d7c9;
+  --color-olive: #78814d;
+  --color-terra: #9b663f;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --color-white: #fbf9f3;
+  --color-slate-50: #f0eee4;
+  --color-slate-100: #e9e7dc;
+  --color-slate-200: #d5d7c9;
+  --color-slate-300: #b7bdac;
+  --color-slate-400: #737b69;
+  --color-slate-500: #646b60;
+  --color-slate-600: #545f50;
+  --color-slate-700: #384b3c;
+  --color-slate-800: #2b4133;
+  --color-slate-900: #233e30;
+  --color-green-50: #e9ecdf;
+  --color-green-100: #dce3cf;
+  --color-green-200: #cbd6b8;
+  --color-green-300: #adb995;
+  --color-green-500: #687d4d;
+  --color-green-600: #38573a;
+  --color-green-700: #2e4e37;
+  --color-green-800: #233e30;
+  --color-blue-50: #edf0ea;
+  --color-blue-100: #dbe5db;
+  --color-blue-200: #bdd0c4;
+  --color-blue-500: #5d8175;
+  --color-blue-600: #466a5e;
+  --color-blue-700: #35574d;
+  --color-blue-900: #29483e;
+  --color-orange-50: #f0e9db;
+  --color-orange-100: #e8dcc6;
+  --color-orange-200: #dcc4a2;
+  --color-orange-500: #ad7943;
+  --color-orange-700: #855b32;
+  --color-orange-800: #704b2d;
+  --color-orange-900: #5d402b;
+}
+
+/* The editorial landing and Leaflet styles use the same Tailwind tokens. */
+:root {
+  --agri-ink: var(--color-ink);
+  --agri-paper: var(--color-paper);
+  --agri-muted: var(--color-muted);
+  --agri-line: var(--color-line);
+  --agri-sans: var(--font-sans);
+  --agri-serif: var(--font-serif);
+}

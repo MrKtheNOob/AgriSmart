@@ -8,7 +8,13 @@ export default function MapModeToggle({
   onChange: (mode: MapMode) => void
 }) {
   return (
-    <div className="map-mode-toggle" role="group" aria-label="Mode cartographique">
+    <div
+      className="map-mode-toggle pointer-events-auto shrink-0"
+      data-mode={value}
+      role="group"
+      aria-label="Mode cartographique"
+    >
+      <span className="map-mode-toggle__indicator" aria-hidden="true" />
       <button
         type="button"
         className={value === 'agroecological' ? 'is-active' : undefined}

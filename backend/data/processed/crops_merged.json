@@ -145,6 +145,146 @@
     }
   },
   {
+    "crop_name": "Arachide",
+    "nitrogen_total_gkg": {
+      "min": 0.4,
+      "max": 1.0
+    },
+    "phosphorus_extractable_ppm": {
+      "min": 7,
+      "max": 30,
+      "method": "Mehlich-3"
+    },
+    "potassium_extractable_ppm": {
+      "min": 40,
+      "max": 120,
+      "method": "Mehlich-3"
+    },
+    "carbon_organic_gkg": {
+      "min": 3,
+      "max": 12
+    },
+    "cation_exchange_capacity_cmol_kg": {
+      "min_required": 2.5,
+      "optimal_range": "4.0-10.0"
+    },
+    "clay_percentage": {
+      "min": 5,
+      "max": 20
+    },
+    "sand_percentage": {
+      "min": 65,
+      "max": 90
+    },
+    "ph": {
+      "min": 5.5,
+      "max": 7.0
+    },
+    "usda_texture_preferences": [
+      "Sand",
+      "Loamy Sand",
+      "Sandy Loam"
+    ],
+    "senegal_soil_equivalents": [
+      "Sol Dior",
+      "Sol Deck-Dior"
+    ],
+    "isra_specific_notes": "Agronomic targets tailored to groundnut cultivation in the Senegalese Groundnut Basin (Bassin Arachidier) and northern/central rainfed zones. Deep, light-textured sandy soils are critical for peg penetration and pod development.",
+    "data_sources": [
+      "ISRA (Institut Sénégalais de Recherches Agricoles) technical sheets for groundnut (Arachis hypogaea)",
+      "FAO EcoCrop database: Arachis hypogaea",
+      "FAO Fertilizer and Plant Nutrition Bulletin (Senegal Groundnut recommendations)",
+      "iSDAsoil (2021) digital soil mapping for Senegal",
+      "Supplied Senegal agronomy baseline and Dior/Deck soil classification literature"
+    ],
+    "fertilizer_application_kg_ha": {
+      "nitrogen_n": {
+        "min": 10,
+        "optimal": 15,
+        "max": 20
+      },
+      "phosphorus_p2o5": {
+        "min": 30,
+        "optimal": 40,
+        "max": 50
+      },
+      "potassium_k2o": {
+        "min": 15,
+        "optimal": 25,
+        "max": 35
+      }
+    },
+    "fertilizer_research_notes": "Values for phosphorus and potassium reflect P2O5 and K2O equivalent application rates. Because groundnut (Arachis hypogaea) is a legume capable of biological nitrogen fixation via Rhizobium, synthetic nitrogen requirements are low (starter nitrogen only, around 10–20 kg N/ha). Standard ISRA extension recommendations in the Bassin Arachidier typically call for approximately 150 kg/ha of NPK starter fertilizer formulation (e.g., 6-20-10 or 6-20-15) supplemented with gypsum/calcium application at pegging where soil calcium is deficient. Climate requirements and growth cycles reflect standard varieties cultivated in Senegal (e.g., short-cycle 90-day vs long-cycle 120-day varieties).",
+    "climate_requirements": {
+      "temperature": {
+        "optimal": {
+          "minimum": 22,
+          "maximum": 30
+        },
+        "tolerable": {
+          "minimum": 15,
+          "maximum": 40
+        },
+        "canonical_unit": "°C",
+        "claims": [
+          {
+            "original_value": "22–30",
+            "original_unit": "°C",
+            "normalized_minimum": 22,
+            "normalized_maximum": 30,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Optimal",
+            "evidence_type": "explicit",
+            "supporting_quote": "22–30"
+          },
+          {
+            "original_value": "15–40",
+            "original_unit": "°C",
+            "normalized_minimum": 15,
+            "normalized_maximum": 40,
+            "source_id": "source_001",
+            "source_location": "Ecology table, Temperature requirement, Absolute",
+            "evidence_type": "explicit",
+            "supporting_quote": "15–40"
+          }
+        ]
+      },
+      "drought_tolerance": {
+        "description": "Groundnut exhibits moderate to high drought resistance during early vegetative stages, but remains highly sensitive to moisture stress during flowering, pegging, and early pod filling stages.",
+        "source_id": "source_002",
+        "evidence_type": "explicit"
+      }
+    },
+    "climate_data_sources": [
+      {
+        "id": "source_001",
+        "title": "EcoCrop data sheet: Arachis hypogaea",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=381",
+        "accessed_at": "2026-09-04",
+        "source_type": "database",
+        "quality_notes": "Official FAO ecological profile for groundnut."
+      },
+      {
+        "id": "source_002",
+        "title": "Crop Water Management: Groundnut",
+        "publisher": "Food and Agriculture Organization of the United Nations (FAO)",
+        "authors": [],
+        "publication_year": null,
+        "url": "https://www.fao.org/land-water/databases-and-software/crop-information/groundnut/en/",
+        "accessed_at": "2026-09-04",
+        "source_type": "official_guide",
+        "quality_notes": "FAO crop yield response and moisture sensitivity guide."
+      }
+    ],
+    "growth_time": {
+      "minimum": 90,
+      "maximum": 120
+    }
+  },
+  {
     "crop_name": "Oignon",
     "nitrogen_total_gkg": {
       "min": 0.5,
@@ -1013,7 +1153,7 @@
     }
   },
   {
-    "crop_name": "Laitue",
+    "crop_name": "Salade",
     "nitrogen_total_gkg": {
       "min": 0.4,
       "max": 1.0
