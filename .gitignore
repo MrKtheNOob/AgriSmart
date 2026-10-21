@@ -181,6 +181,9 @@ cython_debug/
 # Learn more at https://abstra.io/docs
 .abstra/
 
+# Local product notes and engineering handoffs
+/.notes/
+
 # AgriSmart generated data
 backend/data/RAG/chroma_db/
 backend/data/RAG/.cache.sqlite

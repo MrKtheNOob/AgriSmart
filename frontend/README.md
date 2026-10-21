@@ -1,73 +1,40 @@
-# React + TypeScript + Vite
+# Frontend AgriSmart
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface React, TypeScript et Vite pour explorer une carte du Sénégal et consulter les analyses agronomiques.
 
-Currently, two official plugins are available:
+## Démarrage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Depuis `frontend/`, créer `.env` :
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```dotenv
+VITE_BASE_URL=http://localhost:8000
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Puis, avec Node.js 22.12+ :
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci
+npm run dev
 ```
+
+Ouvrir `http://localhost:5173` et démarrer le [backend](../README.md#backend) pour lancer des analyses. Redémarrer Vite après une modification des variables d'environnement.
+
+## Organisation
+
+- `src/pages/` : accueil et carte.
+- `src/components/` : interface et affichage du rapport.
+- `src/hooks/useMapLogic.ts` : sélection du point et réception des événements SSE.
+- `src/services/telemetry.ts` : suivi des visites et téléchargements.
+- `src/assets/` : données cartographiques et ressources locales.
+
+La carte utilise Leaflet et une couche de [zones agroécologiques](src/assets/senegal_agroecological_zones.md). Le guide principal décrit le [pipeline d'analyse](../README.md#du-point-sur-la-carte-au-résultat).
+
+## Vérification et compilation
+
+```bash
+npm run lint
+npm run build
+npm run preview
+```
+
+La compilation produit les fichiers statiques dans `dist/`. L'URL de l'API est intégrée au moment de la compilation via `VITE_BASE_URL`.
