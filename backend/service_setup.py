@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Awaitable, Callable, TypeVar
 
 from app_config import Settings
-from management.api import close_management_db, init_management_db
 from services.RAG.RAG_service import RAGService
 from services.RAG.vector_store import VectorStore
 from services.agronomy.agronomic_service import AgronomicService
@@ -55,7 +54,6 @@ async def _clean_up_startup_failure(
     soil_provider: iSDAsoilService,
 ) -> None:
     cleanup_steps = (
-        ("management database reference", close_management_db()),
         ("iSDAsoil HTTP client", soil_provider.client.aclose()),
         ("database connection", database.close()),
     )
@@ -77,7 +75,6 @@ class ApplicationServices:
 
     async def close(self) -> None:
         logger.info("Closing application services")
-        await close_management_db()
         await self.soil_provider.client.aclose()
         await self.database.close()
         logger.info("Application services closed")
@@ -100,10 +97,6 @@ async def create_application_services(settings: Settings) -> ApplicationServices
             lambda: TelemetryService(database),
         )
         await _initialize_service("telemetry schema", telemetry.init_table())
-        await _initialize_service(
-            "management schema",
-            init_management_db(database),
-        )
         logger.info("Management and telemetry databases initialized")
 
         zone_service = _build_service(

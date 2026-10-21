@@ -4,7 +4,6 @@ import json
 from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
 from app_config import Settings
@@ -13,7 +12,6 @@ from logging_config import configure_logging
 
 configure_logging()
 
-from management.api import router as management_router
 from service_setup import ApplicationServices, create_application_services
 from services.agronomy.agronomic_service import AgronomicService
 from services.telemetry.api import get_telemetry_service, router as telemetry_router
@@ -45,7 +43,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="AgriSmart API", lifespan=lifespan)
-app.include_router(management_router)
 app.include_router(telemetry_router)
 
 RATE_LIMIT_RULES = {
@@ -53,10 +50,6 @@ RATE_LIMIT_RULES = {
     ("GET", "/analyze-stream"): RateLimitRule(max_requests=6, window_seconds=60),
     ("POST", "/telemetry/visit"): RateLimitRule(max_requests=60, window_seconds=60),
     ("POST", "/telemetry/download"): RateLimitRule(max_requests=20, window_seconds=60),
-    # ("POST", "/management/farms"): RateLimitRule(max_requests=20, window_seconds=60),
-    # ("POST", "/management/analysis-reports"): RateLimitRule(
-    #     max_requests=20, window_seconds=60
-    # ),
 }
 
 app.add_middleware(RateLimitMiddleware, rules=RATE_LIMIT_RULES)
