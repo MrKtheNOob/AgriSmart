@@ -15,26 +15,73 @@ AgriSmart transforme un point sélectionné sur une carte en un profil environne
 
 ## Du point sur la carte au résultat
 
+L'analyse suit un pipeline en quatre étapes : acquisition des données environnementales, préparation des profils, classement agronomique et génération des explications. Le classement des cultures est déterministe ; le modèle de langage intervient uniquement pour contextualiser les résultats.
+
 ```mermaid
-flowchart TD
-    Point[Point sélectionné sur la carte] --> API[API FastAPI]
-    API --> Soil[iSDAsoil et zones agroécologiques]
-    API --> Climate[Station la plus proche dans les données locales]
-    Soil --> Profile[Profil du sol]
-    Climate --> Months[Profil historique sur 12 mois]
-    Profile --> Rank[Classement déterministe]
-    Months --> Rank
-    Crops[Exigences des cultures en JSON] --> Rank
-    Profile --> Water[Estimation de rétention d'eau]
-    Rank --> Top[Trois cultures les mieux classées]
-    Top --> Explain[Explications par le modèle de langage]
-    Profile --> Explain
-    Months --> Explain
-    Knowledge[Connaissances agronomiques via ChromaDB] --> Explain
-    Explain --> Report[Résultat dans le tableau de bord]
-    Water --> Report
-    Top --> Report
+flowchart TB
+    Point["Point sélectionné sur la carte"]
+    API["API FastAPI"]
+
+    subgraph Sources["1. Acquisition des données"]
+        direction LR
+        Soil["iSDAsoil et zones agroécologiques"]
+        Climate["Station climatique la plus proche"]
+        Crops["Exigences des cultures (JSON)"]
+    end
+
+    subgraph Processing["2. Préparation des données"]
+        direction LR
+        SoilProfile["Profil du sol"]
+        ClimateProfile["Historique climatique sur 12 mois"]
+    end
+
+    subgraph Engine["3. Moteur agronomique"]
+        direction LR
+        Ranking["Classement déterministe"]
+        Water["Estimation de rétention d'eau"]
+        Top3["Top 3 des cultures"]
+        Ranking --> Top3
+    end
+
+    subgraph AI["4. Explications assistées par IA"]
+        direction LR
+        Knowledge["Connaissances agronomiques (ChromaDB)"]
+        LLM["Modèle de langage"]
+        Knowledge --> LLM
+    end
+
+    Dashboard["Résultats dans le tableau de bord"]
+
+    Point --> API
+    API --> Soil
+    API --> Climate
+
+    Soil --> SoilProfile
+    Climate --> ClimateProfile
+
+    SoilProfile --> Ranking
+    ClimateProfile --> Ranking
+    Crops --> Ranking
+
+    SoilProfile --> Water
+
+    Top3 --> LLM
+    SoilProfile --> LLM
+    ClimateProfile --> LLM
+
+    Top3 --> Dashboard
+    Water --> Dashboard
+    LLM --> Dashboard
 ```
+
+Les données du sol et du climat sont traitées séparément avant d'être combinées par le moteur de classement. Les exigences des cultures, définies dans un catalogue JSON, servent à calculer les scores de compatibilité.
+
+En parallèle, une estimation de la rétention d'eau est produite à partir du profil du sol, sans intervenir dans le classement.
+
+Les trois cultures les mieux classées sont ensuite transmises au modèle de langage avec les profils environnementaux et les connaissances agronomiques récupérées depuis ChromaDB. Les explications générées complètent les résultats du moteur sans modifier les scores ni leur ordre.
+
+Le tableau de bord rassemble les recommandations, les scores, l'estimation de rétention d'eau et les explications associées.
+
 
 ### Calcul des scores
 
