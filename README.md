@@ -219,6 +219,6 @@ backend/data/         Données sources, données traitées et connaissances RAG
 backend/scripts/      Préparation et transformation des données
 ```
 
-Les fichiers `.env`, les jetons locaux et les index générés ne doivent pas être versionnés. Les données du projet restent sous `backend/data/` ; les fichiers volumineux concernés sont suivis avec Git LFS.
+Les données du projet restent sous `backend/data/` ; les fichiers volumineux concernés sont suivis avec Git LFS.
 
 Voir aussi les guides [backend](backend/README.md) et [frontend](frontend/README.md), ainsi que la [provenance des zones agroécologiques](frontend/src/assets/senegal_agroecological_zones.md).
